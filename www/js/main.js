@@ -3,27 +3,27 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 	{
 		$routeProvider
 			.when("/home", {
-				templateUrl: "jotc/partials/home.html",
+				templateUrl: "jotc/sections/home/home.html",
 				controller: "home"
 			})
 			.when("/shows", {
-				templateUrl: "jotc/partials/shows.html",
+				templateUrl: "jotc/sections/shows/shows.html",
 				controller: "shows"
 			})
 			.when("/classes", {
-				templateUrl: "jotc/partials/classes.html",
+				templateUrl: "jotc/sections/classes/classes.html",
 				controller: "classes"
 			})
 			.when("/pictures", {
-				templateUrl: "jotc/partials/pictures.html",
+				templateUrl: "jotc/sections/pictures/pictures.html",
 				controller: "pictures"
 			})
 			.when("/links", {
-				templateUrl: "jotc/partials/links.html",
+				templateUrl: "jotc/sections/links/links.html",
 				controller: "links"
 			})
 			.when("/about", {
-				templateUrl: "jotc/partials/about.html",
+				templateUrl: "jotc/sections/about/about.html",
 				controller: "about"
 			})
 			.otherwise({

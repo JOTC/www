@@ -5,12 +5,31 @@ module.exports = function(grunt)
 		ngtemplates:
 		{
 			default: {
-				src: "partials/**/*.html",
+				src: "sections/**/*.html",
 				dest: "js/partials.js",
 				options: {
 					module: "jotc-partials",
 					prefix: "jotc/",
 					standalone: true
+				}
+			},
+			production: {
+				src: "sections/**/*.html",
+				dest: "js/partials.js",
+				options: {
+					module: "jotc-partials",
+					prefix: "jotc/",
+					standalone: true,
+					htmlmin: {
+						collapseBooleanAttributes:      true,
+						collapseWhitespace:             true,
+						removeAttributeQuotes:          true,
+						removeComments:                 true,
+						removeEmptyAttributes:          true,
+						removeRedundantAttributes:      true,
+						removeScriptTypeAttributes:     true,
+						removeStyleLinkTypeAttributes:  true
+					}
 				}
 			}
 		},
@@ -31,11 +50,11 @@ module.exports = function(grunt)
 		
 		watch: {
 			partials: {
-				files: "partials/**/*.html",
-				tasks: [ "ngtemplates" ]
+				files: "sections/**/*.html",
+				tasks: [ "ngtemplates:default" ]
 			},
 			less: {
-				files: "style/**/*.less",
+				files: [ "style/**/*.less", "sections/**/*.less" ],
 				tasks: [ "less" ]
 			},
 			css: {
@@ -52,5 +71,5 @@ module.exports = function(grunt)
 	grunt.loadNpmTasks('grunt-angular-templates');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	
-	grunt.registerTask("default", [ "wiredep", "less", "ngtemplates" ]);
+	grunt.registerTask("default", [ "wiredep", "less", "ngtemplates:default" ]);
 };
