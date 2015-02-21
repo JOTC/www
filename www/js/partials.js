@@ -1,7 +1,7 @@
 angular.module('jotc-partials', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('jotc/partials/about.html',
+  $templateCache.put('jotc/sections/about/about.html',
     "<div id=\"about\">\n" +
     "\t<div class=\"title\">About JOTC</div>\n" +
     "\n" +
@@ -62,7 +62,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/partials/classes.html',
+  $templateCache.put('jotc/sections/classes/classes.html',
     "<div id=\"classes\">\n" +
     "\t<div class=\"title\">JOTC Obedience Classes</div>\n" +
     "\n" +
@@ -241,7 +241,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/partials/home.html',
+  $templateCache.put('jotc/sections/home/home.html',
     "<div id=\"landing\">\n" +
     "\t<div class=\"title\">Welcome to JOTC</div>\n" +
     "\n" +
@@ -297,7 +297,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/partials/links.html',
+  $templateCache.put('jotc/sections/links/links.html',
     "<div id=\"links\">\n" +
     "\t<div class=\"title\">Useful Links</div>\n" +
     "\t<div ng-show=\"auth.canEditLinks\" class=\"addContentButton\">\n" +
@@ -326,7 +326,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/partials/pictures.edit.html',
+  $templateCache.put('jotc/sections/pictures/pictures.edit.html',
     "<div class=\"modal-header\">{{ action }} Gallery</div>\n" +
     "\n" +
     "<div class=\"modal-body\">\n" +
@@ -351,7 +351,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/partials/pictures.gallery.html',
+  $templateCache.put('jotc/sections/pictures/pictures.gallery.html',
     "<div class=\"gallery-modal\">\n" +
     "\t<div class=\"modal-header\">\n" +
     "\t\t{{ gallery.name }}\n" +
@@ -382,7 +382,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/partials/pictures.html',
+  $templateCache.put('jotc/sections/pictures/pictures.html',
     "<div id=\"pictures\">\n" +
     "\t<div class=\"title\">Pictures</div>\n" +
     "\t\n" +
@@ -426,7 +426,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/partials/shows.edit.html',
+  $templateCache.put('jotc/sections/shows/shows.edit.html',
     "<div class=\"modal-header\">{{ action }} Show</div>\n" +
     "\n" +
     "<div class=\"modal-body\">\n" +
@@ -496,7 +496,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/partials/shows.html',
+  $templateCache.put('jotc/sections/shows/shows.html',
     "<div id=\"shows\">\n" +
     "\t<div class=\"title\">JOTC Shows and Trials</div>\n" +
     "\n" +

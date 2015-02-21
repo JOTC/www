@@ -284,6 +284,19 @@ div[ng-view] .title {
   font-weight: bold;
   font-style: italic;
 }
+#about .officers {
+  width: 70%;
+  margin-left: 15%;
+  text-align: center;
+}
+#about .officers .officer .cell {
+  padding: 10px 0;
+  border-bottom: 1px solid #BBB;
+  vertical-align: middle;
+}
+#about .officers .officer .cell.officerTitle {
+  font-weight: bold;
+}
 #landing .calendar {
   background-color: rgba(0, 0, 0, 0.1);
   width: 20%;
@@ -308,93 +321,22 @@ div[ng-view] .title {
   color: blue;
   text-decoration: underline;
 }
-#shows .header,
-#classes .header {
+#links {
+  width: 100%;
+  table-layout: fixed;
+}
+#links .cell.linksColumn {
+  padding-right: 10px;
+}
+#links .cell.linksColumn + .cell.linksColumn {
+  padding: 0;
+  padding-left: 10px;
+  border-left: 1px solid #AAA;
+}
+#links .cell.linksColumn .linkGroup {
   text-align: center;
   margin-bottom: 15px;
   font-size: 1.5em;
-}
-#shows .show,
-#classes .show,
-#shows .class,
-#classes .class {
-  border: 1px solid black;
-  border-radius: 10px;
-  background-color: white;
-  overflow: hidden;
-  clear: both;
-}
-#shows .show + .show,
-#classes .show + .show,
-#shows .class + .show,
-#classes .class + .show,
-#shows .show + .class,
-#classes .show + .class,
-#shows .class + .class,
-#classes .class + .class {
-  margin-top: 35px;
-}
-#shows .show .date,
-#classes .show .date,
-#shows .class .date,
-#classes .class .date {
-  padding: 8px;
-  background-color: #024;
-  color: white;
-  font-weight: bold;
-  border-bottom: 1px solid black;
-}
-#shows .show .map,
-#classes .show .map,
-#shows .class .map,
-#classes .class .map {
-  float: right;
-  text-align: center;
-  font-size: 0.7em;
-}
-#shows .show .map img,
-#classes .show .map img,
-#shows .class .map img,
-#classes .class .map img {
-  border-left: 1px solid black;
-  border-bottom: 1px solid black;
-}
-#shows .show .location,
-#classes .show .location,
-#shows .class .location,
-#classes .class .location {
-  padding: 5px 0 5px 10px;
-  font-weight: bold;
-}
-#shows .show .description,
-#classes .show .description,
-#shows .class .description,
-#classes .class .description {
-  padding: 0 0 10px 10px;
-}
-#shows .show .description .button,
-#classes .show .description .button,
-#shows .class .description .button,
-#classes .class .description .button {
-  border-radius: 20px;
-  background-color: #FA0;
-  padding: 3px 10px;
-  border: 2px outset;
-  cursor: pointer;
-}
-#shows .show button.register,
-#classes .show button.register,
-#shows .class button.register,
-#classes .class button.register {
-  margin: 2em 0 0 2em;
-}
-#shows .table .cell.right,
-#classes .table .cell.right {
-  width: 500px;
-  padding-left: 10px;
-  margin-left: 10px;
-  margin-right: 0;
-  border-left: 3px solid #024;
 }
 #pictures .galleries .galleryRow {
   clear: both;
@@ -527,33 +469,91 @@ div[ng-view] .title {
 .gallery-modal .modal-footer .page {
   float: left;
 }
-#links {
-  width: 100%;
-  table-layout: fixed;
-}
-#links .cell.linksColumn {
-  padding-right: 10px;
-}
-#links .cell.linksColumn + .cell.linksColumn {
-  padding: 0;
-  padding-left: 10px;
-  border-left: 1px solid #AAA;
-}
-#links .cell.linksColumn .linkGroup {
+#shows .header,
+#classes .header {
   text-align: center;
   margin-bottom: 15px;
   font-size: 1.5em;
 }
-#about .officers {
-  width: 70%;
-  margin-left: 15%;
-  text-align: center;
+#shows .show,
+#classes .show,
+#shows .class,
+#classes .class {
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: white;
+  overflow: hidden;
+  clear: both;
 }
-#about .officers .officer .cell {
-  padding: 10px 0;
-  border-bottom: 1px solid #BBB;
-  vertical-align: middle;
+#shows .show + .show,
+#classes .show + .show,
+#shows .class + .show,
+#classes .class + .show,
+#shows .show + .class,
+#classes .show + .class,
+#shows .class + .class,
+#classes .class + .class {
+  margin-top: 35px;
 }
-#about .officers .officer .cell.officerTitle {
+#shows .show .date,
+#classes .show .date,
+#shows .class .date,
+#classes .class .date {
+  padding: 8px;
+  background-color: #024;
+  color: white;
   font-weight: bold;
+  border-bottom: 1px solid black;
+}
+#shows .show .map,
+#classes .show .map,
+#shows .class .map,
+#classes .class .map {
+  float: right;
+  text-align: center;
+  font-size: 0.7em;
+}
+#shows .show .map img,
+#classes .show .map img,
+#shows .class .map img,
+#classes .class .map img {
+  border-left: 1px solid black;
+  border-bottom: 1px solid black;
+}
+#shows .show .location,
+#classes .show .location,
+#shows .class .location,
+#classes .class .location {
+  padding: 5px 0 5px 10px;
+  font-weight: bold;
+}
+#shows .show .description,
+#classes .show .description,
+#shows .class .description,
+#classes .class .description {
+  padding: 0 0 10px 10px;
+}
+#shows .show .description .button,
+#classes .show .description .button,
+#shows .class .description .button,
+#classes .class .description .button {
+  border-radius: 20px;
+  background-color: #FA0;
+  padding: 3px 10px;
+  border: 2px outset;
+  cursor: pointer;
+}
+#shows .show button.register,
+#classes .show button.register,
+#shows .class button.register,
+#classes .class button.register {
+  margin: 2em 0 0 2em;
+}
+#shows .table .cell.right,
+#classes .table .cell.right {
+  width: 500px;
+  padding-left: 10px;
+  margin-left: 10px;
+  margin-right: 0;
+  border-left: 3px solid #024;
 }
