@@ -1,0 +1,85 @@
+#shows, #classes
+{
+	.header
+	{
+		text-align: center;
+		margin-bottom: 15px;
+		font-size: 1.5em;
+	}
+	
+	.show, .class
+	{
+		border: 1px solid black;
+		border-radius: 10px;
+		background-color: white;
+		overflow: hidden;
+		clear: both;
+	
+		+ .show, + .class
+		{
+			margin-top: 35px;
+		}
+	
+		.date
+		{
+			padding: 8px;
+			background-color: #024;
+			color: white;
+			font-weight: bold;
+			border-bottom: 1px solid black;
+		}
+
+		.map
+		{
+			float: right;
+			text-align: center;
+			font-size: 0.7em;
+	
+			img
+			{
+				border-left: 1px solid black;
+				border-bottom: 1px solid black;
+			}
+		}
+
+		.location
+		{
+			padding: 5px 0 5px 10px;
+			font-weight: bold;
+		}
+
+		.description
+		{
+			padding: 0 0 10px 10px;
+
+			.button
+			{
+				border-radius: 20px;
+				background-color: #FA0;
+				padding: 3px 10px;
+				border: 2px outset;
+				cursor: pointer;
+			}
+		}
+		
+		button.register
+		{
+			margin: 2em 0 0 2em;
+		}
+	}
+	
+	.table
+	{
+		.cell
+		{
+			&.right
+			{
+				width: 500px;
+				padding-left: 10px;
+				margin-left: 10px;
+				margin-right: 0;
+				border-left: 3px solid #024;
+			}				
+		}
+	}
+}

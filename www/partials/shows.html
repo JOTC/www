@@ -1,0 +1,69 @@
+<div id="shows">
+	<div class="title">JOTC Shows and Trials</div>
+
+	<div class="table">
+
+		<div class="cell">
+			The Jackson Obedience Training Club sponsors annual back-to-back obedience and rally trials.  The
+			trials are held indoors at the Jackson Fairgrounds.  Competition obedience classes usually include:
+
+			<ul><li ng-repeat="class in getShowClasses()">{{ class.name }}</li></ul>
+
+			<br>We also offer all levels of rally competition:
+			<ul><li ng-repeat="class in getRallyClasses()">{{ class.name }}</li></ul>
+
+			<br>Ribbons and trophies are awarded in all classes.  The trials are licensed by the American Kennel
+			Club and all qualifying scores in Novice, Open, and Utility may be counted towards AKC
+			Obedience titles.  Additionally, qualifying scores in the regular Rally competition may
+			count towards AKC Rally titles.
+		</div>
+
+		<div class="cell right">
+
+			<div class="header">Upcoming Shows and Trials</div>
+			<div ng-show="auth.shows" class="addContentButton" style="text-align: center;">
+				<button class="btn btn-success" ng-click="openEditor()">New Show</button>
+				<br>&nbsp;
+			</div>
+
+			<div ng-repeat="show in shows" class="show">
+				<div class="date">{{ show.dateRange }}, {{ show.title }}</div>
+				<div class="map">
+					<a href="{{ $location.getDirectionsURLForLocation(show.location) }}" target="_blank">
+						<img ng-src="{{ $location.getImageURLForLocation(show.location); }}">
+						<br>
+						Click for directions
+					</a>
+				</div>
+
+				<div class="location">{{ show.location }}</div>
+
+				<div class="description">
+					{{ show.description }}<span ng-if="show.registrationDeadline">  Registration ends {{ show.registrationDeadline | date }}.</span>
+
+					<br><br>
+					The following competition classes are included:
+					<ul>
+						<li ng-repeat="class in show.classes">{{ class.name }}</li>
+					</ul>
+
+					<span ng-if="show.files.length > 0">
+						<br>
+						Downloads:
+						<ul>
+							<li ng-repeat="file in show.files"><a ng-href="data/shows.php?file={{ file.id }}">{{ file.name }}</a> ({{ file.size }})</li>
+						</ul>
+					</span>
+
+					<button ng-if="show.registrationLink.length > 0" ng-click="openNewWindow(show.registrationLink)" class="btn btn-warning register">Register</button>
+				</div>
+
+				<div ng-if="auth.shows" style="text-align: right; padding: 10px;">
+					<button class="btn btn-primary" ng-click="openEditor(show)">Edit</button> <button class="btn btn-danger" ng-click="delete(show)">Delete</button>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</div>

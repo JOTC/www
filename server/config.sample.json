@@ -1,0 +1,7 @@
+{
+	"port": 9931,
+	"session": {
+		"secret": "session-secret-key",
+		"lifetimeInDays": 10 
+	}
+}
