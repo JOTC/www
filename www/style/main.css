@@ -284,6 +284,9 @@ div[ng-view] .title {
   font-weight: bold;
   font-style: italic;
 }
+.center {
+  text-align: center;
+}
 #about .officers {
   width: 70%;
   margin-left: 15%;

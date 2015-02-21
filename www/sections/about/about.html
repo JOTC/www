@@ -32,21 +32,25 @@
 
 	<div>
 		<div style="text-align: center; margin: 15px 0; font-size: 1.5em; ">JOTC Officers</div>
-		<div ng-show="auth.canEditOfficers" class="addContentButton">
-			<span ng-click="about.edit()">[+] new officer</span>
+		<div ng-show="auth.officers" class="center">
+			<button class="btn btn-success" ng-click="editOfficer()">New Officer</button>
 		</div>
 
 		<div class="officers table">
 			<div ng-repeat="officer in officers" class="row officer">
-				<div ng-if="auth.canEditOfficers" class="editBox">[ <span ng-click="about.edit(officer);">edit</span> | <span ng-click="about.remove(officer);">delete</span> ]</div>
+				<div ng-if="auth.officers" class="editBox cell">
+					<button class="btn btn-primary" ng-click="editOfficer(officer);">Edit</button>
+					<button class="btn btn-danger" ng-click="deleteOfficer(officer);">Delete</button>
+				</div>
 				<div class="cell officerTitle">
-					<div ng-repeat="position in officer.positions">{{ position.title }}</div>
+					<div ng-repeat="title in officer.titles">{{ title }}</div>
+					<span ng-if="officer.titles.length === 0">&nbsp;</span>
 				</div>
 				<div class="cell officerName">{{ officer.name }}</div>
 				<div class="cell officerContact">
 					<div ng-repeat="contact in officer.contacts">
-						<a ng-show="contact.type == 'email'" href="mailto:{{ contact.contact }}">Email ({{ contact.contact }})</a>
-						<span ng-show="contact.type == 'phone'">Phone ({{ contact.contact }})</span>
+						<a ng-show="contact.type == 'email'" href="mailto:{{ contact.value }}">Email ({{ contact.value }})</a>
+						<span ng-show="contact.type == 'phone'">Phone ({{ contact.value }})</span>
 					</div>
 					<span ng-if="officer.contacts.length === 0">&nbsp;</span>
 				</div>

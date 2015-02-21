@@ -36,21 +36,25 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\n" +
     "\t<div>\n" +
     "\t\t<div style=\"text-align: center; margin: 15px 0; font-size: 1.5em; \">JOTC Officers</div>\n" +
-    "\t\t<div ng-show=\"auth.canEditOfficers\" class=\"addContentButton\">\n" +
-    "\t\t\t<span ng-click=\"about.edit()\">[+] new officer</span>\n" +
+    "\t\t<div ng-show=\"auth.officers\" class=\"center\">\n" +
+    "\t\t\t<button class=\"btn btn-success\" ng-click=\"editOfficer()\">New Officer</button>\n" +
     "\t\t</div>\n" +
     "\n" +
     "\t\t<div class=\"officers table\">\n" +
     "\t\t\t<div ng-repeat=\"officer in officers\" class=\"row officer\">\n" +
-    "\t\t\t\t<div ng-if=\"auth.canEditOfficers\" class=\"editBox\">[ <span ng-click=\"about.edit(officer);\">edit</span> | <span ng-click=\"about.remove(officer);\">delete</span> ]</div>\n" +
+    "\t\t\t\t<div ng-if=\"auth.officers\" class=\"editBox cell\">\n" +
+    "\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"editOfficer(officer);\">Edit</button>\n" +
+    "\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"deleteOfficer(officer);\">Delete</button>\n" +
+    "\t\t\t\t</div>\n" +
     "\t\t\t\t<div class=\"cell officerTitle\">\n" +
-    "\t\t\t\t\t<div ng-repeat=\"position in officer.positions\">{{ position.title }}</div>\n" +
+    "\t\t\t\t\t<div ng-repeat=\"title in officer.titles\">{{ title }}</div>\n" +
+    "\t\t\t\t\t<span ng-if=\"officer.titles.length === 0\">&nbsp;</span>\n" +
     "\t\t\t\t</div>\n" +
     "\t\t\t\t<div class=\"cell officerName\">{{ officer.name }}</div>\n" +
     "\t\t\t\t<div class=\"cell officerContact\">\n" +
     "\t\t\t\t\t<div ng-repeat=\"contact in officer.contacts\">\n" +
-    "\t\t\t\t\t\t<a ng-show=\"contact.type == 'email'\" href=\"mailto:{{ contact.contact }}\">Email ({{ contact.contact }})</a>\n" +
-    "\t\t\t\t\t\t<span ng-show=\"contact.type == 'phone'\">Phone ({{ contact.contact }})</span>\n" +
+    "\t\t\t\t\t\t<a ng-show=\"contact.type == 'email'\" href=\"mailto:{{ contact.value }}\">Email ({{ contact.value }})</a>\n" +
+    "\t\t\t\t\t\t<span ng-show=\"contact.type == 'phone'\">Phone ({{ contact.value }})</span>\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t<span ng-if=\"officer.contacts.length === 0\">&nbsp;</span>\n" +
     "\t\t\t\t</div>\n" +
@@ -59,6 +63,43 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t</div>\n" +
     "\n" +
     "</div>\n"
+  );
+
+
+  $templateCache.put('jotc/sections/about/officer.edit.html',
+    "<div class=\"modal-header\">{{ action }} Officer</div>\n" +
+    "\n" +
+    "<div class=\"modal-body\">\n" +
+    "\n" +
+    "<form>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Name</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"officer.name\">\n" +
+    "\t\t<div class=\"alert alert-danger\" ng-show=\"officer.name === ''\">Name is required</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Titles</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-repeat=\"title in titles\" ng-model=\"title.value\">\n" +
+    "\t\t<button class=\"btn btn-primary\" ng-click=\"addTitle()\">Add Title</button>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Contacts</label>\n" +
+    "\t\t<div ng-repeat=\"contact in officer.contacts\">\n" +
+    "\t\t\t<hr ng-if=\"$index > 0\">\n" +
+    "\t\t\t<label><input type=\"radio\" name=\"contact-type-{{ $index }}\" ng-model=\"contact.type\" value=\"email\"> Email</label>\n" +
+    "\t\t\t<label><input type=\"radio\" name=\"contact-type-{{ $index }}\" ng-model=\"contact.type\" value=\"phone\"> Phone</label>\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"contact.value\">\n" +
+    "\t\t</div>\n" +
+    "\t\t<button class=\"btn btn-primary\" ng-click=\"addContact()\">Add Contact</button>\n" +
+    "\t</div>\n" +
+    "</form>\n" +
+    "\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"modal-footer\">\n" +
+    "\t<button class=\"btn btn-primary\" ng-click=\"save()\">Save</button>\n" +
+    "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>"
   );
 
 
