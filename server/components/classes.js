@@ -130,7 +130,7 @@ module.exports = {
 				}
 				catch(ex)
 				{
-					console.log(error);
+					console.log(ex);
 					res.send(500);
 				}
 				
