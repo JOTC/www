@@ -135,6 +135,8 @@ module.exports = {
 						res.send(200);
 					}
 				});
+				
+				next();
 			}
 		},
 		"/shows/types/": {

@@ -3,16 +3,75 @@ angular.module("jotc")
 	{
 		var officers = [ ];
 		
-		$http.get("old/data/officers.php")
+		$http.get("/data2/officers")
 			.success(function(data)
 			{
-				if(data.success)
+				Array.prototype.splice.apply(officers, [0, officers.length].concat(data));
+			});
+			
+		var officer = function(officerID)
+		{
+			return Object.freeze({
+				update: function(newOfficer, callback)
 				{
-					Array.prototype.splice.apply(officers, [0, officers.length].concat(data.officers));
+					$http.put("/data2/officers/" + officerID, newOfficer)
+					.success(function()
+					{
+						for(var i = 0; i < officers.length; i++)
+						{
+							if(officers[i]._id === officerID)
+							{
+								officers[i] = newOfficer;
+								officers[i]._id = officerID;
+								break;
+							}
+						}
+
+						if(callback)
+						{
+							callback();
+						}
+					});
+				},
+				delete: function(callback)
+				{
+					$http.delete("/data2/officers/" + officerID)
+					.success(function()
+					{
+						for(var i = 0; i < officers.length; i++)
+						{
+							if(officers[i]._id === officerID)
+							{
+								officers.splice(i, 1);
+								break;
+							}
+						}
+						
+						if(callback)
+						{
+							callback();
+						}
+					});
 				}
 			});
+		};
+		
+		var create = function(newOfficer, callback)
+		{
+			$http.post("/data2/officers", newOfficer)
+			.success(function(officer)
+			{
+				officers.push(officer);
+				if(callback)
+				{
+					callback();
+				}
+			});
+		};
 		
 		return {
-			list: officers
+			list: officers,
+			officer: officer,
+			create: create
 		};
 	}]);

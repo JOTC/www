@@ -6,6 +6,7 @@ module.exports = {
 	files: require("./files.js"),
 	shows: require("./shows.js"),
 	images: require("./images.js"),
+	officers: require("./officers.js"),
 	users: require("./users.js")
 };
 
