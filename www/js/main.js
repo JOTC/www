@@ -28,7 +28,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			})
 			.otherwise({
 				redirectTo: "/home"
-			})
+			});
 	}])
 	.service("jotc-auth", [ "$http", function($http)
 	{
@@ -49,7 +49,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			links: false,
 			officers: false,
 			users: false
-		}
+		};
 
 		$http.get("/data2/auth/user")
 		.success(function(user)
@@ -70,7 +70,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 	}])
 	.service("jotc-api", [ "$http", function($http)
 	{
-		var calendar = function()
+		var calendar = (function()
 		{
 			var calendar = [ ];
 		
@@ -80,7 +80,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 					calendar.splice(0, calendar.length);
 					if(data.success)
 					{
-						for(event in data.events)
+						for(var event in data.events)
 						{
 							if(data.events.hasOwnProperty(event))
 							{
@@ -102,12 +102,12 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 				});
 			
 			return calendar;
-		}();
+		}());
 			
-		var shows = function()
+		var shows = (function()
 		{
 			var shows = [ ];
-			var classes = [ ]
+			var classes = [ ];
 		
 			$http.get("/data2/shows")
 				.success(function(_shows)
@@ -131,7 +131,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 							{
 								for(var i = 0; i < shows.length; i++)
 								{
-									if(shows[i]._id == showID)
+									if(shows[i]._id === showID)
 									{
 										shows[i] = newShow;
 										break;
@@ -151,7 +151,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 							{
 								for(var i = 0; i < shows.length; i++)
 								{
-									if(shows[i]._id == showID)
+									if(shows[i]._id === showID)
 									{
 										shows.splice(i, 1);
 										break;
@@ -182,10 +182,10 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 				create: create
 				//showClasses: showClasses,
 				//rallyClasses: rallyClasses
-			})
-		}();
+			});
+		}());
 		
-		var classes = function()
+		var classes = (function()
 		{
 			var classes = [ ];
 			var classTypes = [ ];
@@ -204,10 +204,10 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			return {
 				classes: classes,
 				classTypes: classTypes
-			}
-		}();
+			};
+		}());
 		
-		var officers = function()
+		var officers = (function()
 		{
 			var officers = [ ];
 			
@@ -221,9 +221,9 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 				});
 			
 			return officers;
-		}();
+		}());
 			
-		var links = function()
+		var links = (function()
 		{
 			var links = [ ];
 			
@@ -237,9 +237,9 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 				});
 			
 			return links;
-		}();
+		}());
 		
-		var pictureGalleries = function()
+		var pictureGalleries = (function()
 		{
 			var galleries = [ ];
 			
@@ -259,7 +259,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 						{
 							for(var i = 0; i < galleries.length; i++)
 							{
-								if(galleries[i]._id == galleryID)
+								if(galleries[i]._id === galleryID)
 								{
 									galleries[i].name = newGallery.name;
 									galleries[i].description = newGallery.description;
@@ -279,7 +279,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 						{
 							for(var i = 0; i < galleries.length; i++)
 							{
-								if(galleries[i]._id == galleryID)
+								if(galleries[i]._id === galleryID)
 								{
 									galleries.splice(i, 1);
 									break;
@@ -332,7 +332,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 									}
 								});
 							}
-						})
+						});
 					}
 				});
 			};
@@ -354,8 +354,8 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 				list: galleries,
 				gallery: gallery,
 				create: createGallery
-			}
-		}();
+			};
+		}());
 			
 		return Object.freeze({
 			calendar: calendar,
@@ -380,7 +380,9 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			getImageURLForLocation: function(locationStr)
 			{
 				if(!locationStr)
+				{
 					return "";
+				}
 				var loc = locationStr.replace(/ /g, "+");
 				return "http://maps.googleapis.com/maps/api/staticmap?sensor=false&zoom=11&size=200x150&center=" + loc + "&markers=" + loc;
 				
@@ -388,7 +390,9 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			getDirectionsURLForLocation: function(locationStr)
 			{
 				if(!locationStr)
+				{
 					return "";
+				}
 				return "https://maps.google.com/maps?q=" + locationStr.replace(/ /g, "+");
 			}
 		});
