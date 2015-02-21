@@ -1,0 +1,25 @@
+<div id="links">
+	<div class="title">Useful Links</div>
+	<div ng-show="auth.canEditLinks" class="addContentButton">
+		<span ng-click="links.edit()">[+] new link</span>
+	</div>
+
+	<div id="links" class="table">
+		<div ng-repeat="half in getHalves()" class="cell linksColumn">
+			<div ng-repeat="group in half">
+				<div class='linkGroup'>{{ group.name }}</div>
+				<ul>
+					<li ng-repeat="link in group.links">
+						<a href="{{ link.url }}">{{ link.name }}</a>
+								<span ng-show="auth.canEditLinks" class="editBox">[
+									<span ng-click="links.edit(link, group);">edit</span> |
+									<span ng-click="links.remove(link);">delete</span>
+									<span ng-show="!$first"> | </span><span ng-show="!$first" ng-click="links.move(link, group, true);">&#x2191;</span>
+									<span ng-show="!$last"> | </span><span ng-show="!$last" ng-click="links.move(link, group, false);">&#x2193;</span> ]
+								</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

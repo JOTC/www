@@ -1,0 +1,27 @@
+<div class="gallery-modal">
+	<div class="modal-header">
+		{{ gallery.name }}
+	</div>
+
+	<div class="modal-body">
+		<div class="image">
+			<img ng-src="/galleryImages/{{ gallery.images[index].path }}">
+		</div>
+		<div>
+			<div class="control prev" ng-click="previous()" ng-if="index > 0"><i class="fa fa-step-backward"></i> Previous</div>
+			<div class="control next" ng-click="next()" ng-if="index < gallery.images.length - 1">Next <i class="fa fa-step-forward"></i></div>
+			<div class="metadata">
+				<span ng-hide="editing">{{ gallery.images[index].description }}</span>
+				<textarea ng-show="editing" ng-model="gallery.images[index].description"></textarea>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+		<div class="page">{{ index + 1 }} of {{ gallery.images.length }}</div>
+		<button class="btn btn-primary" ng-if="auth.pictures && editing" ng-click="saveEditing()">Save</button>
+		<button class="btn btn-warning" ng-if="auth.pictures" ng-click="beginEditing()">Edit</button>
+		<button class="btn btn-danger" ng-if="auth.pictures" ng-click="delete()">Delete</button>
+		<button class="btn btn-primary" ng-click="close()">Close</button>
+	</div>
+</div>

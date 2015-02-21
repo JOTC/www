@@ -1,0 +1,41 @@
+@import "../colors.less";
+
+#landing
+{
+	.calendar
+	{
+		background-color: rgba(0, 0, 0, 0.1);
+		width: 20%;
+		
+		.header
+		{
+			text-align: center;
+			font-weight: bold;
+			font-size: 1.2em;
+		}
+		
+		.event
+		{
+			.date
+			{
+				background-color: @darkbackground;
+				color: white;
+				padding: 2px;
+			}
+		
+			.body
+			{
+				cursor: pointer;
+				padding: 5px;
+			
+				.link
+				{
+					text-align: right;
+					font-size: 0.8em;
+					color: blue;
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+}
