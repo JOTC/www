@@ -10,5 +10,5 @@ angular.module("jotc")
 			Array.prototype.splice.apply(halves[1], [0, halves[1].length].concat($scope.links.slice(Math.ceil($scope.links.length / 2))));
 
 			return halves;
-		}
+		};
 	}]);

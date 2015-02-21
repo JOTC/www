@@ -19,7 +19,7 @@ angular.module("jotc")
 			}
 			
 			return $scope.imgUrl;
-		}
+		};
 		
 		$scope.click = function(event)
 		{

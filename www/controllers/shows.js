@@ -34,7 +34,7 @@ angular.module("jotc")
 				}
 			}
 			return rallyClasses;
-		}
+		};
 		
 		$scope.$location = locationService;
 		
@@ -52,7 +52,6 @@ angular.module("jotc")
 					endDate: null,
 					classes: [ ],
 					location: "",
-					description: "",
 					registrationLink: "",
 				};
 			}
@@ -183,8 +182,8 @@ angular.module("jotc")
 			fn($scope.show, function()
 			{
 				$modalInstance.dismiss();
-			})
-		}
+			});
+		};
 		
 		$scope.cancel = $modalInstance.dismiss;
 	}]);
