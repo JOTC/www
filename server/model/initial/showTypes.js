@@ -64,4 +64,4 @@ module.exports = [
 		isRally: true,
 		priorityOrder: 13
 	}
-]
+];

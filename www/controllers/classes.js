@@ -18,14 +18,18 @@ angular.module("jotc")
 				{
 					if(basicClassesListed > 0)
 					{
-						if(i == clss.classTypes.length - 1)
+						if(i === clss.classTypes.length - 1)
 						{
 							if(basicClassesListed > 1)
+							{
 								basicStr += ",";
+							}
 							basicStr += " and ";
 						}
 						else
+						{
 							basicStr += ", ";
+						}
 					}
 					
 					console.log(clss.classTypes[i]);
@@ -37,7 +41,7 @@ angular.module("jotc")
 			
 			var day = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ][new Date(clss.startDate).getUTCDay()];
 			if(basicClassesListed > 0)
-				basicStr += " will be offered.  Classes meet every " + day + " at " + clss.timeOfDay + " for " + clss.hoursPerWeek + " hour" + (clss.hoursPerWeek == 1 ? "" : "s") + " and last " + clss.numberOfWeeks + " weeks, including a graduation night.";
+				basicStr += " will be offered.  Classes meet every " + day + " at " + clss.timeOfDay + " for " + clss.hoursPerWeek + " hour" + (clss.hoursPerWeek === 1 ? "" : "s") + " and last " + clss.numberOfWeeks + " weeks, including a graduation night.";
 
 			if(basicStr.length > 0)
 			{
@@ -52,14 +56,18 @@ angular.module("jotc")
 				{
 					if(advancedClassesListed > 0)
 					{
-						if(i == clss.classTypes.length - 1)
+						if(i === clss.classTypes.length - 1)
 						{
 							if(advancedClassesListed > 1)
+							{
 								advancedStr += ",";
+							}
 							advancedStr += " and ";
 						}
 						else
+						{
 							advancedStr += ", ";
+						}
 					}
 
 					advancedStr += clss.classTypes[i].name;
@@ -69,7 +77,9 @@ angular.module("jotc")
 
 			var requires = (advancedClassesListed > 1 ? "These classes require" : "This class requires");
 			if(advancedClassesListed > 0)
+			{
 				advancedStr += " will " + (basicStr.length > 0 ? "also " : "") + "be available if enough dogs enroll.  " + requires + " that the dog previously completed the JOTC Basic Obedience course.";
+			}
 			
 			if(advancedStr.length > 0)
 			{

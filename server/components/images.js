@@ -2,7 +2,6 @@ var restify = require("restify");
 
 var db = require("../model/db.js");
 var fs = require("fs");
-var mv = require("mv");
 var log = require("bunyan").createLogger({ name: "image component", level: "debug" });
 
 var imageMagick = require("gm").subClass({ imageMagick: true });
@@ -34,7 +33,7 @@ module.exports = {
 			{
 				if(!req.user || !req.user.permissions.pictures)
 				{
-					return next(new restify.UnauthorizedError)
+					return next(new restify.UnauthorizedError());
 				}
 				
 				var gallery = req.body;
@@ -69,7 +68,7 @@ module.exports = {
 			{
 				if(!req.user || !req.user.permissions.pictures)
 				{
-					return next(new restify.UnauthorizedError)
+					return next(new restify.UnauthorizedError());
 				}
 				
 				var gallery = req.body;
@@ -77,7 +76,7 @@ module.exports = {
 				{
 					gallery = { name: gallery.name, description: gallery.description };
 					
-					db.images.galleries.update({ _id: req.params.galleryID }, gallery, { upsert: true }).exec(function(err, count)
+					db.images.galleries.update({ _id: req.params.galleryID }, gallery, { upsert: true }).exec(function(err)
 					{
 						if(err)
 						{
@@ -103,7 +102,7 @@ module.exports = {
 			{
 				if(!req.user || !req.user.permissions.pictures)
 				{
-					return next(new restify.UnauthorizedError)
+					return next(new restify.UnauthorizedError());
 				}
 				
 				db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery)
@@ -142,7 +141,7 @@ module.exports = {
 			{
 				if(!req.user || !req.user.permissions.pictures)
 				{
-					return next(new restify.UnauthorizedError)
+					return next(new restify.UnauthorizedError());
 				}
 				
 				db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery)
@@ -163,7 +162,7 @@ module.exports = {
 					{
 						if(err)
 						{
-							log.error(err)
+							log.error(err);
 							res.send(500);
 						}
 						else
@@ -192,7 +191,7 @@ module.exports = {
 			{
 				if(!req.user || !req.user.permissions.pictures)
 				{
-					return next(new restify.UnauthorizedError)
+					return next(new restify.UnauthorizedError());
 				}
 				
 				var image = req.body;
@@ -245,7 +244,7 @@ module.exports = {
 			{
 				if(!req.user || !req.user.permissions.pictures)
 				{
-					return next(new restify.UnauthorizedError)
+					return next(new restify.UnauthorizedError());
 				}
 				
 				db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery)
@@ -284,4 +283,4 @@ module.exports = {
 			}
 		}
 	}
-}
+};

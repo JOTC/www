@@ -9,11 +9,11 @@ var isValidShow = function(show)
 	if(show)
 	{
 		valid = true;
-		valid = valid & (show.title && typeof show.title === "string");
-		valid = valid & (show.location && typeof show.location === "string");
-		valid = valid & (show.startDate && typeof show.startDate === "string");
-		valid = valid & (show.endDate && typeof show.endDate === "string");
-		valid = valid & (show.registrationDeadline && typeof show.registrationDeadline === "string");
+		valid = valid && (show.title && typeof show.title === "string");
+		valid = valid && (show.location && typeof show.location === "string");
+		valid = valid && (show.startDate && typeof show.startDate === "string");
+		valid = valid && (show.endDate && typeof show.endDate === "string");
+		valid = valid && (show.registrationDeadline && typeof show.registrationDeadline === "string");
 	}
 	
 	return valid;
@@ -21,7 +21,7 @@ var isValidShow = function(show)
 
 var getObjectsInOrder = function(model, sortBy, response)
 {
-	sort = { };
+	var sort = { };
 	sort[sortBy] = "asc";
 	
 	model.find({}).sort(sort).exec().then(function(objs, err)

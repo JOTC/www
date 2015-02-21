@@ -4,7 +4,7 @@ var imageSchema = mongoose.Schema({
 	description: String,
 	path: String,
 	added: { type: Date, default: Date.now }
-})
+});
 
 var imageGallerySchema = mongoose.Schema({
 	name: String,

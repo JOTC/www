@@ -11,7 +11,7 @@ module.exports = {
 
 module.exports.classes.classTypes.find({}).exec().then(function(classTypes)
 	{
-		if(classTypes.length == 0)
+		if(classTypes.length === 0)
 		{
 			console.log("Initializing class types");
 			require("./initial/classTypes.js").forEach(function(classType)
@@ -24,7 +24,7 @@ module.exports.classes.classTypes.find({}).exec().then(function(classTypes)
 
 module.exports.shows.showTypes.find({}).exec().then(function(showTypes)
 	{
-		if(showTypes.length == 0)
+		if(showTypes.length === 0)
 		{
 			require("./initial/showTypes.js").forEach(function(showType)
 			{

@@ -59,7 +59,7 @@ angular.module("jotc")
 							$scope.index = 0;
 						}
 					
-						if($scope.gallery.images.length == 0)
+						if($scope.gallery.images.length === 0)
 						{
 							$scope.close();
 						}
@@ -112,7 +112,7 @@ angular.module("jotc")
 			{
 				rowedGalleries += $scope.rows[i].length;
 			}
-			if(rowedGalleries == $scope.galleries.length)
+			if(rowedGalleries === $scope.galleries.length)
 			{
 				return $scope.rows;
 			}
@@ -178,7 +178,7 @@ angular.module("jotc")
 		
 		$scope.deleteGallery = function(gallery, event)
 		{
-			var s = (gallery.images.length == 1 ? "" : "s");
+			var s = (gallery.images.length === 1 ? "" : "s");
 			if(confirm("Are you sure you wish to delete this gallery?  It and all " + gallery.images.length + " picture" + s + " will be deleted.  This action cannot be undone."))
 			{
 				if(confirm("Confirm again.  Are you sure you wish to permanently delete this gallery and all of its images?"))
@@ -228,8 +228,7 @@ angular.module("jotc")
 						}
 					}
 				});
-				
-			}
+			};
 		};
 		
 		$scope.$watch("files", function()

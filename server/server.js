@@ -2,7 +2,6 @@ var restify = require("restify");
 var passport = require("passport");
 var sessions = require("client-sessions");
 var fs = require("fs");
-var db = require("./model/db.js");
 var config = JSON.parse(fs.readFileSync("config.json"));
 
 var app = restify.createServer({ name: "JOTC Data API Server" });
@@ -52,12 +51,16 @@ fs.readdirSync("./components").forEach(function(file)
 	{
 
 		if(!component.paths.hasOwnProperty(path))
+		{
 			continue;
+		}
 
 		for(var verb in component.paths[path])
 		{
 			if(!component.paths[path].hasOwnProperty(verb))
+			{
 				continue;
+			}
 
 			var handler = component.paths[path][verb];
 			if(typeof(handler) === "function")
@@ -66,7 +69,7 @@ fs.readdirSync("./components").forEach(function(file)
 				console.log("%s\t%s", verb.toUpperCase(), path);
 			}
 		}
-	};
+	}
 });
 
 app.listen(config.port, function()

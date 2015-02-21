@@ -31,7 +31,7 @@ module.exports = function(passport)
 			if(err)
 			{
 				done(err);
-				return
+				return;
 			}
 		
 			if(bcrypt.compareSync(password, user.local.secret))
@@ -42,6 +42,6 @@ module.exports = function(passport)
 			{
 				done(null, false);
 			}
-		})
+		});
 	}));		
 };
