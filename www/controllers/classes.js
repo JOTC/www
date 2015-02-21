@@ -41,7 +41,9 @@ angular.module("jotc")
 			
 			var day = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ][new Date(clss.startDate).getUTCDay()];
 			if(basicClassesListed > 0)
+			{
 				basicStr += " will be offered.  Classes meet every " + day + " at " + clss.timeOfDay + " for " + clss.hoursPerWeek + " hour" + (clss.hoursPerWeek === 1 ? "" : "s") + " and last " + clss.numberOfWeeks + " weeks, including a graduation night.";
+			}
 
 			if(basicStr.length > 0)
 			{
