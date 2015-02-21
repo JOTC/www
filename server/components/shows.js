@@ -9,15 +9,34 @@ var isValidShow = function(show)
 	if(show)
 	{
 		valid = true;
-		valid &= (show.title && typeof show.title === "string");
-		valid &= (show.location && typeof show.location === "string");
-		valid &= (show.startDate && typeof show.startDate === "string");
-		valid &= (show.endDate && typeof show.endDate === "string");
-		valid &= (show.registrationDeadline && typeof show.registrationDeadline === "string");
+		valid = valid & (show.title && typeof show.title === "string");
+		valid = valid & (show.location && typeof show.location === "string");
+		valid = valid & (show.startDate && typeof show.startDate === "string");
+		valid = valid & (show.endDate && typeof show.endDate === "string");
+		valid = valid & (show.registrationDeadline && typeof show.registrationDeadline === "string");
 	}
 	
 	return valid;
-}
+};
+
+var getObjectsInOrder = function(model, sortBy, response)
+{
+	sort = { };
+	sort[sortBy] = "asc";
+	
+	model.find({}).sort(sort).exec().then(function(objs, err)
+	{
+		if(err)
+		{
+			log.error(err);
+			response.send(500);
+		}
+		else
+		{
+			response.send(objs);
+		}
+	});
+};
 
 module.exports = {
 	name: "shows",
@@ -25,25 +44,14 @@ module.exports = {
 		"/shows": {
 			"get": function(req, res, next)
 			{
-				db.shows.shows.find({}).sort({ startDate: "asc" }).exec().then(function(shows, error)
-				{
-					if(error)
-					{
-						console.log(err);
-						res.send(500);
-					}
-					else
-					{
-						res.send(shows);
-					}
-				});
+				getObjectsInOrder(db.shows.shows, "startDate", res);
 				next();
 			},
 			"post": function(req, res, next)
 			{
 				if(!req.user || !req.user.permissions.shows)
 				{
-					return next(new restify.UnauthorizedError)
+					return next(new restify.UnauthorizedError());
 				}
 								
 				var show = req.body;
@@ -57,6 +65,7 @@ module.exports = {
 					{
 						if(err)
 						{
+							log.error(err);
 							res.send(500);
 						}
 						else
@@ -80,14 +89,14 @@ module.exports = {
 			{
 				if(!req.user || !req.user.permissions.shows)
 				{
-					return next(new restify.UnauthorizedError)
+					return next(new restify.UnauthorizedError());
 				}
 				
 				var show = req.body;
 				if(isValidShow(show))
 				{
 					delete show._id;
-					db.shows.shows.update({ _id: req.params.showID }, show, { upsert: true }).exec(function(err, count)
+					db.shows.shows.update({ _id: req.params.showID }, show, { upsert: true }).exec(function(err)
 					{
 						if(err)
 						{
@@ -111,7 +120,7 @@ module.exports = {
 			{
 				if(!req.user || !req.user.permissions.shows)
 				{
-					return next(new restify.UnauthorizedError)
+					return next(new restify.UnauthorizedError());
 				}
 
 				db.shows.shows.remove({ _id: req.params.showID }).exec(function(err)
@@ -131,20 +140,9 @@ module.exports = {
 		"/shows/types/": {
 			"get": function(req, res, next)
 			{
-				db.shows.showTypes.find({}).sort({ priorityOrder: "asc" }).exec().then(function(showTypes, error)
-				{
-					if(error)
-					{
-						console.log(error);
-						res.send(500);
-					}
-					else
-					{
-						res.send(showTypes);
-					}
-				});
+				getObjectsInOrder(db.shows.showTypes, "priorityOrder", res);
 				next();
 			}
 		}
 	}
-}
+};
