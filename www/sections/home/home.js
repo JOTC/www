@@ -1,7 +1,7 @@
 angular.module("jotc")
 	.controller("home", [ "$scope", "$location", "jotc-api", function($scope, $location, $api)
 	{
-		$scope.calendar = $api.calendar;
+		$scope.calendar = $api.calendar.events;
 		
 		var pathsByTypes = {
 			"show": "shows",
@@ -11,7 +11,7 @@ angular.module("jotc")
 		$scope.imgUrl = "";
 		$scope.getRandomImage = function()
 		{
-			if($scope.imgUrl === "")
+			if($scope.imgUrl === "" && $api.galleries.list.length > 0)
 			{
 				var r1 = Math.floor(Math.random() * $api.galleries.list.length);
 				var r2 = Math.floor(Math.random() * $api.galleries.list[r1].images.length);
