@@ -13,7 +13,7 @@ angular.module("jotc")
 					name: "",
 					titles: [ ],
 					contacts: [ ]
-				}
+				};
 			}
 			
 			$modal.open({
