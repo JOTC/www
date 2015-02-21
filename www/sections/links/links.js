@@ -1,7 +1,7 @@
 angular.module("jotc")
-	.controller("links", [ "$scope", "jotc-api", function($scope, $api)
+	.controller("links", [ "$scope", "jotc-api.links", function($scope, $links)
 	{
-		$scope.links = $api.links;
+		$scope.links = $links.list;
 		
 		var halves = [ [], [] ];
 		$scope.getHalves = function()

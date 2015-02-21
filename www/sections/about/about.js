@@ -1,5 +1,5 @@
 angular.module("jotc")
-	.controller("about", [ "$scope", "jotc-api", function($scope, $api)
+	.controller("about", [ "$scope", "jotc-api.officers", function($scope, $officers)
 	{
-		$scope.officers = $api.officers;
+		$scope.officers = $officers.list;
 	}]);
