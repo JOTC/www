@@ -338,26 +338,83 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
+  $templateCache.put('jotc/sections/links/links.edit.html',
+    "<div class=\"modal-header\">{{ action }} Link</div>\n" +
+    "\n" +
+    "<div class=\"modal-body\">\n" +
+    "\n" +
+    "<form>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Name</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"link.name\">\n" +
+    "\t\t<div class=\"alert alert-danger\" ng-show=\"link.name === ''\">Name is required</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>URL</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"link.url\">\n" +
+    "\t\t<div class=\"alert alert-danger\" ng-show=\"link.url === ''\">URL is required</div>\n" +
+    "\t</div>\n" +
+    "</form>\n" +
+    "\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"modal-footer\">\n" +
+    "\t<button class=\"btn btn-primary\" ng-click=\"save()\">Save</button>\n" +
+    "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('jotc/sections/links/links.group.edit.html',
+    "<div class=\"modal-header\">{{ action }} Link Group</div>\n" +
+    "\n" +
+    "<div class=\"modal-body\">\n" +
+    "\n" +
+    "<form>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Name</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"group.name\">\n" +
+    "\t\t<div class=\"alert alert-danger\" ng-show=\"group.name === ''\">Name is required</div>\n" +
+    "\t</div>\n" +
+    "</form>\n" +
+    "\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"modal-footer\">\n" +
+    "\t<button class=\"btn btn-primary\" ng-click=\"save()\">Save</button>\n" +
+    "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('jotc/sections/links/links.html',
     "<div id=\"links\">\n" +
     "\t<div class=\"title\">Useful Links</div>\n" +
-    "\t<div ng-show=\"auth.canEditLinks\" class=\"addContentButton\">\n" +
-    "\t\t<span ng-click=\"links.edit()\">[+] new link</span>\n" +
+    "\t\n" +
+    "\t<div ng-if=\"auth.links\" class=\"newButton\">\n" +
+    "\t\t<button class=\"btn btn-success\" ng-click=\"edit.group()\">New Group</button>\n" +
     "\t</div>\n" +
     "\n" +
-    "\t<div id=\"links\" class=\"table\">\n" +
-    "\t\t<div ng-repeat=\"half in getHalves()\" class=\"cell linksColumn\">\n" +
-    "\t\t\t<div ng-repeat=\"group in half\">\n" +
-    "\t\t\t\t<div class='linkGroup'>{{ group.name }}</div>\n" +
+    "\t<div id=\"links\" class=\"container-fluid\">\n" +
+    "\t\t<div ng-repeat=\"half in getHalves()\" class=\"col-md-6\">\n" +
+    "\t\t\t<div ng-repeat=\"group in half\" class=\"linkGroup\">\n" +
+    "\t\t\t\t<div class=\"header\">\n" +
+    "\t\t\t\t\t{{ group.name }}\n" +
+    "\t\t\t\t\t<div class=\"admin\" ng-if=\"auth.links\">\n" +
+    "\t\t\t\t\t\t<button class=\"btn btn-success\" ng-click=\"edit.link(group)\">New Link</button>\n" +
+    "\t\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"edit.group(group)\">Edit</button>\n" +
+    "\t\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"delete.group(group)\">Delete</button>\n" +
+    "\t\t\t\t\t\t<button ng-if=\"group.ordering > 0\" class=\"btn btn-success\" ng-click=\"up.group(group)\"><i class=\"fa fa-arrow-up\"></i></button>\n" +
+    "\t\t\t\t\t\t<button ng-if=\"group.ordering < (groups.length - 1)\" class=\"btn btn-success\" ng-click=\"down.group(group)\"><i class=\"fa fa-arrow-down\"></i></button>\n" +
+    "\t\t\t\t\t</div>\n" +
+    "\t\t\t\t</div>\n" +
     "\t\t\t\t<ul>\n" +
     "\t\t\t\t\t<li ng-repeat=\"link in group.links\">\n" +
+    "\t\t\t\t\t\t<button ng-if=\"auth.links\" class=\"btn btn-primary\" ng-click=\"edit.link(group, link)\">Edit</button>\n" +
+    "\t\t\t\t\t\t<button ng-if=\"auth.links\" class=\"btn btn-danger\" ng-click=\"delete.link(group, link)\">Delete</button>\n" +
+    "\t\t\t\t\t\t<button ng-if=\"auth.links && $index > 0\" class=\"btn btn-success\" ng-click=\"up.link(group, link)\"><i class=\"fa fa-arrow-up\"></i></button>\n" +
+    "\t\t\t\t\t\t<button ng-if=\"auth.links && $index < (group.links.length - 1)\" class=\"btn btn-success\" ng-click=\"down.link(group, link)\"><i class=\"fa fa-arrow-down\"></i></button>\n" +
     "\t\t\t\t\t\t<a href=\"{{ link.url }}\">{{ link.name }}</a>\n" +
-    "\t\t\t\t\t\t\t\t<span ng-show=\"auth.canEditLinks\" class=\"editBox\">[\n" +
-    "\t\t\t\t\t\t\t\t\t<span ng-click=\"links.edit(link, group);\">edit</span> |\n" +
-    "\t\t\t\t\t\t\t\t\t<span ng-click=\"links.remove(link);\">delete</span>\n" +
-    "\t\t\t\t\t\t\t\t\t<span ng-show=\"!$first\"> | </span><span ng-show=\"!$first\" ng-click=\"links.move(link, group, true);\">&#x2191;</span>\n" +
-    "\t\t\t\t\t\t\t\t\t<span ng-show=\"!$last\"> | </span><span ng-show=\"!$last\" ng-click=\"links.move(link, group, false);\">&#x2193;</span> ]\n" +
-    "\t\t\t\t\t\t\t\t</span>\n" +
     "\t\t\t\t\t</li>\n" +
     "\t\t\t\t</ul>\n" +
     "\t\t\t</div>\n" +

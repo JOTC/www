@@ -68,7 +68,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 		
 		return permissions;
 	}])
-	.service("jotc-api", [ "$http", "jotc-api.shows", "jotc-api.classes", "jotc-api.calendar", "jotc-api.pictures", "jotc-api.links", "jotc-api.officers", function($http, $shows, $classes, $calendar, $pictures, $links, $officers)
+	.service("jotc-api", [ "$http", "jotc-api.shows", "jotc-api.classes", "jotc-api.calendar", "jotc-api.pictures", "jotc-api.linkGroups", "jotc-api.officers", function($http, $shows, $classes, $calendar, $pictures, $linkGroups, $officers)
 	{
 		return Object.freeze({
 			calendar: $calendar,
@@ -79,7 +79,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			
 			galleries: $pictures,
 						
-			links: $links,
+			links: $linkGroups,
 			
 			officers: $officers
 		});
