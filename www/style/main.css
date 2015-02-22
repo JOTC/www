@@ -328,18 +328,31 @@ div[ng-view] .title {
   width: 100%;
   table-layout: fixed;
 }
-#links .cell.linksColumn {
-  padding-right: 10px;
-}
-#links .cell.linksColumn + .cell.linksColumn {
-  padding: 0;
-  padding-left: 10px;
-  border-left: 1px solid #AAA;
-}
-#links .cell.linksColumn .linkGroup {
+#links .newButton {
   text-align: center;
-  margin-bottom: 15px;
+  margin: 20px 0;
+}
+#links .linkGroup + .linkGroup .header {
+  margin-top: 20px;
+}
+#links .linkGroup .header {
+  text-align: center;
   font-size: 1.5em;
+  background-color: #002244;
+  color: white;
+  border-radius: 10px;
+  padding: 5px;
+}
+#links .linkGroup ul {
+  padding: 0 20px;
+}
+#links .linkGroup ul li {
+  margin: 0;
+  margin: 5px 0;
+}
+#links .linkGroup ul li button {
+  font-size: 0.7em;
+  padding: 2px;
 }
 #pictures .galleries .galleryRow {
   clear: both;

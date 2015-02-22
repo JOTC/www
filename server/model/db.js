@@ -7,14 +7,14 @@ module.exports = {
 	shows: require("./shows.js"),
 	images: require("./images.js"),
 	officers: require("./officers.js"),
-	users: require("./users.js")
+	users: require("./users.js"),
+	linkGroups: require("./links.js")
 };
 
 module.exports.classes.classTypes.find({}).exec().then(function(classTypes)
 	{
 		if(classTypes.length === 0)
 		{
-			console.log("Initializing class types");
 			require("./initial/classTypes.js").forEach(function(classType)
 			{
 				var db = new module.exports.classes.classTypes(classType);
@@ -29,8 +29,19 @@ module.exports.shows.showTypes.find({}).exec().then(function(showTypes)
 		{
 			require("./initial/showTypes.js").forEach(function(showType)
 			{
-				console.log(showType);
 				var db = new module.exports.shows.showTypes(showType);
+				db.save();
+			});
+		}
+	});
+	
+module.exports.linkGroups.find({}).exec().then(function(linkGroups)
+	{
+		if(linkGroups.length === 0)
+		{
+			require("./initial/links.js").forEach(function(link)
+			{
+				var db = new module.exports.linkGroups(link);
 				db.save();
 			});
 		}
