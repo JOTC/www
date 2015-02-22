@@ -243,7 +243,7 @@ angular.module("jotc")
 								
 								if(callback)
 								{
-									callback;
+									callback();
 								}
 							});
 						}
