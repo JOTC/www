@@ -385,9 +385,12 @@ div[ng-view] .title {
   background: #002244;
   color: white;
 }
+#pictures .galleries .gallery .description {
+  margin-bottom: 1.4em;
+}
 #pictures .galleries .gallery .metadata {
   position: absolute;
-  left: 78px;
+  right: 7px;
   bottom: 3px;
   font-size: 0.75em;
   color: #AAA;
