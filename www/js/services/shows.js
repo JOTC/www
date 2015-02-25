@@ -1,13 +1,17 @@
 angular.module("jotc")
 	.service("jotc-api.shows", [ "$http", function($http)
 	{
-		var shows = [ ];
+		var shows = {
+			upcoming: [ ],
+			past: [ ]
+		};
 		var classes = [ ];
 
 		$http.get("/data2/shows")
 			.success(function(_shows)
 			{
-				Array.prototype.splice.apply(shows, [0, shows.length].concat(_shows));
+				shows.upcoming = _shows.upcoming;
+				shows.past = _shows.past;
 			});
 		
 		$http.get("/data2/shows/types")
@@ -15,6 +19,39 @@ angular.module("jotc")
 			{
 				Array.prototype.splice.apply(classes, [0, classes.length].concat(showClasses));
 			});
+			
+		var getNoDataSuccessHandler = function(showID, callback, fn)
+		{
+			return function()
+			{
+				var outerBreak = false;
+				for(var showType in shows)
+				{
+					if(shows.hasOwnProperty(showType))
+					{
+						for(var i = 0; i < shows[showType].length; i++)
+						{
+							if(shows[showType][i]._id === showID)
+							{
+								fn(shows[showType][i], shows[showType], i);
+								outerBreak = true;
+								break;
+							}
+						}
+					}
+				
+					if(outerBreak)
+					{
+						break;
+					}
+				}
+				
+				if(callback)
+				{
+					callback();
+				}
+			}
+		};
 		
 		var show = function(showID)
 		{
@@ -22,37 +59,34 @@ angular.module("jotc")
 				update: function(newShow, callback)
 				{
 					$http.put("/data2/shows/" + showID, newShow)
-						.success(function()
+						.success(getNoDataSuccessHandler(showID, callback, function(show, arr, i)
 						{
-							for(var i = 0; i < shows.length; i++)
-							{
-								if(shows[i]._id === showID)
-								{
-									shows[i] = newShow;
-									break;
-								}
-							}
-					
-							if(callback)
-							{
-								callback();
-							}
-						});
+							arr[i] = newShow;
+						}));
 				},
 				delete: function(callback)
 				{
 					$http.delete("/data2/shows/" + showID)
-						.success(function()
+						.success(getNoDataSuccessHandler(showID, callback, function(show, arr, i)
 						{
-							for(var i = 0; i < shows.length; i++)
-							{
-								if(shows[i]._id === showID)
-								{
-									shows.splice(i, 1);
-									break;
-								}
-							}
-						});
+							arr.splice(i, 1);
+						}));
+				},
+				deletePremiumList: function(callback)
+				{
+					$http.delete("/data2/shows/" + showID + "/premiumList")
+						.success(getNoDataSuccessHandler(showID, callback, function(show)
+						{
+							show.premiumListPath = "";
+						}));
+				},
+				deleteResults: function(callback)
+				{
+					$http.delete("/data2/shows/" + showID + "/results")
+						.success(getNoDataSuccessHandler(showID, callback, function(show)
+						{
+							show.resultsPath = "";
+						}));
 				}
 			});
 		};
@@ -75,8 +109,6 @@ angular.module("jotc")
 			classes: classes,
 			show: show,
 			create: create
-			//showClasses: showClasses,
-			//rallyClasses: rallyClasses
 		});
 	}]);
 

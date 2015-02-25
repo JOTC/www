@@ -9,6 +9,7 @@
     "gm": "^1.17.0",
     "marked": "^0.3.2",
     "mongoose": "^3.8.21",
+    "mv": "^2.0.3",
     "passport": "^0.2.1",
     "passport-facebook": "^1.0.3",
     "passport-google-oauth": "^0.1.5",

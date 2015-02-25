@@ -6,7 +6,6 @@ var log = require("bunyan").createLogger({ name: "image component", level: "debu
 
 var imageMagick = require("gm").subClass({ imageMagick: true });
 
-//process.env.TMPDIR = '/vagrant/server/tmp_upload'
 var __SAVE_PATH = "/vagrant/www/galleryImages/";
 
 module.exports = {
@@ -150,6 +149,7 @@ module.exports = {
 					{
 						log.error(err);
 						res.send(500);
+						next();
 						return;
 					}
 					
@@ -164,6 +164,7 @@ module.exports = {
 						{
 							log.error(err);
 							res.send(500);
+							next();
 						}
 						else
 						{							
@@ -179,11 +180,11 @@ module.exports = {
 								{
 									res.send(img);
 								}
+								next();
 							});
 						}
 					});					
 				});
-				next();
 			}
 		},
 		"/galleries/:galleryID/image/:imageID": {

@@ -81,10 +81,106 @@ angular.module("jotc")
 			}
 		};
 		
+		$scope.deletePremiumList = function(show)
+		{
+			if(confirm("Are you sure you wish to delete the premium list for the show " + show.title + "?  This cannot be undone."))
+			{
+				if(confirm("Please confirm again.  This will delete the premium list for this show."))
+				{
+					$api.shows.show(show._id).deletePremiumList();
+				}
+			}
+		};
+
+		$scope.deleteResults = function(show)
+		{
+			if(confirm("Are you sure you wish to delete the results for the show " + show.title + "?  This cannot be undone."))
+			{
+				if(confirm("Please confirm again.  This will delete the results for this show."))
+				{
+					$api.shows.show(show._id).deleteResults();
+				}
+			}
+		};
+		
+		$scope.safeURL = function(url)
+		{
+			return encodeURIComponent(url);
+		};
+		
 		$scope.openNewWindow = function(url)
 		{
 			$window.open(url, '_blank');
 		};
+	}])
+	.controller("show-addFile", [ "$scope", "$attrs", "$upload", "jotc-api", function($scope, $attrs, $upload, $api)
+	{
+		$scope.files = [ ];
+		$scope.uploadingFiles = [ ];
+		$scope.name = $attrs.name;
+		
+		var removeFileFromUploading = function(file)
+		{
+			for(var i = 0; i < $scope.uploadingFiles.length; i++)
+			{
+				if($scope.uploadingFiles[i].file === file)
+				{
+					$scope.uploadingFiles.splice(i, 1);
+					break;
+				}
+			}
+		};
+		
+		var getUploader = function(file, metadata)
+		{
+			return function()
+			{
+				$upload.upload({
+					url: "/data2/shows/" + $attrs.showId + "/" + $attrs.type,
+					file: file
+				})
+				.progress(function(e)
+				{
+					metadata.progress = Math.round(100 * e.loaded / e.total);
+				})
+				.success(function(data)
+				{
+					removeFileFromUploading(file);
+
+					var prop = $attrs.type + "Path";
+					var shows = $api.shows.list.past.concat($api.shows.list.upcoming);
+					
+					for(var i = 0; i < shows.length; i++)
+					{
+						if(shows[i]._id === data._id)
+						{
+							shows[i][prop] = data[prop];
+							break;
+						}
+					}
+				})
+				.error(function()
+				{
+					alert("There was an error uploading this file.  Please try again later.");
+					removeFileFromUploading(file);
+				});
+			};
+		};
+		
+		$scope.$watch("files", function()
+		{
+			for(var i = 0; i < $scope.files.length; i++)
+			{
+				var uploadingFile = {
+					name: $scope.files[i].name,
+					file: $scope.files[i],
+					progress: 0
+				};
+				$scope.uploadingFiles.push(uploadingFile);
+
+				getUploader($scope.files[i], uploadingFile)();
+			}
+		});
 	}])
 	.controller("editShow", [ "$scope", "$modalInstance", "jotc-api", "show", function($scope, $modalInstance, $api, show)
 	{

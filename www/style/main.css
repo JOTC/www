@@ -287,6 +287,14 @@ div[ng-view] .title {
 .center {
   text-align: center;
 }
+.upload-box {
+  border: 2px dashed black;
+  border-radius: 10px;
+  margin: 30px;
+  padding: 30px;
+  font-style: italic;
+  color: #AAA;
+}
 #about .officers {
   width: 70%;
   margin-left: 15%;
@@ -398,12 +406,6 @@ div[ng-view] .title {
 }
 #pictures .galleries .gallery .upload-box {
   position: relative;
-  border: 2px dashed black;
-  border-radius: 10px;
-  margin: 30px;
-  padding: 30px;
-  font-style: italic;
-  color: #AAA;
 }
 #pictures .galleries .gallery .uploading {
   text-align: center;
@@ -562,11 +564,21 @@ div[ng-view] .title {
   border: 2px outset;
   cursor: pointer;
 }
+#shows .show .uploading,
+#classes .show .uploading,
+#shows .class .uploading,
+#classes .class .uploading {
+  padding: 0 30px;
+}
 #shows .show button.register,
 #classes .show button.register,
 #shows .class button.register,
-#classes .class button.register {
-  margin: 2em 0 0 2em;
+#classes .class button.register,
+#shows .show div.premiumList,
+#classes .show div.premiumList,
+#shows .class div.premiumList,
+#classes .class div.premiumList {
+  margin: 1em 0 0 0;
 }
 #shows .table .cell.right,
 #classes .table .cell.right {

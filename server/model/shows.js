@@ -17,7 +17,8 @@ var showSchema = mongoose.Schema({
 	description: String,
 	registrationLink: String,
 	classes: [ showTypesSchema ],
-	files: [ require("./files.js").Schema ]
+	premiumListPath: String,
+	resultsPath: String
 });
 
 module.exports = {
