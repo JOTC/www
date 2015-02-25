@@ -652,7 +652,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t<button ng-if=\"show.registrationLink.length > 0\" ng-click=\"openNewWindow(show.registrationLink)\" class=\"btn btn-warning register\">Register</button>\n" +
     "\t\t\t\t</div>\n" +
     "\n" +
-    "\t\t\t\t<div ng-if=\"auth.shows && show.premiumListPath === ''\" ng-controller=\"show-addFile\" show-id=\"{{ show._id }}\" type=\"premiumList\" name=\"premium list\">\n" +
+    "\t\t\t\t<div ng-if=\"auth.shows && !show.premiumListPath\" ng-controller=\"show-addFile\" show-id=\"{{ show._id }}\" type=\"premiumList\" name=\"premium list\">\n" +
     "\t\t\t\t\t<div ng-show=\"uploadingFiles.length === 0\" ng-file-drop ng-model=\"files\" class=\"upload-box\" drag-over-class=\"dragover\" multiple=\"false\" allow-dir=\"false\" accept=\".pdf,.pdf\">\n" +
     "\t\t\t\t\t\tDrag and drop a PDF to add {{ name }}\n" +
     "\t\t\t\t\t</div>\n" +
@@ -684,7 +684,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"deleteResults(show)\">Delete Results</button>\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\n" +
-    "\t\t\t\t\t<div ng-if=\"auth.shows && show.resultsPath === ''\" ng-controller=\"show-addFile\" data-show-id=\"{{ show._id }}\" data-type=\"results\" data-name=\"results\">\n" +
+    "\t\t\t\t\t<div ng-if=\"auth.shows && !show.resultsPath\" ng-controller=\"show-addFile\" data-show-id=\"{{ show._id }}\" data-type=\"results\" data-name=\"results\">\n" +
     "\t\t\t\t\t\t<div ng-show=\"uploadingFiles.length === 0\" ng-file-drop ng-model=\"files\" class=\"upload-box\" drag-over-class=\"dragover\" multiple=\"false\" allow-dir=\"false\" accept=\".pdf,.pdf\">\n" +
     "\t\t\t\t\t\t\tDrag and drop a PDF to add {{ name }}\n" +
     "\t\t\t\t\t\t</div>\n" +
