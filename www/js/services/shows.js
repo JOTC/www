@@ -96,7 +96,7 @@ angular.module("jotc")
 			$http.post("/data2/shows", newShow)
 				.success(function(show)
 				{
-					shows.push(show);
+					shows.upcoming.push(show);
 					if(callback)
 					{
 						callback();

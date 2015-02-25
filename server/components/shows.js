@@ -252,12 +252,36 @@ module.exports = {
 					return next(new restify.UnauthorizedError());
 				}
 
-				db.shows.shows.remove({ _id: req.params.showID }).exec(function(err)
+				db.shows.shows.findOne({ _id: req.params.showID }).exec(function(err, show)
 				{
 					if(err)
 					{
 						log.error(err);
 						res.send(500);
+					}
+					else if(show)
+					{
+						if(show.premiumListPath)
+						{
+							fs.unlinkSync(__BASE_PATH + decodeURIComponent(show.premiumListPath));
+						}
+						if(show.resultsPath)
+						{
+							fs.unlinkSync(__BASE_PATH + decodeURIComponent(show.resultsPath));
+						}
+						
+						db.shows.shows.remove({ _id: req.params.showID }).exec(function(err)
+						{
+							if(err)
+							{
+								log.error(err);
+								res.send(500);
+							}
+							else
+							{
+								res.send(200);
+							}
+						});
 					}
 					else
 					{

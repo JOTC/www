@@ -55,7 +55,7 @@
 					<button ng-if="show.registrationLink.length > 0" ng-click="openNewWindow(show.registrationLink)" class="btn btn-warning register">Register</button>
 				</div>
 
-				<div ng-if="auth.shows && show.premiumListPath === ''" ng-controller="show-addFile" show-id="{{ show._id }}" type="premiumList" name="premium list">
+				<div ng-if="auth.shows && !show.premiumListPath" ng-controller="show-addFile" show-id="{{ show._id }}" type="premiumList" name="premium list">
 					<div ng-show="uploadingFiles.length === 0" ng-file-drop ng-model="files" class="upload-box" drag-over-class="dragover" multiple="false" allow-dir="false" accept=".pdf,.pdf">
 						Drag and drop a PDF to add {{ name }}
 					</div>
@@ -87,7 +87,7 @@
 						<button class="btn btn-danger" ng-click="deleteResults(show)">Delete Results</button>
 					</div>
 				
-					<div ng-if="auth.shows && show.resultsPath === ''" ng-controller="show-addFile" data-show-id="{{ show._id }}" data-type="results" data-name="results">
+					<div ng-if="auth.shows && !show.resultsPath" ng-controller="show-addFile" data-show-id="{{ show._id }}" data-type="results" data-name="results">
 						<div ng-show="uploadingFiles.length === 0" ng-file-drop ng-model="files" class="upload-box" drag-over-class="dragover" multiple="false" allow-dir="false" accept=".pdf,.pdf">
 							Drag and drop a PDF to add {{ name }}
 						</div>
