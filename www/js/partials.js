@@ -623,7 +623,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t<br>&nbsp;\n" +
     "\t\t\t</div>\n" +
     "\n" +
-    "\t\t\t<div ng-repeat=\"show in shows\" class=\"show\">\n" +
+    "\t\t\t<div ng-repeat=\"show in shows.upcoming\" class=\"show\">\n" +
     "\t\t\t\t<div class=\"date\">{{ show.dateRange }}, {{ show.title }}</div>\n" +
     "\t\t\t\t<div class=\"map\">\n" +
     "\t\t\t\t\t<a href=\"{{ $location.getDirectionsURLForLocation(show.location) }}\" target=\"_blank\">\n" +
@@ -644,21 +644,61 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t\t<li ng-repeat=\"class in show.classes\">{{ class.name }}</li>\n" +
     "\t\t\t\t\t</ul>\n" +
     "\n" +
-    "\t\t\t\t\t<span ng-if=\"show.files.length > 0\">\n" +
-    "\t\t\t\t\t\t<br>\n" +
-    "\t\t\t\t\t\tDownloads:\n" +
-    "\t\t\t\t\t\t<ul>\n" +
-    "\t\t\t\t\t\t\t<li ng-repeat=\"file in show.files\"><a ng-href=\"data/shows.php?file={{ file.id }}\">{{ file.name }}</a> ({{ file.size }})</li>\n" +
-    "\t\t\t\t\t\t</ul>\n" +
-    "\t\t\t\t\t</span>\n" +
-    "\n" +
+    "\t\t\t\t\t<div ng-if=\"show.premiumListPath\" class=\"premiumList\">\n" +
+    "\t\t\t\t\t\t<a class=\"btn btn-success download\" ng-href=\"{{ show.premiumListPath }}\">Download Premium List</a>\n" +
+    "\t\t\t\t\t\t<button ng-if=\"auth.shows\" class=\"btn btn-danger\" ng-click=\"deletePremiumList(show)\">Delete Premium List</button>\n" +
+    "\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\n" +
     "\t\t\t\t\t<button ng-if=\"show.registrationLink.length > 0\" ng-click=\"openNewWindow(show.registrationLink)\" class=\"btn btn-warning register\">Register</button>\n" +
+    "\t\t\t\t</div>\n" +
+    "\n" +
+    "\t\t\t\t<div ng-if=\"auth.shows && show.premiumListPath === ''\" ng-controller=\"show-addFile\" show-id=\"{{ show._id }}\" type=\"premiumList\" name=\"premium list\">\n" +
+    "\t\t\t\t\t<div ng-show=\"uploadingFiles.length === 0\" ng-file-drop ng-model=\"files\" class=\"upload-box\" drag-over-class=\"dragover\" multiple=\"false\" allow-dir=\"false\" accept=\".pdf,.pdf\">\n" +
+    "\t\t\t\t\t\tDrag and drop a PDF to add {{ name }}\n" +
+    "\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\n" +
+    "\t\t\t\t\t<div class=\"uploading\" ng-if=\"uploadingFiles.length > 0\">\n" +
+    "\t\t\t\t\t\tUploading...\n" +
+    "\t\t\t\t\t\t<div class=\"progress\" style=\"height: 20px; margin: 10px;\">\n" +
+    "\t\t\t\t\t\t\t<div class=\"progress-bar progress-bar-striped progress-bar-success active\" role=\"progressbar\" aria-valuenow=\"45\" style=\"width: {{ uploadingFiles[0].progress }}%;\">\n" +
+    "\t\t\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t</div>\n" +
     "\t\t\t\t</div>\n" +
     "\n" +
     "\t\t\t\t<div ng-if=\"auth.shows\" style=\"text-align: right; padding: 10px;\">\n" +
     "\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"openEditor(show)\">Edit</button> <button class=\"btn btn-danger\" ng-click=\"delete(show)\">Delete</button>\n" +
     "\t\t\t\t</div>\n" +
     "\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t\n" +
+    "\t\t\t<hr>\n" +
+    "\t\t\t\n" +
+    "\t\t\t<div class=\"header\">Completed Shows</div>\n" +
+    "\t\t\t<div ng-repeat=\"show in shows.past\" class=\"show\">\n" +
+    "\t\t\t\t<div class=\"date\">{{ show.dateRange }}, {{ show.title }}</div>\n" +
+    "\t\t\t\t<div class=\"location\">{{ show.location }}</div>\n" +
+    "\t\t\t\t<div class=\"description\">\n" +
+    "\t\t\t\t\t<a ng-if=\"show.resultsPath\" class=\"btn btn-success\" ng-href=\"{{ show.resultsPath }}\">Download Results</a>\n" +
+    "\t\t\t\t\t<div ng-if=\"auth.shows && show.resultsPath\">\n" +
+    "\t\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"deleteResults(show)\">Delete Results</button>\n" +
+    "\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\n" +
+    "\t\t\t\t\t<div ng-if=\"auth.shows && show.resultsPath === ''\" ng-controller=\"show-addFile\" data-show-id=\"{{ show._id }}\" data-type=\"results\" data-name=\"results\">\n" +
+    "\t\t\t\t\t\t<div ng-show=\"uploadingFiles.length === 0\" ng-file-drop ng-model=\"files\" class=\"upload-box\" drag-over-class=\"dragover\" multiple=\"false\" allow-dir=\"false\" accept=\".pdf,.pdf\">\n" +
+    "\t\t\t\t\t\t\tDrag and drop a PDF to add {{ name }}\n" +
+    "\t\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\n" +
+    "\t\t\t\t\t\t<div class=\"uploading\" ng-if=\"uploadingFiles.length > 0\">\n" +
+    "\t\t\t\t\t\t\tUploading...\n" +
+    "\t\t\t\t\t\t\t<div class=\"progress\" style=\"height: 20px; margin: 10px;\">\n" +
+    "\t\t\t\t\t\t\t\t<div class=\"progress-bar progress-bar-striped progress-bar-success active\" role=\"progressbar\" aria-valuenow=\"45\" style=\"width: {{ uploadingFiles[0].progress }}%;\">\n" +
+    "\t\t\t\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\n" +
+    "\t\t\t\t</div>\t\t\t\t\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\n" +

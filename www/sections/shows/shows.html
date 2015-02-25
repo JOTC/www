@@ -26,7 +26,7 @@
 				<br>&nbsp;
 			</div>
 
-			<div ng-repeat="show in shows" class="show">
+			<div ng-repeat="show in shows.upcoming" class="show">
 				<div class="date">{{ show.dateRange }}, {{ show.title }}</div>
 				<div class="map">
 					<a href="{{ $location.getDirectionsURLForLocation(show.location) }}" target="_blank">
@@ -47,21 +47,61 @@
 						<li ng-repeat="class in show.classes">{{ class.name }}</li>
 					</ul>
 
-					<span ng-if="show.files.length > 0">
-						<br>
-						Downloads:
-						<ul>
-							<li ng-repeat="file in show.files"><a ng-href="data/shows.php?file={{ file.id }}">{{ file.name }}</a> ({{ file.size }})</li>
-						</ul>
-					</span>
-
+					<div ng-if="show.premiumListPath" class="premiumList">
+						<a class="btn btn-success download" ng-href="{{ show.premiumListPath }}">Download Premium List</a>
+						<button ng-if="auth.shows" class="btn btn-danger" ng-click="deletePremiumList(show)">Delete Premium List</button>
+					</div>
+					
 					<button ng-if="show.registrationLink.length > 0" ng-click="openNewWindow(show.registrationLink)" class="btn btn-warning register">Register</button>
+				</div>
+
+				<div ng-if="auth.shows && show.premiumListPath === ''" ng-controller="show-addFile" show-id="{{ show._id }}" type="premiumList" name="premium list">
+					<div ng-show="uploadingFiles.length === 0" ng-file-drop ng-model="files" class="upload-box" drag-over-class="dragover" multiple="false" allow-dir="false" accept=".pdf,.pdf">
+						Drag and drop a PDF to add {{ name }}
+					</div>
+				
+					<div class="uploading" ng-if="uploadingFiles.length > 0">
+						Uploading...
+						<div class="progress" style="height: 20px; margin: 10px;">
+							<div class="progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="45" style="width: {{ uploadingFiles[0].progress }}%;">
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<div ng-if="auth.shows" style="text-align: right; padding: 10px;">
 					<button class="btn btn-primary" ng-click="openEditor(show)">Edit</button> <button class="btn btn-danger" ng-click="delete(show)">Delete</button>
 				</div>
 
+			</div>
+			
+			<hr>
+			
+			<div class="header">Completed Shows</div>
+			<div ng-repeat="show in shows.past" class="show">
+				<div class="date">{{ show.dateRange }}, {{ show.title }}</div>
+				<div class="location">{{ show.location }}</div>
+				<div class="description">
+					<a ng-if="show.resultsPath" class="btn btn-success" ng-href="{{ show.resultsPath }}">Download Results</a>
+					<div ng-if="auth.shows && show.resultsPath">
+						<button class="btn btn-danger" ng-click="deleteResults(show)">Delete Results</button>
+					</div>
+				
+					<div ng-if="auth.shows && show.resultsPath === ''" ng-controller="show-addFile" data-show-id="{{ show._id }}" data-type="results" data-name="results">
+						<div ng-show="uploadingFiles.length === 0" ng-file-drop ng-model="files" class="upload-box" drag-over-class="dragover" multiple="false" allow-dir="false" accept=".pdf,.pdf">
+							Drag and drop a PDF to add {{ name }}
+						</div>
+					
+						<div class="uploading" ng-if="uploadingFiles.length > 0">
+							Uploading...
+							<div class="progress" style="height: 20px; margin: 10px;">
+								<div class="progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="45" style="width: {{ uploadingFiles[0].progress }}%;">
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>				
 			</div>
 		</div>
 
