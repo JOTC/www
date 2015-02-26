@@ -18,6 +18,10 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 				templateUrl: "jotc/sections/pictures/pictures.html",
 				controller: "pictures"
 			})
+			.when("/calendar", {
+				templateUrl: "jotc/sections/calendar/calendar.html",
+				controller: "calendar"
+			})
 			.when("/links", {
 				templateUrl: "jotc/sections/links/links.html",
 				controller: "links"
