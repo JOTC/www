@@ -3,6 +3,7 @@ var mv = require("mv");
 var fs = require("fs");
 var db = require("../model/db.js");
 var dates = require("../dateHelper.js");
+var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "shows component", level: "debug" });
 
 var isValidShow = function(show)
@@ -176,121 +177,25 @@ module.exports = {
 				});
 				next();
 			},
-			"post": function(req, res, next)
+			"post": fn.getModelCreator(db.shows.shows, "shows", log, isValidShow, function(obj)
 			{
-				if(!req.user || !req.user.permissions.shows)
-				{
-					return next(new restify.UnauthorizedError());
-				}
-								
-				var show = req.body;
-				if(isValidShow(show))
-				{
-					
-					var dbShow = new db.shows.shows(show);
-					dbShow.dateRange = dates.stringDateRange(dbShow.startDate, dbShow.endDate);
-
-					dbShow.save(function(err)
-					{
-						if(err)
-						{
-							log.error(err);
-							res.send(500);
-						}
-						else
-						{
-							res.send(dbShow);
-						}
-					});
-				}
-				else
-				{
-					return next(new restify.BadRequestError());
-				}
-				
-				
-				next();
-			}
+				obj.dateRange = dates.stringDateRange(obj.startDate, obj.endDate);
+			})
 		},
 		"/shows/:showID":
 		{
-			"put": function(req, res, next)
+			"put": fn.getModelUpdater(db.shows.shows, "showID", "shows", log, isValidShow),
+			"delete": fn.getModelDeleter(db.shows.shows, "showID", "shows", log, function(show)
 			{
-				if(!req.user || !req.user.permissions.shows)
+				if(show.premiumListPath)
 				{
-					return next(new restify.UnauthorizedError());
+					fs.unlinkSync(__BASE_PATH + decodeURIComponent(show.premiumListPath));
 				}
-				
-				var show = req.body;
-				if(isValidShow(show))
+				if(show.resultsPath)
 				{
-					delete show._id;
-					db.shows.shows.update({ _id: req.params.showID }, show, { upsert: true }).exec(function(err)
-					{
-						if(err)
-						{
-							log.error(err);
-							res.send(500);
-						}
-						else
-						{
-							res.send(200);
-						}
-					});
+					fs.unlinkSync(__BASE_PATH + decodeURIComponent(show.resultsPath));
 				}
-				else
-				{
-					return next(new restify.BadRequestError());
-				}
-				
-				next();
-			},
-			"delete": function(req, res, next)
-			{
-				if(!req.user || !req.user.permissions.shows)
-				{
-					return next(new restify.UnauthorizedError());
-				}
-
-				db.shows.shows.findOne({ _id: req.params.showID }).exec(function(err, show)
-				{
-					if(err)
-					{
-						log.error(err);
-						res.send(500);
-					}
-					else if(show)
-					{
-						if(show.premiumListPath)
-						{
-							fs.unlinkSync(__BASE_PATH + decodeURIComponent(show.premiumListPath));
-						}
-						if(show.resultsPath)
-						{
-							fs.unlinkSync(__BASE_PATH + decodeURIComponent(show.resultsPath));
-						}
-						
-						db.shows.shows.remove({ _id: req.params.showID }).exec(function(err)
-						{
-							if(err)
-							{
-								log.error(err);
-								res.send(500);
-							}
-							else
-							{
-								res.send(200);
-							}
-						});
-					}
-					else
-					{
-						res.send(200);
-					}
-				});
-				
-				next();
-			},
+			})
 		},
 		"/shows/:showID/premiumList": {
 			"post": getFileUploadHandler("Premium List", "premiumListPath"),

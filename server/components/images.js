@@ -1,139 +1,41 @@
 var restify = require("restify");
-
 var db = require("../model/db.js");
 var fs = require("fs");
+var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "image component", level: "debug" });
 
 var imageMagick = require("gm").subClass({ imageMagick: true });
 
 var __SAVE_PATH = "/vagrant/www/galleryImages/";
 
+var isValidGallery = function(gallery)
+{
+	var valid = false;
+	if(gallery)
+	{
+		valid = true;
+		valid = valid && (gallery.name && typeof gallery.name === "string");
+	}
+	
+	return valid;
+};
+
 module.exports = {
 	name: "images",
 	paths: {
 		"/galleries": {
-			"get": function(req, res, next)
-			{
-				db.images.galleries.find().exec(function(err, galleries)
-				{
-					if(err)
-					{
-						log.error(err);
-						res.send(500);
-					}
-					else
-					{
-						res.send(galleries);
-					}
-				});
-				next();
-			},
-			"post": function(req, res, next)
-			{
-				if(!req.user || !req.user.permissions.pictures)
-				{
-					return next(new restify.UnauthorizedError());
-				}
-				
-				var gallery = req.body;
-				if(gallery && typeof gallery === 'object' && gallery.name && typeof gallery.name === 'string')
-				{
-					gallery = new db.images.galleries(gallery);
-					gallery.save(function(err)
-					{
-						if(err)
-						{
-							log.error(err);
-							res.send(500);
-						}
-						else
-						{
-							res.send(gallery);
-						}
-					});
-				}
-				else
-				{
-					log.error("Invalid gallery object");
-					log.error(gallery);
-					res.send(400);
-				}
-				
-				next();
-			}
+			"get": fn.getModelLister(db.images.galleries, log),
+			"post": fn.getModelCreator(db.images.galleries, "pictures", log, isValidGallery)
 		},
 		"/galleries/:galleryID": {
-			"put": function(req, res, next)
+			"put": fn.getModelUpdater(db.images.galleries, "galleryID", "pictures", log, isValidGallery),
+			"delete": fn.getModelDeleter(db.images.galleries, "galleryID", "pictures", log, function(gallery)
 			{
-				if(!req.user || !req.user.permissions.pictures)
+				for(var i = 0; i < gallery.images.length; i++)
 				{
-					return next(new restify.UnauthorizedError());
+					fs.unlinkSync(__SAVE_PATH + gallery.images[i]._id + gallery.images[i].path.replace(/.*\.(png|jpg|jpeg|gif)/g, ".$1"));
 				}
-				
-				var gallery = req.body;
-				if(gallery && typeof gallery === 'object' && gallery.name && typeof gallery.name === 'string' && typeof gallery.description === 'string')
-				{
-					gallery = { name: gallery.name, description: gallery.description };
-					
-					db.images.galleries.update({ _id: req.params.galleryID }, gallery, { upsert: true }).exec(function(err)
-					{
-						if(err)
-						{
-							log.error(err);
-							res.send(500);
-						}
-						else
-						{
-							res.send(200);
-						}
-					});
-				}
-				else
-				{
-					log.error("Invalid gallery object");
-					log.error(gallery);
-					res.send(400);
-				}
-				
-				next();
-			},
-			"delete": function(req, res, next)
-			{
-				if(!req.user || !req.user.permissions.pictures)
-				{
-					return next(new restify.UnauthorizedError());
-				}
-				
-				db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery)
-				{
-					if(err)
-					{
-						log.error(err);
-						res.send(500);
-						return;
-					}
-
-					db.images.galleries.remove({ _id: req.params.galleryID }).exec(function(err)
-					{
-						if(err)
-						{
-							log.error(err);
-							res.send(500);
-						}
-						else
-						{
-							for(var i = 0; i < gallery.images.length; i++)
-							{
-								fs.unlinkSync(__SAVE_PATH + gallery.images[i]._id + gallery.images[i].path.replace(/.*\.(png|jpg|jpeg|gif)/g, ".$1"));
-							}
-							
-							res.send(200);
-						}
-					});
-				});
-				
-				next();
-			}
+			})
 		},
 		"/galleries/:galleryID/image": {
 			"post": function(req, res, next)

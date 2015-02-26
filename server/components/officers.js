@@ -1,6 +1,7 @@
 var restify = require("restify");
 var db = require("../model/db.js");
 var log = require("bunyan").createLogger({ name: "officers component", level: "debug" });
+var fn = require("../common-fn.js");
 
 var isValidOfficer = function(officer)
 {
@@ -31,108 +32,12 @@ module.exports = {
 	name: "officers",
 	paths: {
 		"/officers": {
-			"get": function(req, res, next)
-			{
-				db.officers.find({}).exec(function(err, officers)
-				{
-					if(err)
-					{
-						res.send(500);
-					}
-					else
-					{
-						res.send(officers);
-					}
-				});
-				
-				next();
-			},
-			"post": function(req, res, next)
-			{
-				if(!req.user || !req.user.permissions.shows)
-				{
-					return next(new restify.UnauthorizedError());
-				}
-				
-				var officer = req.body;
-				if(isValidOfficer(officer))
-				{
-					var dbOfficer = new db.officers(officer);
-					dbOfficer.save(function(err)
-					{
-						if(err)
-						{
-							log.error(err);
-							res.send(500);
-						}
-						else
-						{
-							res.send(dbOfficer);
-						}
-					});
-				}
-				else
-				{
-					return next(new restify.BadRequestError());
-				}
-				
-				next();
-			}
+			"get": fn.getModelLister(db.officers, log),
+			"post": fn.getModelCreator(db.officers, "officers", log, isValidOfficer)
 		},
 		"/officers/:officerID": {
-			"put": function(req, res, next)
-			{
-				if(!req.user || !req.user.permissions.shows)
-				{
-					return next(new restify.UnauthorizedError());
-				}
-				
-				var officer = req.body;
-				if(isValidOfficer(officer))
-				{
-					delete officer._id;
-					db.officers.update({ _id: req.params.officerID }, officer, { upsert: true }).exec(function(err)
-					{
-						if(err)
-						{
-							log.error(err);
-							res.send(500);
-						}
-						else
-						{
-							res.send(200);
-						}
-					});
-				}
-				else
-				{
-					return next(new restify.BadRequestError());
-				}
-				
-				next();
-			},
-			"delete": function(req, res, next)
-			{
-				if(!req.user || !req.user.permissions.shows)
-				{
-					return next(new restify.UnauthorizedError());
-				}
-				
-				db.officers.remove({ _id: req.params.officerID }).exec(function(err)
-				{
-					if(err)
-					{
-						log.error(err);
-						res.send(500);
-					}
-					else
-					{
-						res.send(200);
-					}
-				});
-				
-				next();
-			}
+			"put": fn.getModelUpdater(db.officers, "officerID", "shows", log, isValidOfficer),
+			"delete": fn.getModelDeleter(db.officers, "officerID", "officers", log)
 		}
 	}
 };

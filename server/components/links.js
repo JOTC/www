@@ -1,5 +1,6 @@
 var restify = require("restify");
 var db = require("../model/db.js");
+var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "links component", level: "debug" });
 
 var swapGroup = function(groupID, direction, res)
@@ -153,113 +154,24 @@ module.exports = {
 	name: "links",
 	paths: {
 		"/links": {
-			"get": function(req, res, next)
+			"get": fn.getModelLister(db.linkGroups, log, { ordering: "asc" }),
+			"post": fn.getModelCreator(db.linkGroups, "links", log, isValidGroup, function(obj)
 			{
-				db.linkGroups.find({}).sort({ ordering: "asc" }).exec(function(err, links)
+				db.linkGroups.find({}).sort({ ordering: "desc" }).exec(function(err, groups)
 				{
-					if(err)
+					if(group && groups.length > 0)
 					{
-						log.error(err);
-						res.send(500);
+						obj.ordering = groups[0].ordering + 1;
 					}
 					else
 					{
-						res.send(links);
+						obj.ordering = 1;
 					}
 				});
-				
-				next();
-			},
-			"post": function(req, res, next)
-			{
-				console.log("HEY, I'M AT POST /links");
-				
-				if(!req.user || !req.user.permissions.links)
-				{
-					return next(new restify.UnauthorizedError());
-				}
-				
-				var group = req.body;
-				console.log(group);
-				if(isValidGroup(group))
-				{
-					delete group._id;
-					var groupDB = new db.linkGroups(group);
-					
-					db.linkGroups.find({}).sort({ ordering: "desc" }).exec(function(err, groups)
-					{
-						if(err)
-						{
-							log.error(err);
-							res.send(500);
-						}
-						else
-						{
-							if(groups.length > 0)
-							{
-								groupDB.ordering = groups[0].ordering + 1;
-							}
-							else
-							{
-								groupDB.ordering = 1;
-							}
-							
-							groupDB.save(function(err)
-							{
-								if(err)
-								{
-									log.error(err);
-									res.send(500);
-								}
-								else
-								{
-									res.send(200, groupDB);
-								}
-							});
-						}
-					});
-				}
-				else
-				{
-					console.log(group);
-					return next(new restify.BadRequestError());
-				}
-				
-				next();
-			}
+			})
 		},
 		"/links/:groupID": {
-			"put": function(req, res, next)
-			{
-				if(!req.user || !req.user.permissions.links)
-				{
-					return next(new restify.UnauthorizedError());
-				}
-
-				var group = req.body;
-				if(isValidGroup(group))
-				{
-					delete group._id;
-					db.linkGroups.update({ _id: req.params.groupID }, group, { upsert: true }).exec(function(err)
-					{
-						if(err)
-						{
-							log.error(err);
-							res.send(500);
-						}
-						else
-						{
-							res.send(200);
-						}
-					});
-				}
-				else
-				{
-					return next(new restify.BadRequestError());
-				}
-				
-				next();
-			},
+			"put": fn.getModelUpdater(db.linkGroups, "groupID", "links", log, isValidGroup),
 			"post": function(req, res, next)
 			{
 				if(!req.user || !req.user.permissions.links)
@@ -308,28 +220,7 @@ module.exports = {
 
 				next();
 			},
-			"delete": function(req, res, next)
-			{
-				if(!req.user || !req.user.permissions.links)
-				{
-					return next(new restify.UnauthorizedError());
-				}
-				
-				db.linkGroups.remove({ _id: req.params.groupID }).exec(function(err)
-				{
-					if(err)
-					{
-						log.error(err);
-						res.send(500);
-					}
-					else
-					{
-						res.send(200);
-					}
-				});
-				
-				next();
-			}
+			"delete": fn.getModelDeleter(db.linkGroups, "groupID", "links", log)
 		},
 		"/links/:groupID/up": {
 			"put": function(req, res, next)
