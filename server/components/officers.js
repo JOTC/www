@@ -1,4 +1,3 @@
-var restify = require("restify");
 var db = require("../model/db.js");
 var log = require("bunyan").createLogger({ name: "officers component", level: "debug" });
 var fn = require("../common-fn.js");

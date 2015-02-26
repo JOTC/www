@@ -50,9 +50,9 @@ module.exports = {
 				{
 					res.send(200, objs);
 				}
-			})
+			});
 			next();
-		}
+		};
 	},
 	getModelCreator: function(model, permissionName, logger, validationFn, postProcessFn)
 	{
@@ -142,6 +142,6 @@ module.exports = {
 			});
 
 			next();
-		}
+		};
 	}
 };
