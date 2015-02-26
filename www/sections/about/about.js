@@ -73,13 +73,15 @@ angular.module("jotc")
 		
 		$scope.save = function()
 		{
+			var i = 0;
+			
 			if($scope.officer.name === "")
 			{
 				return;
 			}
 			
 			$scope.officer.titles = [ ];
-			for(var i = 0; i < $scope.titles.length; i++)
+			for(i = 0; i < $scope.titles.length; i++)
 			{
 				if($scope.titles[i].value)
 				{
@@ -87,7 +89,7 @@ angular.module("jotc")
 				}
 			}
 			
-			for(var i = 0; i < $scope.officer.contacts.length; i++)
+			for(i = 0; i < $scope.officer.contacts.length; i++)
 			{
 				if($scope.officer.contacts[i].value === "")
 				{

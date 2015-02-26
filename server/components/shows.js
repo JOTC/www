@@ -40,7 +40,7 @@ var getFileUploadHandler = function(filenameSuffix, showPropertyName)
 			return next(new restify.UnauthorizedError());
 		}
 	
-		handleError = function(err)
+		var handleError = function(err)
 		{
 			log.error(err);
 			res.send(500);
@@ -150,14 +150,14 @@ module.exports = {
 					if(err)
 					{
 						log.error(err);
-						response.send(500);
+						res.send(500);
 					}
 					else
 					{
 						var shows = {
 							upcoming: [ ],
 							past: [ ]
-						}
+						};
 						
 						var now = new Date();
 						objs.forEach(function(show)
@@ -308,7 +308,7 @@ module.exports = {
 					if(err)
 					{
 						log.error(err);
-						response.send(500);
+						res.send(500);
 					}
 					else
 					{

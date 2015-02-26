@@ -193,10 +193,12 @@ angular.module("jotc")
 		var classesByRow = [ ];
 		$scope.getClassesByRow = function()
 		{
+			var i = 0;
+			
 			if(classesByRow.length === 0)
 			{
 				var row;
-				for(var i = 0; i < $scope.classes.length; i++)
+				for(i = 0; i < $scope.classes.length; i++)
 				{
 					if(i % 3 === 0)
 					{
@@ -209,7 +211,7 @@ angular.module("jotc")
 				}
 			}
 			
-			for(var i = 0; i < $scope.show.classes.length; i++)
+			for(i = 0; i < $scope.show.classes.length; i++)
 			{
 				$scope.classesChecked[$scope.show.classes[i]._id] = true;
 			}

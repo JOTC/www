@@ -107,8 +107,10 @@ angular.module("jotc")
 		
 		$scope.getRows = function()
 		{
+			var i = 0;
 			var rowedGalleries = 0;
-			for(var i = 0; i < $scope.rows.length; i++)
+			
+			for(i = 0; i < $scope.rows.length; i++)
 			{
 				rowedGalleries += $scope.rows[i].length;
 			}
@@ -120,7 +122,7 @@ angular.module("jotc")
 			$scope.rows.splice(0, $scope.rows.length);
 			
 			var row = [ ];
-			for(var i = 0; i < $scope.galleries.length; i++)
+			for(i = 0; i < $scope.galleries.length; i++)
 			{
 				row.push($scope.galleries[i]);
 				if(row.length === 3)
@@ -216,11 +218,11 @@ angular.module("jotc")
 							$scope.uploadingFiles.splice(i, 1);
 							
 							var galleries = $api.galleries.list;
-							for(var i = 0; i < galleries.length; i++)
+							for(var j = 0; j < galleries.length; j++)
 							{
-								if(galleries[i]._id === $attrs.galleryId)
+								if(galleries[j]._id === $attrs.galleryId)
 								{
-									galleries[i].images.push(data);
+									galleries[j].images.push(data);
 									break;
 								}
 							}
