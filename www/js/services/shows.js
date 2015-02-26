@@ -50,7 +50,7 @@ angular.module("jotc")
 				{
 					callback();
 				}
-			}
+			};
 		};
 		
 		var show = function(showID)
