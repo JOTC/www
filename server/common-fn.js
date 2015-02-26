@@ -1,3 +1,5 @@
+var restify = require("restify");
+
 var getBasicBodyHandler = function(permissionName, logger, validationFn, handler)
 {
 	return function(req, res, next)
@@ -111,7 +113,7 @@ module.exports = {
 			{
 				if(err)
 				{
-					log.error(err);
+					logger.error(err);
 					res.send(500);
 				}
 				else if(modelObj)
@@ -120,7 +122,7 @@ module.exports = {
 					{
 						if(err)
 						{
-							log.error(err);
+							logger.error(err);
 							res.send(500);
 						}
 						else
