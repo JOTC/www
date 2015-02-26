@@ -159,7 +159,7 @@ module.exports = {
 			{
 				db.linkGroups.find({}).sort({ ordering: "desc" }).exec(function(err, groups)
 				{
-					if(group && groups.length > 0)
+					if(groups && groups.length > 0)
 					{
 						obj.ordering = groups[0].ordering + 1;
 					}
