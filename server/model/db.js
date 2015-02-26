@@ -17,20 +17,25 @@ var initializedModels = {
 	"./initial/links.js": module.exports.linkGroups
 };
 
+var getInserter = function(model, module)
+{
+	return function(objs)
+	{
+		if(objs.length === 0)
+		{
+			require(module).forEach(function(obj)
+			{
+				var modelObj = new model(obj);
+				modelObj.save();
+			});
+		}
+	};
+};
+
 for(var mod in initializedModels)
 {
 	if(initializedModels.hasOwnProperty(mod))
 	{
-		initializedModels[mod].find({}).exec().then(function(objs)
-		{
-			if(objs.length === 0)
-			{
-				require(mod).forEach(function(obj)
-				{
-					var model = new initializedModels[mod](obj);
-					model.save();
-				});
-			}
-		});
+		initializedModels[mod].find({}).exec().then(getInserter(initializedModels[mod], mod));
 	}
 }
