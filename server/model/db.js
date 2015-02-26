@@ -11,38 +11,26 @@ module.exports = {
 	linkGroups: require("./links.js")
 };
 
-module.exports.classes.classTypes.find({}).exec().then(function(classTypes)
-	{
-		if(classTypes.length === 0)
-		{
-			require("./initial/classTypes.js").forEach(function(classType)
-			{
-				var db = new module.exports.classes.classTypes(classType);
-				db.save();
-			});
-		}
-	});
+var initializedModels = {
+	"./initial/classTypes.js": module.exports.classes.classTypes,
+	"./initial/showTypes.js": module.exports.shows.showTypes,
+	"./initial/links.js": module.exports.linkGroups
+};
 
-module.exports.shows.showTypes.find({}).exec().then(function(showTypes)
+for(var mod in initializedModels)
+{
+	if(initializedModels.hasOwnProperty(mod))
 	{
-		if(showTypes.length === 0)
+		initializedModels[mod].find({}).exec().then(function(objs)
 		{
-			require("./initial/showTypes.js").forEach(function(showType)
+			if(objs.length === 0)
 			{
-				var db = new module.exports.shows.showTypes(showType);
-				db.save();
-			});
-		}
-	});
-	
-module.exports.linkGroups.find({}).exec().then(function(linkGroups)
-	{
-		if(linkGroups.length === 0)
-		{
-			require("./initial/links.js").forEach(function(link)
-			{
-				var db = new module.exports.linkGroups(link);
-				db.save();
-			});
-		}
-	});
+				require(mod).forEach(function(obj)
+				{
+					var model = new initializedModels[mod](obj);
+					model.save();
+				});
+			}
+		});
+	}
+}
