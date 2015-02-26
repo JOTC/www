@@ -1,0 +1,72 @@
+@import "../style/colors.less";
+
+#calendar
+{
+	position: relative;
+	
+	.table
+	{
+		table-layout: fixed;
+		width: 100%;
+		
+		.cal-row
+		{
+			display: table-row;
+		
+			.cell.header
+			{
+				text-align: center;
+				background: @darkbackground;
+				color: white;
+			}
+			
+			.cell.value
+			{
+				position: relative;
+				border: 1px solid #BBB;
+				height: 130px;
+				padding: 3px;
+				
+				.date
+				{
+					float: left;
+					font-style: italic;
+				}
+				
+				.month
+				{
+					position: absolute;
+					bottom: 0;
+					font-size: 3em;
+					font-style: italic;
+					color: #BBB;
+				}
+				
+				.event
+				{
+					//display: inline-block;
+					margin-left: 20px;
+					padding: 3px;
+					background: @darkbackground;
+					color: white;
+					border-radius: 7px;
+					
+					&+ .event
+					{
+						margin-top: 2px;
+					}
+					
+					&.show
+					{
+						background: red;
+					}
+					
+					&.class
+					{
+						background: green;
+					}
+				}
+			}
+		}
+	}
+}

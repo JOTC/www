@@ -103,6 +103,28 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
+  $templateCache.put('jotc/sections/calendar/calendar.html',
+    "<div id=\"calendar\">\n" +
+    "\t<div class=\"title\">Calendar of Events</div>\n" +
+    "\t\n" +
+    "\t<div class=\"table\">\n" +
+    "\t\t<div class=\"cal-row\">\n" +
+    "\t\t\t<div class=\"cell header\" ng-repeat=\"day in daysOfTheWeek\">{{ day }}</div>\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"cal-row\" ng-repeat=\"week in weeks\">\n" +
+    "\t\t\t<div class=\"cell value\" ng-repeat=\"day in week\">\n" +
+    "\t\t\t\t<div class=\"date\">{{ day.date }}</div>\n" +
+    "\t\t\t\t<div class=\"month\" ng-if=\"day.month\">{{ day.month }}</div>\n" +
+    "\t\t\t\t<div class=\"event\" ng-repeat=\"event in events[day.ts]\" ng-class=\"event.type\">\n" +
+    "\t\t\t\t\t{{ event.title }}\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t</div>\n" +
+    "\t</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('jotc/sections/classes/classes.html',
     "<div id=\"classes\">\n" +
     "\t<div class=\"title\">JOTC Obedience Classes</div>\n" +

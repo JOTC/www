@@ -1,0 +1,18 @@
+<div id="calendar">
+	<div class="title">Calendar of Events</div>
+	
+	<div class="table">
+		<div class="cal-row">
+			<div class="cell header" ng-repeat="day in daysOfTheWeek">{{ day }}</div>
+		</div>
+		<div class="cal-row" ng-repeat="week in weeks">
+			<div class="cell value" ng-repeat="day in week">
+				<div class="date">{{ day.date }}</div>
+				<div class="month" ng-if="day.month">{{ day.month }}</div>
+				<div class="event" ng-repeat="event in events[day.ts]" ng-class="event.type">
+					{{ event.title }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
