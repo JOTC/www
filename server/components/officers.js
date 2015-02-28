@@ -35,7 +35,7 @@ module.exports = {
 			"post": fn.getModelCreator(db.officers, "officers", log, isValidOfficer)
 		},
 		"/officers/:officerID": {
-			"put": fn.getModelUpdater(db.officers, "officerID", "shows", log, isValidOfficer),
+			"put": fn.getModelUpdater(db.officers, "officerID", "officers", log, isValidOfficer),
 			"delete": fn.getModelDeleter(db.officers, "officerID", "officers", log)
 		}
 	}
