@@ -548,6 +548,9 @@ div[ng-view] .title {
 #calendar {
   position: relative;
 }
+#calendar .auth {
+  margin: 10px 0;
+}
 #calendar .table {
   table-layout: fixed;
   width: 100%;

@@ -1,6 +1,11 @@
 angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-partials" ])
 	.config([ "$routeProvider", function($routeProvider)
 	{
+		Date.prototype.toMidnightUTC = function()
+		{
+			return new Date(this.getTime() - (this.getTime() % 86400000));
+		};
+		
 		$routeProvider
 			.when("/home", {
 				templateUrl: "jotc/sections/home/home.html",

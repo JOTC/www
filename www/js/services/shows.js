@@ -1,6 +1,8 @@
 angular.module("jotc")
 	.service("jotc-api.shows", [ "$http", function($http)
 	{
+		var _updateHandlers = [ ];
+		
 		var shows = {
 			upcoming: [ ],
 			past: [ ]
@@ -12,6 +14,22 @@ angular.module("jotc")
 			{
 				shows.upcoming = _shows.upcoming;
 				shows.past = _shows.past;
+				
+				var i = 0;
+				for(i = 0; i < shows.upcoming.length; i++)
+				{
+					shows.upcoming[i].registrationDeadline = new Date(shows.upcoming[i].registrationDeadline);
+					shows.upcoming[i].startDate = new Date(shows.upcoming[i].startDate);
+					shows.upcoming[i].endDate = new Date(shows.upcoming[i].endDate);
+				}
+				for(i = 0; i < shows.past.length; i++)
+				{
+					shows.past[i].registrationDeadline = new Date(shows.past[i].registrationDeadline);
+					shows.past[i].startDate = new Date(shows.past[i].startDate);
+					shows.past[i].endDate = new Date(shows.past[i].endDate);
+				}
+				
+				triggerUpdateHandlers();
 			});
 		
 		$http.get("/data2/shows/types")
@@ -50,6 +68,7 @@ angular.module("jotc")
 				{
 					callback();
 				}
+				triggerUpdateHandlers();
 			};
 		};
 		
@@ -96,19 +115,41 @@ angular.module("jotc")
 			$http.post("/data2/shows", newShow)
 				.success(function(show)
 				{
+					show.registrationDeadline = new Date(show.registrationDeadline);
+					show.startDate = new Date(show.startDate);
+					show.endDate = new Date(show.endDate);
+					
 					shows.upcoming.push(show);
 					if(callback)
 					{
 						callback();
 					}
+					triggerUpdateHandlers();
 				});
+		};
+		
+		var addOnUpdate = function(handler)
+		{
+			if(handler && typeof handler === "function")
+			{
+				_updateHandlers.push(handler);
+			}
+		};
+
+		var triggerUpdateHandlers = function()
+		{
+			for(var i in _updateHandlers)
+			{
+				_updateHandlers[i]();
+			}
 		};
 		
 		return Object.freeze({
 			list: shows,
 			classes: classes,
 			show: show,
-			create: create
+			create: create,
+			onUpdate: addOnUpdate
 		});
 	}]);
 
