@@ -11,7 +11,7 @@ module.exports = {
 	name: "classes",	
 	paths: {
 		"/classes/": {
-			get: function(req, res, next)
+			"get": function(req, res, next)
 			{
 				getFutureClasses(function(error, classes)
 				{
@@ -27,7 +27,7 @@ module.exports = {
 				});
 				next();
 			},
-			post: function(req, res, next)
+			"post": function(req, res, next)
 			{
 				try
 				{
@@ -56,62 +56,20 @@ module.exports = {
 				next();
 			}
 		},
-		"/classes/md": {
-			get: function(req, res, next)
-			{
-				res.setHeader("content-type", "text/plain");
-				
-				getFutureClasses(function(error, classes)
-				{
-					if(error)
-					{						
-						res.send("");
-					}
-					else
-					{
-						var days = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ];
-						var months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
-						
-						var markdown = "";
-						classes.forEach(function(c, i)
-						{
-							if(i > 0)
-							{
-								markdown += "\n-----\n";
-							}
-							markdown += "#Starting " + days[c.startDate.getDay()] + ", " + months[c.startDate.getMonth()] + " " + c.startDate.getDate() + "\n";
-							
-							markdown += "This class meets for " + c.hoursPerWeek + " hour" + (c.hoursPerWeek === 1 ? "" : "s") + " per week, every ";
-							markdown += days[c.startDate.getDay()] + " at " + c.timeOfDay + ", for " + c.numberOfWeeks + " weeks.  The following class";
-							markdown += (c.classTypes.length === 1 ? "" : "es") + " are being offered at this time:\n\n";
-							
-							c.classTypes.forEach(function(classType)
-							{
-								markdown += "###" + classType.name + "\n";
-								markdown += "*" + classType.prerequisite + "*  \n";
-								markdown += "> " + classType.description + "\n\n";
-							});
-						});
-						res.send(markdown);
-					}
-				});
-				next();
-			}
-		},
 		"/classes/:id": {
-			put: function(req, res, next)
+			"put": function(req, res, next)
 			{
 				res.send({});
 				next();
 			},
-			delete: function(req, res, next)
+			"delete": function(req, res, next)
 			{
 				res.send({});
 				next();
 			}
 		},
 		"/classes/types/": {
-			get: function(req, res, next)
+			"get": function(req, res, next)
 			{
 				try
 				{
@@ -134,11 +92,6 @@ module.exports = {
 					res.send(500);
 				}
 				
-				next();
-			},
-			post: function(req, res, next)
-			{
-				res.send(501);
 				next();
 			}
 		}

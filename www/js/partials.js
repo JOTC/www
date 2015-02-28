@@ -103,9 +103,62 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
+  $templateCache.put('jotc/sections/calendar/calendar.edit.html',
+    "<div class=\"modal-header\">{{ action }} Calendar Event</div>\n" +
+    "\n" +
+    "<div class=\"modal-body\">\n" +
+    "\n" +
+    "<form>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Title</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"event.title\">\n" +
+    "\t\t<div class=\"alert alert-danger\" ng-show=\"event.title === ''\">Title is required</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Description</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"event.description\">\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Link</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"event.link\">\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Start Date</label>\n" +
+    "\t\t<div class=\"input-group\">\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"event.startDate\" disabled datepicker-popup=\"dd MMM yyyy\" is-open=\"dateOpen.start\" min-date=\"\">\n" +
+    "\t\t\t<span class=\"input-group-btn\">\n" +
+    "\t\t\t\t<button class=\"btn btn-primary\" style=\"height: 34px;\" ng-click=\"dateOpen.open('start', $event);\"><i class=\"fa fa-calendar\"></i></button>\n" +
+    "\t\t\t</span>\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"alert alert-danger\" ng-show=\"event.startDate === null\">Start date is required</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>End Date</label>\n" +
+    "\t\t<div class=\"input-group\">\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"event.endDate\" disabled datepicker-popup=\"dd MMM yyyy\" is-open=\"dateOpen.end\" min-date=\"event.startDate\">\n" +
+    "\t\t\t<span class=\"input-group-btn\">\n" +
+    "\t\t\t\t<button class=\"btn btn-primary\" style=\"height: 34px;\" ng-click=\"dateOpen.open('end', $event);\"><i class=\"fa fa-calendar\"></i></button>\n" +
+    "\t\t\t</span>\n" +
+    "\t\t</div>\n" +
+    "\t</div>\n" +
+    "</form>\n" +
+    "\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"modal-footer\">\n" +
+    "\t<button class=\"btn btn-primary\" ng-click=\"save()\">Save</button>\n" +
+    "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('jotc/sections/calendar/calendar.html',
     "<div id=\"calendar\">\n" +
     "\t<div class=\"title\">Calendar of Events</div>\n" +
+    "\t\n" +
+    "\t<div class=\"center auth\" ng-if=\"auth.calendar\">\n" +
+    "\t\t<button class=\"btn btn-success\" ng-click=\"editEvent()\">New Event</button>\n" +
+    "\t</div>\n" +
     "\t\n" +
     "\t<div class=\"table\">\n" +
     "\t\t<div class=\"cal-row\">\n" +
@@ -117,6 +170,10 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t<div class=\"month\" ng-if=\"day.month\">{{ day.month }}</div>\n" +
     "\t\t\t\t<div class=\"event\" ng-repeat=\"event in events[day.ts]\" ng-class=\"event.type\">\n" +
     "\t\t\t\t\t{{ event.title }}\n" +
+    "\t\t\t\t\t<div ng-if=\"auth.calendar && event.type === 'calendar'\">\n" +
+    "\t\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"editEvent(event)\">Edit</button>\n" +
+    "\t\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"deleteEvent(event)\">Delete</button>\n" +
+    "\t\t\t\t\t</div>\n" +
     "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +

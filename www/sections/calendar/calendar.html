@@ -1,6 +1,10 @@
 <div id="calendar">
 	<div class="title">Calendar of Events</div>
 	
+	<div class="center auth" ng-if="auth.calendar">
+		<button class="btn btn-success" ng-click="editEvent()">New Event</button>
+	</div>
+	
 	<div class="table">
 		<div class="cal-row">
 			<div class="cell header" ng-repeat="day in daysOfTheWeek">{{ day }}</div>
@@ -11,6 +15,10 @@
 				<div class="month" ng-if="day.month">{{ day.month }}</div>
 				<div class="event" ng-repeat="event in events[day.ts]" ng-class="event.type">
 					{{ event.title }}
+					<div ng-if="auth.calendar && event.type === 'calendar'">
+						<button class="btn btn-primary" ng-click="editEvent(event)">Edit</button>
+						<button class="btn btn-danger" ng-click="deleteEvent(event)">Delete</button>
+					</div>
 				</div>
 			</div>
 		</div>

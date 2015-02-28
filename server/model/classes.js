@@ -10,6 +10,7 @@ var classTypesSchema = mongoose.Schema({
 
 var classSchema = mongoose.Schema({
 	startDate: Date,
+	endDate: Date,
 	numberOfWeeks: {type: Number, default: 6 },
 	hoursPerWeek: { type: Number, default: 1 },
 	timeOfDay: String,

@@ -277,6 +277,10 @@ angular.module("jotc")
 				fn = $api.shows.create;
 			}
 			
+			$scope.show.registrationDeadline = $scope.show.registrationDeadline.toMidnightUTC();
+			$scope.show.startDate = $scope.show.startDate.toMidnightUTC();
+			$scope.show.endDate = $scope.show.endDate.toMidnightUTC();
+			
 			fn($scope.show, function()
 			{
 				$modalInstance.dismiss();

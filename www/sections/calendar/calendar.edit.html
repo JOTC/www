@@ -1,0 +1,45 @@
+<div class="modal-header">{{ action }} Calendar Event</div>
+
+<div class="modal-body">
+
+<form>
+	<div class="form-group">
+		<label>Title</label>
+		<input type="text" class="form-control" ng-model="event.title">
+		<div class="alert alert-danger" ng-show="event.title === ''">Title is required</div>
+	</div>
+	<div class="form-group">
+		<label>Description</label>
+		<input type="text" class="form-control" ng-model="event.description">
+	</div>
+	<div class="form-group">
+		<label>Link</label>
+		<input type="text" class="form-control" ng-model="event.link">
+	</div>
+	<div class="form-group">
+		<label>Start Date</label>
+		<div class="input-group">
+			<input type="text" class="form-control" ng-model="event.startDate" disabled datepicker-popup="dd MMM yyyy" is-open="dateOpen.start" min-date="">
+			<span class="input-group-btn">
+				<button class="btn btn-primary" style="height: 34px;" ng-click="dateOpen.open('start', $event);"><i class="fa fa-calendar"></i></button>
+			</span>
+		</div>
+		<div class="alert alert-danger" ng-show="event.startDate === null">Start date is required</div>
+	</div>
+	<div class="form-group">
+		<label>End Date</label>
+		<div class="input-group">
+			<input type="text" class="form-control" ng-model="event.endDate" disabled datepicker-popup="dd MMM yyyy" is-open="dateOpen.end" min-date="event.startDate">
+			<span class="input-group-btn">
+				<button class="btn btn-primary" style="height: 34px;" ng-click="dateOpen.open('end', $event);"><i class="fa fa-calendar"></i></button>
+			</span>
+		</div>
+	</div>
+</form>
+
+</div>
+
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="save()">Save</button>
+	<button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+</div>

@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 var calendarSchema = mongoose.Schema({
-	name: String,
+	title: String,
 	startDate: Date,
 	endDate: Date,
 	link: String,
