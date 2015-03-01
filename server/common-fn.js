@@ -80,11 +80,16 @@ module.exports = {
 			});
 		});
 	},
-	getModelUpdater: function(model, parameterName, permissionName, logger, validationFn)
+	getModelUpdater: function(model, parameterName, permissionName, logger, validationFn, postProcessFn)
 	{
 		return getBasicBodyHandler(permissionName, logger, validationFn, function(req, res, obj)
 		{
 			delete obj._id;
+			
+			if(postProcessFn)
+			{
+				postProcessFn(obj);
+			}
 			
 			model.update({ _id: req.params[parameterName] }, obj, { upsert: true }).exec(function(err)
 			{

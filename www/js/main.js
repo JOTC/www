@@ -3,7 +3,14 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 	{
 		Date.prototype.toMidnightUTC = function()
 		{
-			return new Date(this.getTime() - (this.getTime() % 86400000));
+			// Go to 23:59:59 UTC of the current day.  That pretty
+			// much puts the entire world on the same date.  This
+			// is handy since we're not interested in times.
+			
+			var month = this.getMonth() + 1;
+			var date = this.getDate();
+			
+			return new Date(this.getFullYear() + "-" + (month > 10 ? "" : "0") + month + "-" + (date > 10 ? "" : "0") + date + "T23:59:59Z");
 		};
 		
 		$routeProvider

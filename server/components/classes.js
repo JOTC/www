@@ -1,4 +1,9 @@
+var restify = require("restify");
+var mv = require("mv");
+var fs = require("fs");
 var db = require("../model/db.js");
+var fn = require("../common-fn.js");
+var log = require("bunyan").createLogger({ name: "classes component", level: "debug" });
 
 var getFutureClasses = function(callback)
 {
@@ -6,6 +11,36 @@ var getFutureClasses = function(callback)
 	midnightToday = new Date(midnightToday - (midnightToday % 86400000));
 	db.classes.classes.find({ startDate: { $gte: midnightToday }}).sort({ startDate: "asc" }).exec(callback);
 };
+
+var isValidClass = function(clss)
+{
+	var valid = false;
+	
+	if(clss)
+	{
+		valid = true;
+		valid = valid && (clss.location && typeof clss.location === "string");
+		valid = valid && (clss.startDate && typeof clss.startDate === "string");
+		valid = valid && (clss.numberOfWeeks && typeof clss.numberOfWeeks === "number");
+		valid = valid && (clss.hoursPerWeek && typeof clss.hoursPerWeek === "number");
+		valid = valid && (clss.classTypes && Array.isArray(clss.classTypes));
+		
+		if(valid)
+		{
+			valid = valid && (clss.classTypes.length > 0);
+			
+			clss.classTypes.forEach(function(classType)
+			{
+				valid = valid && (classType._id && typeof classType._id === "string");
+				valid = valid && (classType.name && typeof classType.name === "string");
+				valid = valid && (classType.description && typeof classType.description === "string");
+				valid = valid && (typeof classType.isAdvanced === "boolean");
+			});
+		}
+	}
+	
+	return valid;
+}
 
 module.exports = {
 	name: "classes",	
@@ -27,46 +62,20 @@ module.exports = {
 				});
 				next();
 			},
-			"post": function(req, res, next)
+			"post": fn.getModelCreator(db.classes.classes, "classes", log, isValidClass, function(obj)
 			{
-				try
-				{
-					db.classes.classTypes.find({ _id: { $in: req.body.classTypes }}).exec(function(error, classTypes)
-					{
-						if(error)
-						{
-							res.send({ succeess: false });
-						}
-						else
-						{
-							req.body.classTypes = classTypes;
-							var newClass = new db.classes.classes(req.body);
-							newClass.save(function()
-							{
-								res.send({ success: true, class: newClass.toObject() });
-							});
-						}
-					});					
-				}
-				catch(e)
-				{
-					console.log(e);
-					res.send({ success: false });
-				}
-				next();
-			}
+				obj.endDate = new Date(obj.startDate.getTime() + (obj.numberOfWeeks * 604800000));
+			})
 		},
-		"/classes/:id": {
-			"put": function(req, res, next)
+		"/classes/:classID": {
+			"put": fn.getModelUpdater(db.classes.classes, "classID", "classes", log, isValidClass, function(obj)
 			{
-				res.send({});
-				next();
-			},
-			"delete": function(req, res, next)
+				obj.startDate = new Date(obj.startDate);
+				obj.endDate = new Date(obj.startDate.getTime() + (obj.numberOfWeeks * 604800000));
+			}),
+			"delete": fn.getModelDeleter(db.classes.classes, "classID", "classes", log, function(obj)
 			{
-				res.send({});
-				next();
-			}
+			})
 		},
 		"/classes/types/": {
 			"get": function(req, res, next)

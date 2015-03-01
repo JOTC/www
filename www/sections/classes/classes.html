@@ -25,13 +25,14 @@
 		
 			<div class="col-md-6">
 				<div class="header">Upcoming Classes</div>
-				<div ng-show="auth.canEditClasses" class="addContentButton">
-					<span ng-click="classes.edit();">[+] new class</span>
+				
+				<div ng-if="auth.classes" class="auth">
+					<button class="btn btn-success" ng-click="editClass()">New Class</button>
 				</div>
 
 				<div ng-repeat="class in classes" class="class">
 					<div class="date">
-						Starting {{ class.startDate | date }}
+						Starting {{ getStartDate(class); }}
 						<span ng-if="auth.canEditClasses" class="editBox">[ <span ng-click="classes.edit(class);">edit</span> | <span ng-click="classes.remove(class);">delete</span> ]</span>
 					</div>
 					<div class="map">
@@ -52,8 +53,12 @@
 
 						<br><br>
 
-						<span ng-if="class.files.length > 0" class="button"><a href="old/data/classes.php?file={{ class.files[0].id }}" style="text-decoration: none; color: black;">Download Application</a></span>
 					</div>
+					
+					<div ng-if="auth.classes" style="text-align: right; padding: 10px;">
+						<button class="btn btn-primary" ng-click="editClass(class)">Edit</button> <button class="btn btn-danger" ng-click="deleteClass(class)">Delete</button>
+					</div>
+					
 				</div>
 			</div>
 		

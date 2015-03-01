@@ -325,6 +325,11 @@ div[ng-view] .title {
   margin-bottom: 15px;
   font-size: 1.5em;
 }
+#shows .auth,
+#classes .auth {
+  text-align: center;
+  margin: 10px 0;
+}
 #shows .show,
 #classes .show,
 #shows .class,

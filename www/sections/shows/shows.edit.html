@@ -50,7 +50,7 @@
 		<label>Classes</label>
 		<div class="input-group container">
 			<div class="row" ng-repeat="row in getClassesByRow()">
-				<div class="col-md-4" ng-repeat="class in row">
+				<div class="col-md-6" ng-repeat="class in row">
 					<label class="control-label" style="margin-left: 1em; text-indent: -1em;"><input type="checkbox" ng-model="classesChecked[class._id]" ng-change="toggleClass(class)"> {{ class.name }}</label>
 				</div>
 			</div>

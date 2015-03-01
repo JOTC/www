@@ -184,7 +184,10 @@ module.exports = {
 		},
 		"/shows/:showID":
 		{
-			"put": fn.getModelUpdater(db.shows.shows, "showID", "shows", log, isValidShow),
+			"put": fn.getModelUpdater(db.shows.shows, "showID", "shows", log, isValidShow, function(obj)
+			{
+				obj.dateRange = dates.stringDateRange(obj.startDate, obj.endDate);
+			}),
 			"delete": fn.getModelDeleter(db.shows.shows, "showID", "shows", log, function(show)
 			{
 				if(show.premiumListPath)

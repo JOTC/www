@@ -15,8 +15,7 @@ var classSchema = mongoose.Schema({
 	hoursPerWeek: { type: Number, default: 1 },
 	timeOfDay: String,
 	location: String,
-	classTypes: [ classTypesSchema ],
-	files: [ require("./files.js").Schema ]
+	classTypes: [ classTypesSchema ]
 });
 
 module.exports = {
