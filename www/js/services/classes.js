@@ -51,6 +51,7 @@ angular.module("jotc")
 							if(classes[i]._id === classID)
 							{
 								classes[i] = newClass;
+								classes[i].endDate = new Date(newClass.startDate.getTime() + ((newClass.numberOfWeeks - 1) * 604800000));
 								break;
 							}
 						}
