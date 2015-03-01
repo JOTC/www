@@ -75,8 +75,6 @@ angular.module("jotc")
 	{
 		$scope.action = (event.name === "" ? "New" : "Edit");
 		$scope.event = JSON.parse(JSON.stringify(event));
-		$scope.event.startDate = new Date($scope.event.startDate);
-		$scope.event.endDate = new Date($scope.event.endDate);
 		
 		$scope.dateOpen = {
 			start: false,
@@ -102,7 +100,6 @@ angular.module("jotc")
 		
 		$scope.save = function()
 		{
-			console.log($scope.event);
 			$scope.event.startDate = $scope.event.startDate.toMidnightUTC();
 			if($scope.event.endDate)
 			{
@@ -118,10 +115,11 @@ angular.module("jotc")
 			{
 				fn = $calendar.create
 			}
+			
+			$scope.event.startDate = new Date($scope.event.startDate);
+			$scope.event.endDate = new Date($scope.event.endDate);
+			
 			fn($scope.event, $self.dismiss);
-			//var time = $scope.event.startDate.getTime();
-			//time = time - (time % 86400000);
-			//$scope.event.startDate = new Date(time);
 		};
 		
 		$scope.cancel = $self.dismiss;

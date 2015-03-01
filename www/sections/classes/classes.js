@@ -1,6 +1,7 @@
 angular.module("jotc")
-	.controller("classes", [ "$scope", "jotc-api", "jotc-location", function($scope, $api, locationService)
+	.controller("classes", [ "$scope", "$modal", "jotc-auth", "jotc-api", "jotc-location", function($scope, $modal, $auth, $api, locationService)
 	{
+		$scope.auth = $auth;
 		$scope.classes = $api.classes.list;
 		$scope.classTypes = $api.classes.types;
 		
@@ -44,7 +45,7 @@ angular.module("jotc")
 		{
 			var descriptions = [ ];
 			
-			var day = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ][new Date(clss.startDate).getUTCDay()];
+			var day = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ][clss.startDate.getUTCDay()];
 			
 			var basicStr = getClassTypesList(clss, false).string;
 			if(basicStr.length > 0)
@@ -64,6 +65,138 @@ angular.module("jotc")
 
 			return descriptions;
 		};
+		
+		$scope.getStartDate = function()
+		{
+			var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+			
+			return function(clss)
+			{
+				return months[clss.startDate.getUTCMonth()] + " " + clss.startDate.getUTCDate() + ", " + clss.startDate.getUTCFullYear();
+			};
+		}();
 
 		$scope.$location = locationService;
+		
+		$scope.editClass = function(clss)
+		{
+			if(!clss)
+			{
+				clss = {
+					startDate: null,
+					numberOfWeeks: 6,
+					hoursPerWeek: 1,
+					timeOfDay: "7:00 PM",
+					location: "",
+					classTypes: [ ],
+				};
+			}
+			
+			$modal.open({
+				templateUrl: "jotc/sections/classes/classes.edit.html",
+				controller: "classes.edit",
+				backdrop: "static",
+				size: "lg",
+				resolve: {
+					editClass: function()
+					{
+						return clss;
+					}
+				}
+			});
+		};
+	}])
+	.controller("classes.edit", [ "$scope", "$modalInstance", "jotc-api.classes", "editClass", function($scope, $self, $classes, editClass)
+	{
+		$scope.action = (editClass._id === "" ? "New" : "Edit");
+		$scope.editClass = JSON.parse(JSON.stringify(editClass));
+		
+		//$scope.editClass.startDate = new Date($scope.editClass.startDate);
+		
+		$scope.date = {
+			start: false,
+			open: function(which, $event)
+			{
+				$event.preventDefault();
+				$event.stopPropagation();
+				
+				switch(which)
+				{
+					case "start":
+						$scope.date.start = true;
+						break;
+				}
+			}
+		};
+		
+		$scope.classes = $classes.types;
+		$scope.classesChecked = { };
+		
+		var classesByRow = [ ];
+		$scope.getClassesByRow = function()
+		{
+			var i = 0;
+			
+			if(classesByRow.length === 0)
+			{
+				var row;
+				for(i = 0; i < $scope.classes.length; i++)
+				{
+					if(i % 2 === 0)
+					{
+						row = [ ];
+						classesByRow.push(row);
+					}
+					row.push($scope.classes[i]);
+					
+					$scope.classesChecked[$scope.classes[i]._id] = false;
+				}
+			}
+			
+			for(i = 0; i < $scope.editClass.classTypes.length; i++)
+			{
+				$scope.classesChecked[$scope.editClass.classTypes[i]._id] = true;
+			}
+			
+			return classesByRow;
+		};
+		
+		$scope.toggleClass = function(toggledClass)
+		{
+			if($scope.classesChecked[toggledClass._id])
+			{
+				$scope.editClass.classTypes.push(toggledClass);
+			}
+			else
+			{
+				for(var i = 0; i < $scope.editClass.classTypes.length; i++)
+				{
+					if($scope.editClass.classTypes[i]._id === toggledClass._id)
+					{
+						$scope.editClass.classTypes.splice(i, 1);
+						break;
+					}
+				}
+			}
+		};
+		
+		$scope.save = function()
+		{
+			var fn = null;
+			if($scope.editClass._id)
+			{
+				fn = $classes.class($scope.editClass._id).update;
+			}
+			else
+			{
+				fn = $classes.create;
+			}
+			
+			$scope.editClass.startDate = $scope.editClass.startDate.toMidnightUTC();
+			delete $scope.editClass.endDate;
+			
+			fn($scope.editClass, $self.dismiss);
+		};
+		
+		$scope.cancel = $self.dismiss;
 	}]);
