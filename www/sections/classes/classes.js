@@ -122,8 +122,6 @@ angular.module("jotc")
 		$scope.action = (editClass._id === "" ? "New" : "Edit");
 		$scope.editClass = JSON.parse(JSON.stringify(editClass));
 		
-		//$scope.editClass.startDate = new Date($scope.editClass.startDate);
-		
 		$scope.date = {
 			start: false,
 			open: function(which, $event)
@@ -203,7 +201,7 @@ angular.module("jotc")
 				fn = $classes.create;
 			}
 			
-			$scope.editClass.startDate = $scope.editClass.startDate.toMidnightUTC();
+			$scope.editClass.startDate = new Date($scope.editClass.startDate).toMidnightUTC();
 			delete $scope.editClass.endDate;
 			
 			fn($scope.editClass, $self.dismiss);
