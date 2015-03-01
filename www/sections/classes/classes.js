@@ -106,6 +106,17 @@ angular.module("jotc")
 			});
 		};
 		
+		$scope.deleteClass = function(clss)
+		{
+			if(confirm("Are you sure you wish to delete this class?  This cannot be undone."))
+			{
+				if(confirm("Please confirm again.  This class will be permanently deleted."))
+				{
+					$api.classes.class(clss._id).delete();
+				}
+			}
+		};
+		
 		$scope.deleteRegistrationForm = function(clss)
 		{
 			if(confirm("Are you sure you wish to delete this registration form?  This cannot be undone."))
