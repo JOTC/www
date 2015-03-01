@@ -1,0 +1,13 @@
+<div class="drag-drop-uploader-container" ng-controller="dragDropFileUploader.controller">
+	<div ng-file-drop ng-if="uploadingFiles.length === 0" class="upload-box" ng-model="files" drag-over-class="dragover" multiple="false" allow-dir="false" accept=".pdf,.pdf" ng-file-change="fileDropped($files, $event, $rejectedFiles)">
+		Drag and drop a PDF to add {{ documentName }}
+	</div>
+
+	<div class="uploading" ng-if="uploadingFiles.length > 0">
+		Uploading...
+		<div class="progress" style="height: 20px; margin: 10px;">
+			<div class="progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="45" style="width: {{ uploadingFiles[0].progress }}%;">
+			</div>
+		</div>
+	</div>
+</div>

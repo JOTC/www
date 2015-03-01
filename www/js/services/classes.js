@@ -84,6 +84,26 @@ angular.module("jotc")
 							callback();
 						}
 					});
+				},
+				deleteRegistrationForm: function(callback)
+				{
+					$http.delete("/data2/classes/" + classID + "/registrationForm")
+					.success(function()
+					{
+						for(var i = 0; i < classes.length; i++)
+						{
+							if(classes[i]._id === classID)
+							{
+								classes[i].registrationFormPath = "";
+								break;
+							}
+						}
+						
+						if(callback)
+						{
+							callback();
+						}
+					});
 				}
 			});
 		}

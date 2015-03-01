@@ -55,19 +55,7 @@
 					<button ng-if="show.registrationLink.length > 0" ng-click="openNewWindow(show.registrationLink)" class="btn btn-warning register">Register</button>
 				</div>
 
-				<div ng-if="auth.shows && !show.premiumListPath" ng-controller="show-addFile" show-id="{{ show._id }}" type="premiumList" name="premium list">
-					<div ng-show="uploadingFiles.length === 0" ng-file-drop ng-model="files" class="upload-box" drag-over-class="dragover" multiple="false" allow-dir="false" accept=".pdf,.pdf">
-						Drag and drop a PDF to add {{ name }}
-					</div>
-				
-					<div class="uploading" ng-if="uploadingFiles.length > 0">
-						Uploading...
-						<div class="progress" style="height: 20px; margin: 10px;">
-							<div class="progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="45" style="width: {{ uploadingFiles[0].progress }}%;">
-							</div>
-						</div>
-					</div>
-				</div>
+				<div drag-drop-file-uploader ng-if="auth.shows && !show.premiumListPath" obj-type="shows" obj="show" doc-type="premiumList" doc-name="premium list"></div>
 
 				<div ng-if="auth.shows" style="text-align: right; padding: 10px;">
 					<button class="btn btn-primary" ng-click="openEditor(show)">Edit</button> <button class="btn btn-danger" ng-click="delete(show)">Delete</button>
@@ -87,19 +75,7 @@
 						<button class="btn btn-danger" ng-click="deleteResults(show)">Delete Results</button>
 					</div>
 				
-					<div ng-if="auth.shows && !show.resultsPath" ng-controller="show-addFile" data-show-id="{{ show._id }}" data-type="results" data-name="results">
-						<div ng-show="uploadingFiles.length === 0" ng-file-drop ng-model="files" class="upload-box" drag-over-class="dragover" multiple="false" allow-dir="false" accept=".pdf,.pdf">
-							Drag and drop a PDF to add {{ name }}
-						</div>
-					
-						<div class="uploading" ng-if="uploadingFiles.length > 0">
-							Uploading...
-							<div class="progress" style="height: 20px; margin: 10px;">
-								<div class="progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="45" style="width: {{ uploadingFiles[0].progress }}%;">
-								</div>
-							</div>
-						</div>
-					</div>
+					<div drag-drop-file-uploader ng-if="auth.shows && !show.resultsPath" obj-type="shows" obj="show" doc-type="results" doc-name="results"></div>
 					
 				</div>				
 			</div>
