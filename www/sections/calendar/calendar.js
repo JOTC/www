@@ -105,6 +105,10 @@ angular.module("jotc")
 			{
 				$scope.event.endDate = $scope.event.endDate.toMidnightUTC();
 			}
+			else
+			{
+				$scope.event.endDate = $scope.event.startDate;
+			}
 			
 			var fn = null;
 			if($scope.event._id)
@@ -115,9 +119,6 @@ angular.module("jotc")
 			{
 				fn = $calendar.create
 			}
-			
-			$scope.event.startDate = new Date($scope.event.startDate);
-			$scope.event.endDate = new Date($scope.event.endDate);
 			
 			fn($scope.event, $self.dismiss);
 		};
