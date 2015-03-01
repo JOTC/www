@@ -71,7 +71,7 @@ module.exports = {
 			},
 			"post": fn.getModelCreator(db.classes.classes, "classes", log, isValidClass, function(obj)
 			{
-				obj.endDate = new Date(obj.startDate.getTime() + (obj.numberOfWeeks * 604800000));
+				obj.endDate = new Date(obj.startDate.getTime() + ((obj.numberOfWeeks - 1) * 604800000));
 			})
 		},
 		"/classes/:classID": {
