@@ -1,5 +1,5 @@
 angular.module("jotc")
-	.service("jotc-api.calendar", [ "$http", "jotc-api.shows", function($http, $shows)
+	.service("jotc-api.calendar", [ "$http", "jotc-api.shows", "jotc-api.classes", function($http, $shows, $classes)
 	{
 		var events = [ ];
 		var calendarEvents = { };
@@ -15,9 +15,9 @@ angular.module("jotc")
 		
 		var addEvent = function(event)
 		{
-			var time = event.startDate.getTime();
+			var time = event.startDate.getTime() - (event.startDate.getTime() % 86400000);
 			
-			while(time <= event.endDate.getTime())
+			while(time < event.endDate.getTime())
 			{
 				addCalendarEvent(time, {
 					title: event.title,
@@ -40,10 +40,6 @@ angular.module("jotc")
 			}
 			
 			var i = 0;
-			for(i = 0; i < events.length; i++)
-			{
-				addEvent(events[i]);
-			}
 			
 			var show = null;
 			for(i = 0; i < $shows.list.upcoming.length; i++)
@@ -54,7 +50,7 @@ angular.module("jotc")
 					type: "show"
 				});
 
-				var time = show.startDate.getTime();
+				var time = show.startDate.getTime() - (show.startDate.getTime() % 86400000);
 				addCalendarEvent(time, {
 					title: show.title + " show begins",
 					type: "show"
@@ -75,6 +71,27 @@ angular.module("jotc")
 					type: "show"
 				});
 			}
+			
+			var clss = null;
+			for(i = 0; i < $classes.list.length; i++)
+			{
+				clss = $classes.list[i];
+				
+				var time = clss.startDate.getTime() - (clss.startDate.getTime() % 86400000);
+				while(time < clss.endDate.getTime())
+				{
+					addCalendarEvent(time, {
+						title: "Class meets at " + clss.timeOfDay,
+						type: "class"
+					});
+					time += 604800000; // 7 days
+				}
+			}
+			
+			for(i = 0; i < events.length; i++)
+			{
+				addEvent(events[i]);
+			}
 		};
 		
 		$http.get("data2/calendar")
@@ -90,6 +107,7 @@ angular.module("jotc")
 			});
 			
 		$shows.onUpdate(buildCalendarEvents);
+		$classes.onUpdate(buildCalendarEvents);
 			
 		var create = function(newEvent, callback)
 		{
