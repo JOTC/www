@@ -202,26 +202,18 @@ module.exports = {
 		"/classes/types/": {
 			"get": function(req, res, next)
 			{
-				try
+				db.classes.classTypes.find({}).sort({ priorityOrder: "asc" }).exec(function(err, classTypes)
 				{
-					db.classes.classTypes.find({}).sort({ priorityOrder: "asc" }).exec(function(error, classTypes)
+					if(err)
 					{
-						if(error)
-						{
-							console.log(error);
-							res.send(500);
-						}
-						else
-						{
-							res.send(classTypes);
-						}
-					});
-				}
-				catch(ex)
-				{
-					console.log(ex);
-					res.send(500);
-				}
+						log.error(err);
+						res.send(500);
+					}
+					else
+					{
+						res.send(classTypes);
+					}
+				});
 				
 				next();
 			}
