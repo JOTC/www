@@ -27,6 +27,9 @@ angular.module("jotc")
 			$http.post("/data2/classes", newClass)
 			.success(function(data)
 			{
+				data.startDate = new Date(data.startDate);
+				data.endDate = new Date(data.endDate);
+				
 				classes.push(data);
 				
 				triggerUpdateHandler();
