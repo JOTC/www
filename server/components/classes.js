@@ -78,7 +78,10 @@ module.exports = {
 			"put": fn.getModelUpdater(db.classes.classes, "classID", "classes", log, isValidClass, function(obj)
 			{
 				obj.startDate = new Date(obj.startDate);
-				obj.endDate = new Date(obj.startDate.getTime() + (obj.numberOfWeeks * 604800000));
+				
+				// Subtract one because otherwise a 1-week class would end
+				// a week after the first day of class, which is wrong.
+				obj.endDate = new Date(obj.startDate.getTime() + ((obj.numberOfWeeks - 1) * 604800000));
 			}),
 			"delete": fn.getModelDeleter(db.classes.classes, "classID", "classes", log, function(obj)
 			{
