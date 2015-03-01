@@ -23,8 +23,8 @@ var isValidClass = function(clss)
 		valid = true;
 		valid = valid && (clss.location && typeof clss.location === "string");
 		valid = valid && (clss.startDate && typeof clss.startDate === "string");
-		valid = valid && (clss.numberOfWeeks && typeof clss.numberOfWeeks === "number");
-		valid = valid && (clss.hoursPerWeek && typeof clss.hoursPerWeek === "number");
+		valid = valid && (clss.numberOfWeeks && typeof +clss.numberOfWeeks === "number");
+		valid = valid && (clss.hoursPerWeek && typeof +clss.hoursPerWeek === "number");
 		valid = valid && (clss.classTypes && Array.isArray(clss.classTypes));
 		
 		if(valid)
