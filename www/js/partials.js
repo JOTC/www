@@ -291,8 +291,15 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t\t\t<span ng-if=\"$index > 0\"><br><br></span>\n" +
     "\t\t\t\t\t\t\t{{ description }}\n" +
     "\t\t\t\t\t\t</span>\n" +
+    "\t\t\t\t\t\t\n" +
+    "\t\t\t\t\t<div ng-if=\"class.registrationFormPath\" class=\"premiumList\">\n" +
+    "\t\t\t\t\t\t<a class=\"btn btn-success download\" ng-href=\"{{ class.registrationFormPath }}\">Download Registration Form</a>\n" +
+    "\t\t\t\t\t\t<button ng-if=\"auth.classes\" class=\"btn btn-danger\" ng-click=\"deleteRegistrationForm(class)\">Delete Registration Form</button>\n" +
+    "\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\n" +
     "\n" +
-    "\t\t\t\t\t\t<br><br>\n" +
+    "\t\t\t\t\t<div drag-drop-file-uploader ng-if=\"auth.classes && !class.registrationFormPath\" obj-type=\"classes\" obj=\"class\" doc-type=\"registrationForm\" doc-name=\"registration form\">\n" +
+    "\t\t\t\t\t</div>\n" +
     "\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t\n" +
@@ -792,19 +799,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t<button ng-if=\"show.registrationLink.length > 0\" ng-click=\"openNewWindow(show.registrationLink)\" class=\"btn btn-warning register\">Register</button>\n" +
     "\t\t\t\t</div>\n" +
     "\n" +
-    "\t\t\t\t<div ng-if=\"auth.shows && !show.premiumListPath\" ng-controller=\"show-addFile\" show-id=\"{{ show._id }}\" type=\"premiumList\" name=\"premium list\">\n" +
-    "\t\t\t\t\t<div ng-show=\"uploadingFiles.length === 0\" ng-file-drop ng-model=\"files\" class=\"upload-box\" drag-over-class=\"dragover\" multiple=\"false\" allow-dir=\"false\" accept=\".pdf,.pdf\">\n" +
-    "\t\t\t\t\t\tDrag and drop a PDF to add {{ name }}\n" +
-    "\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\n" +
-    "\t\t\t\t\t<div class=\"uploading\" ng-if=\"uploadingFiles.length > 0\">\n" +
-    "\t\t\t\t\t\tUploading...\n" +
-    "\t\t\t\t\t\t<div class=\"progress\" style=\"height: 20px; margin: 10px;\">\n" +
-    "\t\t\t\t\t\t\t<div class=\"progress-bar progress-bar-striped progress-bar-success active\" role=\"progressbar\" aria-valuenow=\"45\" style=\"width: {{ uploadingFiles[0].progress }}%;\">\n" +
-    "\t\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t</div>\n" +
-    "\t\t\t\t</div>\n" +
+    "\t\t\t\t<div drag-drop-file-uploader ng-if=\"auth.shows && !show.premiumListPath\" obj-type=\"shows\" obj=\"show\" doc-type=\"premiumList\" doc-name=\"premium list\"></div>\n" +
     "\n" +
     "\t\t\t\t<div ng-if=\"auth.shows\" style=\"text-align: right; padding: 10px;\">\n" +
     "\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"openEditor(show)\">Edit</button> <button class=\"btn btn-danger\" ng-click=\"delete(show)\">Delete</button>\n" +
@@ -824,24 +819,29 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"deleteResults(show)\">Delete Results</button>\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\n" +
-    "\t\t\t\t\t<div ng-if=\"auth.shows && !show.resultsPath\" ng-controller=\"show-addFile\" data-show-id=\"{{ show._id }}\" data-type=\"results\" data-name=\"results\">\n" +
-    "\t\t\t\t\t\t<div ng-show=\"uploadingFiles.length === 0\" ng-file-drop ng-model=\"files\" class=\"upload-box\" drag-over-class=\"dragover\" multiple=\"false\" allow-dir=\"false\" accept=\".pdf,.pdf\">\n" +
-    "\t\t\t\t\t\t\tDrag and drop a PDF to add {{ name }}\n" +
-    "\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t\n" +
-    "\t\t\t\t\t\t<div class=\"uploading\" ng-if=\"uploadingFiles.length > 0\">\n" +
-    "\t\t\t\t\t\t\tUploading...\n" +
-    "\t\t\t\t\t\t\t<div class=\"progress\" style=\"height: 20px; margin: 10px;\">\n" +
-    "\t\t\t\t\t\t\t\t<div class=\"progress-bar progress-bar-striped progress-bar-success active\" role=\"progressbar\" aria-valuenow=\"45\" style=\"width: {{ uploadingFiles[0].progress }}%;\">\n" +
-    "\t\t\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t<div drag-drop-file-uploader ng-if=\"auth.shows && !show.resultsPath\" obj-type=\"shows\" obj=\"show\" doc-type=\"results\" doc-name=\"results\"></div>\n" +
     "\t\t\t\t\t\n" +
     "\t\t\t\t</div>\t\t\t\t\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\n" +
+    "\t</div>\n" +
+    "</div>\n"
+  );
+
+
+  $templateCache.put('jotc/sections/uploader/uploader.html',
+    "<div class=\"drag-drop-uploader-container\" ng-controller=\"dragDropFileUploader.controller\">\n" +
+    "\t<div ng-file-drop ng-if=\"uploadingFiles.length === 0\" class=\"upload-box\" ng-model=\"files\" drag-over-class=\"dragover\" multiple=\"false\" allow-dir=\"false\" accept=\".pdf,.pdf\" ng-file-change=\"fileDropped($files, $event, $rejectedFiles)\">\n" +
+    "\t\tDrag and drop a PDF to add {{ documentName }}\n" +
+    "\t</div>\n" +
+    "\n" +
+    "\t<div class=\"uploading\" ng-if=\"uploadingFiles.length > 0\">\n" +
+    "\t\tUploading...\n" +
+    "\t\t<div class=\"progress\" style=\"height: 20px; margin: 10px;\">\n" +
+    "\t\t\t<div class=\"progress-bar progress-bar-striped progress-bar-success active\" role=\"progressbar\" aria-valuenow=\"45\" style=\"width: {{ uploadingFiles[0].progress }}%;\">\n" +
+    "\t\t\t</div>\n" +
+    "\t\t</div>\n" +
     "\t</div>\n" +
     "</div>\n"
   );

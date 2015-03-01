@@ -50,8 +50,15 @@
 							<span ng-if="$index > 0"><br><br></span>
 							{{ description }}
 						</span>
+						
+					<div ng-if="class.registrationFormPath" class="premiumList">
+						<a class="btn btn-success download" ng-href="{{ class.registrationFormPath }}">Download Registration Form</a>
+						<button ng-if="auth.classes" class="btn btn-danger" ng-click="deleteRegistrationForm(class)">Delete Registration Form</button>
+					</div>
+					
 
-						<br><br>
+					<div drag-drop-file-uploader ng-if="auth.classes && !class.registrationFormPath" obj-type="classes" obj="class" doc-type="registrationForm" doc-name="registration form">
+					</div>
 
 					</div>
 					

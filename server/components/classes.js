@@ -5,6 +5,8 @@ var db = require("../model/db.js");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "classes component", level: "debug" });
 
+var __BASE_PATH = "/vagrant/www";
+
 var getFutureClasses = function(callback)
 {
 	var midnightToday = Date.now();
@@ -42,6 +44,11 @@ var isValidClass = function(clss)
 	return valid;
 }
 
+var getRegistrationFormFilename = function(clss)
+{
+	return "JOTC_Class_Registration.pdf";
+};
+
 module.exports = {
 	name: "classes",	
 	paths: {
@@ -52,7 +59,7 @@ module.exports = {
 				{
 					if(error)
 					{
-						console.log(error);
+						log.error(error);
 						res.send(500);
 					}
 					else
@@ -75,7 +82,119 @@ module.exports = {
 			}),
 			"delete": fn.getModelDeleter(db.classes.classes, "classID", "classes", log, function(obj)
 			{
+				if(obj.registrationFormPath)
+				{
+					fs.unlinkSync(__BASE_PATH + "/classes/" + obj._id + "/" + getRegistrationFormFilename(obj));
+				}
 			})
+		},
+		"/classes/:classID/registrationForm": {
+			"post": function(req, res, next)
+			{
+				if(!req.user || !req.user.permissions.classes)
+				{
+					return next(new restify.UnauthorizedError());
+				}
+	
+				var handleError = function(err)
+				{
+					log.error(err);
+					res.send(500);
+					require("fs").unlinkSync(req.files.file.path);
+				};
+					
+				db.classes.classes.findOne({ _id: req.params.classID }).exec(function(err, clss)
+				{
+					if(err)
+					{
+						handleError(err);
+						next();
+					}
+					else if(clss)
+					{
+						var filename = getRegistrationFormFilename(clss);
+						mv(req.files.file.path, __BASE_PATH + "/classes/" + req.params.classID + "/" + filename, { mkdirp: true }, function(err)
+						{
+							if(err)
+							{
+								handleError(err);
+								next();
+							}
+							else
+							{
+								clss.registrationFormPath = "/classes/" + req.params.classID + "/" + filename;
+								clss.save(function(err)
+								{
+									if(err)
+									{
+										handleError(err);
+										require("fs").unlinkSync(__BASE_PATH + "/classes/" + req.params.classID + "/" + filename);
+									}
+									else
+									{
+										res.send(200, clss);
+									}
+									next();
+								});
+							}
+						});
+					}
+					else
+					{
+						handleError("Show ID [" + req.params.classID + "] not found");
+						next();
+					}
+				});
+			},
+			"delete": function(req, res, next)
+			{
+				if(!req.user || !req.user.permissions.classes)
+				{
+					return next(new restify.UnauthorizedError());
+				}
+				
+				db.classes.classes.findOne({ _id: req.params.classID }).exec(function(err, clss)
+				{
+					if(err)
+					{
+						log.error(err);
+						res.send(500);
+					}
+					else if(clss)
+					{
+						fs.unlink(__BASE_PATH + "/classes/" + clss._id + "/" + getRegistrationFormFilename(clss), function(err)
+						{
+							if(err)
+							{
+								log.error(err);
+								res.send(500);
+							}
+							else
+							{
+								clss.registrationFormPath = "";
+								clss.save(function(err)
+								{
+									if(err)
+									{
+										log.error(err);
+										res.send(500);
+									}
+									else
+									{
+										res.send(200);
+									}
+								});
+							}
+						})
+					}
+					else
+					{
+						res.send(200);
+					}
+				});
+				
+				next();
+			}
 		},
 		"/classes/types/": {
 			"get": function(req, res, next)
