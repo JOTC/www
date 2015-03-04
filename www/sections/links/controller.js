@@ -46,7 +46,7 @@ angular.module("jotc")
 				}
 				
 				$modal.open({
-					templateUrl: "jotc/sections/links/links.group.edit.html",
+					templateUrl: "jotc/sections/links/edit-group.template.html",
 					controller: "links-edit-group",
 					backdrop: "static",
 					size: "lg",
@@ -74,7 +74,7 @@ angular.module("jotc")
 				}
 				
 				$modal.open({
-					templateUrl: "jotc/sections/links/links.edit.html",
+					templateUrl: "jotc/sections/links/edit-link.template.html",
 					controller: "links-edit",
 					backdrop: "static",
 					size: "lg",

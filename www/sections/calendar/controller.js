@@ -47,7 +47,7 @@ angular.module("jotc")
 			}
 			
 			$modal.open({
-				templateUrl: "jotc/sections/calendar/calendar.edit.html",
+				templateUrl: "jotc/sections/calendar/edit-calendar.template.html",
 				controller: "calendar.edit",
 				backdrop: "static",
 				size: "lg",

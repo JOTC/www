@@ -9,7 +9,7 @@ angular.module("jotc")
 				documentName: "@docName"
 			},
 			transclude: false,
-			templateUrl: "jotc/sections/uploader/uploader.html"
+			templateUrl: "jotc/sections/uploader/template.html"
 		};
 	}])
 	.controller("dragDropFileUploader.controller", [ "$scope", "$upload", function($scope, $upload)
