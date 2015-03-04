@@ -186,7 +186,7 @@ module.exports = {
 		{
 			"put": fn.getModelUpdater(db.shows.shows, "showID", "shows", log, isValidShow, function(obj)
 			{
-				obj.dateRange = dates.stringDateRange(obj.startDate, obj.endDate);
+				obj.dateRange = dates.stringDateRange(new Date(obj.startDate), new Date(obj.endDate));
 			}),
 			"delete": fn.getModelDeleter(db.shows.shows, "showID", "shows", log, function(show)
 			{
