@@ -2,7 +2,7 @@ angular.module("jotc")
 	.controller("links", [ "$scope", "$modal", "jotc-auth", "jotc-api.linkGroups", function($scope, $modal, $auth, $linkGroups)
 	{
 		$scope.groups = $linkGroups.list;
-		$scope.auth = $auth;
+		$scope.auth = $auth.permissions;
 		
 		var halves = [ [], [] ];
 		$scope.getHalves = function()

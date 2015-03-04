@@ -4,7 +4,7 @@ angular.module("jotc")
 		$scope.gallery = gallery;
 		$scope.index = 0;
 		
-		$scope.auth = $auth;
+		$scope.auth = $auth.permissions;
 		
 		$scope.next = function()
 		{
@@ -103,7 +103,7 @@ angular.module("jotc")
 	{
 		$scope.galleries = $api.galleries.list;
 		$scope.rows = [ ];
-		$scope.auth = $auth;
+		$scope.auth = $auth.permissions;
 		
 		$scope.getRows = function()
 		{

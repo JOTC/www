@@ -1,7 +1,7 @@
 angular.module("jotc")
 	.controller("about", [ "$scope", "$modal", "jotc-auth", "jotc-api.officers", function($scope, $modal, $auth, $officers)
 	{
-		$scope.auth = $auth;
+		$scope.auth = $auth.permissions;
 		
 		$scope.officers = $officers.list;
 		

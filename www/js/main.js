@@ -48,15 +48,6 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 	}])
 	.service("jotc-auth", [ "$http", function($http)
 	{
-		/* * /
-		$http({
-			method: "POST",
-			url: "/data2/auth/local",
-			data: "username=mgwalker@gmail.com&password=" + SHA256(""),
-			headers: { "Content-type": "application/x-www-form-urlencoded" }
-		}).success(function(){});
-		//*/
-		
 		var permissions = {
 			shows: false,
 			classes: false,
@@ -66,23 +57,42 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			officers: false,
 			users: false
 		};
-
-		$http.get("/data2/auth/user")
-		.success(function(user)
-		{
-			if(user && user.permissions)
-			{
-				permissions.shows = user.permissions.shows;
-				permissions.classes = user.permissions.classes;
-				permissions.pictures = user.permissions.pictures;
-				permissions.calendar = user.permissions.calendar;
-				permissions.links = user.permissions.links;
-				permissions.officers = user.permissions.officers;
-				permissions.users = user.permissions.users;
-			}
-		});
 		
-		return permissions;
+		var loggedIn = false;
+		var username = "";
+
+		var getUser = function()
+		{
+			$http.get("/data2/auth/user")
+			.success(function(user)
+			{
+				loggedIn = false;
+				username = "";
+				
+				if(user && user.permissions)
+				{
+					loggedIn = true;
+					username = user.name;
+					
+					permissions.shows = user.permissions.shows;
+					permissions.classes = user.permissions.classes;
+					permissions.pictures = user.permissions.pictures;
+					permissions.calendar = user.permissions.calendar;
+					permissions.links = user.permissions.links;
+					permissions.officers = user.permissions.officers;
+					permissions.users = user.permissions.users;
+				}
+			});
+		};
+		
+		getUser();
+		
+		return {
+			isLoggedIn: function() { return loggedIn; },
+			getUsername: function() { return username; },
+			refresh: getUser,
+			permissions: permissions
+		};
 	}])
 	.service("jotc-api", [ "$http", "jotc-api.shows", "jotc-api.classes", "jotc-api.calendar", "jotc-api.pictures", "jotc-api.linkGroups", "jotc-api.officers", function($http, $shows, $classes, $calendar, $pictures, $linkGroups, $officers)
 	{
@@ -123,6 +133,26 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			}
 		});
 	}])
-	.controller("main", [ "$scope", "$http", function($scope, $http)
+	.controller("main", [ "$scope", "$modal", "$http", "jotc-auth", function($scope, $modal, $http, $auth)
 	{
+		$scope.login = function()
+		{
+			$modal.open({
+				templateUrl: "jotc/sections/login/template.html",
+				controller: "login",
+				backdrop: "static",
+				size: "sm"
+			});
+		};
+		
+		$scope.logout = function()
+		{
+			$http.get("/data2/auth/logout")
+			.success(function()
+			{
+				$auth.refresh();
+			});
+		};
+		
+		$scope.auth = $auth;
 	}]);

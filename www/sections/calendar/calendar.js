@@ -1,7 +1,7 @@
 angular.module("jotc")
 	.controller("calendar", [ "$scope", "$modal", "jotc-auth", "jotc-api", function($scope, $modal, $auth, $api)
 	{
-		$scope.auth = $auth;
+		$scope.auth = $auth.permissions;
 		$scope.events = $api.calendar.events;
 
 		var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];

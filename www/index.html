@@ -8,7 +8,7 @@
 	<!-- endbower -->
 	<link rel="stylesheet" type="text/css" href="style/main.css">
 </head>
-<body ng-app="jotc">
+<body ng-app="jotc" ng-controller="main">
 	
 	<div id="header">
 		<img class="logo" src="media/jotc_logo_color.png">
@@ -17,11 +17,11 @@
 			<div class="motto">Teaching You to Train Your Dog</div>
 		</div>
 		<div id="userStatus">
-			[ <span ng-if="!auth.loggedIn" ng-click="auth.showLogin();">Login</span>
-			<span ng-if="auth.loggedIn">
-				<span ng-if="auth.canUploadFiles"><span ng-click="upload.show();">Upload File</span> | </span>
-				<span ng-if="auth.canManageUsers"><a href="users.php" style="text-decoration: none; color: white;">Manage Users</a> | </span>
-				<span ng-click="auth.logout();">Logout</span>
+			[ <span ng-if="!auth.isLoggedIn()" ng-click="login();">Login</span>
+			<span ng-if="auth.isLoggedIn()">
+				Hello {{ auth.getUsername() }} | 
+				<span ng-if="auth.permissions.users">Manage Users | </span>
+				<span ng-click="logout();">Logout</span>
 			</span> ]
 		</div>
 	</div>
@@ -65,6 +65,7 @@
 	<script src="js/services/officers.js" type="text/javascript"></script>
 	<script src="js/sha256.js" type="text/javascript"></script>
 	<script src="sections/uploader/uploader.js" type="text/javascript"></script>
+	<script src="sections/login/controller.js" type="text/javascript"></script>
 	<script src="sections/home/home.js" type="text/javascript"></script>
 	<script src="sections/shows/shows.js" type="text/javascript"></script>
 	<script src="sections/classes/classes.js" type="text/javascript"></script>
