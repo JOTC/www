@@ -472,9 +472,9 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\n" +
     "\t\t<div class=\"cell calendar\">\n" +
     "\t\t\t<div class=\"header\">Upcoming Events</div>\n" +
-    "\t\t\t<div class=\"event\" ng-repeat=\"event in calendar\">\n" +
-    "\t\t\t\t<div class=\"date\">{{ event.start | date : 'MMMM d' : UTC }}</div>\n" +
-    "\t\t\t\t<div class=\"body\" ng-click=\"click(event)\">\n" +
+    "\t\t\t<div class=\"eventGroup\" ng-repeat=\"(ts,eventGroup) in events\" ng-if=\"isFuture(ts)\">\n" +
+    "\t\t\t\t<div class=\"date\">{{ ts | date : 'MMMM d' }}</div>\n" +
+    "\t\t\t\t<div class=\"body\" ng-click=\"click(event)\" ng-repeat=\"event in eventGroup\">\n" +
     "\t\t\t\t\t{{ event.title }}\n" +
     "\t\t\t\t\t<div class=\"link\">More Information</div>\n" +
     "\t\t\t\t</div>\n" +
