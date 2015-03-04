@@ -2,6 +2,55 @@ angular.module("jotc")
 	.controller("home", [ "$scope", "$location", "jotc-api", function($scope, $location, $api)
 	{
 		$scope.calendar = $api.calendar.events;
+		$scope.events = { };
+		
+		$scope.$watchCollection("calendar", function()
+		{
+			var seenShows = [ ], seenClasses = [ ], newEvents = { };
+			
+			var add = function(ts, event)
+			{
+				if(!newEvents[ts])
+				{
+					newEvents[ts] = [ ];
+				}
+				newEvents[ts].push(event);
+			};
+			
+			for(var i in $scope.calendar)
+			{
+				if($scope.calendar.hasOwnProperty(i))
+				{
+					for(var j in $scope.calendar[i])
+					{
+						if($scope.calendar[i][j].type === "class")
+						{
+							if(seenClasses.indexOf($scope.calendar[i][j].classID) < 0)
+							{
+								seenClasses.push($scope.calendar[i][j].classID);
+								add(i, $scope.calendar[i][j]);
+							}
+						}
+						else
+						{
+							add(i, $scope.calendar[i][j]);
+						}
+					}
+				}
+			}
+			
+			for(var i in $scope.events)
+			{
+				if($scope.events.hasOwnProperty(i))
+				{
+					delete $scope.events[i];
+				}
+			}
+			for(var i in newEvents)
+			{
+				$scope.events[i] = newEvents[i];
+			}
+		});
 		
 		var pathsByTypes = {
 			"show": "shows",
@@ -19,6 +68,11 @@ angular.module("jotc")
 			}
 			
 			return $scope.imgUrl;
+		};
+		
+		$scope.isFuture = function(ts)
+		{
+			return ts > Date.now();
 		};
 		
 		$scope.click = function(event)

@@ -304,16 +304,16 @@ div[ng-view] .title {
   font-weight: bold;
   font-size: 1.2em;
 }
-#landing .calendar .event .date {
+#landing .calendar .eventGroup .date {
   background-color: #002244;
   color: white;
   padding: 2px;
 }
-#landing .calendar .event .body {
+#landing .calendar .eventGroup .body {
   cursor: pointer;
   padding: 5px;
 }
-#landing .calendar .event .body .link {
+#landing .calendar .eventGroup .body .link {
   text-align: right;
   font-size: 0.8em;
   color: blue;
