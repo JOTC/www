@@ -571,6 +571,31 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
+  $templateCache.put('jotc/sections/login/template.html',
+    "<div class=\"modal-header\">Login</div>\n" +
+    "\n" +
+    "<div class=\"modal-body\">\n" +
+    "\n" +
+    "<form>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Email</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"credentials.username\">\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Password</label>\n" +
+    "\t\t<input type=\"password\" class=\"form-control\" ng-model=\"credentials.password\">\n" +
+    "\t</div>\n" +
+    "</form>\n" +
+    "\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"modal-footer\">\n" +
+    "\t<button class=\"btn btn-primary\" ng-click=\"login()\">Login</button>\n" +
+    "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('jotc/sections/pictures/pictures.edit.html',
     "<div class=\"modal-header\">{{ action }} Gallery</div>\n" +
     "\n" +

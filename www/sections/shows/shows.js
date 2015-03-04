@@ -38,7 +38,7 @@ angular.module("jotc")
 		
 		$scope.$location = locationService;
 		
-		$scope.auth = $auth;
+		$scope.auth = $auth.permissions;
 		
 		$scope.openEditor = function(show)
 		{

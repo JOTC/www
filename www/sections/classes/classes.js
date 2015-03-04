@@ -1,7 +1,7 @@
 angular.module("jotc")
 	.controller("classes", [ "$scope", "$modal", "jotc-auth", "jotc-api", "jotc-location", function($scope, $modal, $auth, $api, locationService)
 	{
-		$scope.auth = $auth;
+		$scope.auth = $auth.permissions;
 		$scope.classes = $api.classes.list;
 		$scope.classTypes = $api.classes.types;
 		
