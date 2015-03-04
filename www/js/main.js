@@ -82,6 +82,16 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 					permissions.officers = user.permissions.officers;
 					permissions.users = user.permissions.users;
 				}
+				else
+				{
+					permissions.shows = false;
+					permissions.classes = false;
+					permissions.pictures = false;
+					permissions.calendar = false;
+					permissions.links = false;
+					permissions.officers = false;
+					permissions.users = false;
+				}
 			});
 		};
 		
