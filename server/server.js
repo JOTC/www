@@ -29,7 +29,7 @@ app.delete = app.del;
 
 require("./auth.js")(passport);
 
-app.post("/auth/local", passport.authenticate("custom-local", { failureRedirect: "/fuckoff", successRedirect: "/ohgood" }));
+app.post("/auth/local", passport.authenticate("custom-local"), function(req, res) { res.send(200); });
 
 app.get("/auth/user", function(req, res, next)
 {
@@ -41,6 +41,14 @@ app.get("/auth/user", function(req, res, next)
 	delete user.local;
 	
 	res.send(user);
+	next();
+});
+
+app.get("/auth/logout", function(req, res, next)
+{
+	req.logout();
+	req.session.destroy();
+	res.send(200);
 	next();
 });
 
