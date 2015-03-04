@@ -47,28 +47,32 @@ angular.module("jotc")
 				show = $shows.list.upcoming[i];
 				addCalendarEvent(show.registrationDeadline.getTime(), {
 					title: "Registration deadline for " + show.title + " show",
-					type: "show"
+					type: "show",
+					showID: show._id
 				});
 
 				var time = show.startDate.getTime() - (show.startDate.getTime() % 86400000);
 				addCalendarEvent(time, {
 					title: show.title + " show begins",
-					type: "show"
+					type: "show",
+					showID: show._id
 				});
 				time += 86400000;
 				
-				while(time < show.endDate.getTime())
+				while(time < show.endDate.getTime() - 86400000)
 				{
 					addCalendarEvent(time, {
 						title: show.title + " show",
-						type: "show"
+						type: "show",
+						showID: show._id
 					});
 					time += 86400000;
 				}
 				
-				addCalendarEvent(show.endDate.getTime(), {
-					title: show.title + " show end",
-					type: "show"
+				addCalendarEvent(show.endDate.getTime() - (show.endDate.getTime() % 86400000), {
+					title: show.title + " show ends",
+					type: "show",
+					showID: show._id
 				});
 			}
 			
@@ -82,7 +86,8 @@ angular.module("jotc")
 				{
 					addCalendarEvent(time, {
 						title: "Class meets at " + clss.timeOfDay,
-						type: "class"
+						type: "class",
+						classID: clss._id
 					});
 					time += 604800000; // 7 days
 				}
