@@ -168,7 +168,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t<div class=\"cell value\" ng-repeat=\"day in week\">\n" +
     "\t\t\t\t<div class=\"date\">{{ day.date }}</div>\n" +
     "\t\t\t\t<div class=\"month\" ng-if=\"day.month\">{{ day.month }}</div>\n" +
-    "\t\t\t\t<div class=\"event\" ng-repeat=\"event in events[day.ts]\" ng-class=\"event.type\">\n" +
+    "\t\t\t\t<div class=\"event\" ng-repeat=\"event in events[day.do]\" ng-class=\"event.type\">\n" +
     "\t\t\t\t\t{{ event.title }}\n" +
     "\t\t\t\t\t<div ng-if=\"auth.calendar && event.type === 'calendar'\">\n" +
     "\t\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"editEvent(event)\">Edit</button>\n" +
@@ -472,9 +472,9 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\n" +
     "\t\t<div class=\"cell calendar\">\n" +
     "\t\t\t<div class=\"header\">Upcoming Events</div>\n" +
-    "\t\t\t<div class=\"eventGroup\" ng-repeat=\"(ts,eventGroup) in events\" ng-if=\"isFuture(ts)\">\n" +
-    "\t\t\t\t<div class=\"date\">{{ ts | date : 'MMMM d' }}</div>\n" +
-    "\t\t\t\t<div class=\"body\" ng-click=\"click(event)\" ng-repeat=\"event in eventGroup\">\n" +
+    "\t\t\t<div class=\"eventGroup\" ng-repeat=\"eventGroup in events\" ng-if=\"isFuture(eventGroup)\">\n" +
+    "\t\t\t\t<div class=\"date\">{{ eventGroup.date | date : 'MMMM d' }}</div>\n" +
+    "\t\t\t\t<div class=\"body\" ng-click=\"click(event)\" ng-repeat=\"event in eventGroup.events\">\n" +
     "\t\t\t\t\t{{ event.title }}\n" +
     "\t\t\t\t\t<div class=\"link\">More Information</div>\n" +
     "\t\t\t\t</div>\n" +

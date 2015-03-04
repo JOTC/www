@@ -40,9 +40,9 @@
 
 		<div class="cell calendar">
 			<div class="header">Upcoming Events</div>
-			<div class="eventGroup" ng-repeat="(ts,eventGroup) in events" ng-if="isFuture(ts)">
-				<div class="date">{{ ts | date : 'MMMM d' }}</div>
-				<div class="body" ng-click="click(event)" ng-repeat="event in eventGroup">
+			<div class="eventGroup" ng-repeat="eventGroup in events" ng-if="isFuture(eventGroup)">
+				<div class="date">{{ eventGroup.date | date : 'MMMM d' }}</div>
+				<div class="body" ng-click="click(event)" ng-repeat="event in eventGroup.events">
 					{{ event.title }}
 					<div class="link">More Information</div>
 				</div>

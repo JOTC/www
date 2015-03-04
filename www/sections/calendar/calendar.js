@@ -11,7 +11,7 @@ angular.module("jotc")
 		
 		var theDate = Date.now();
 		theDate = new Date(theDate - (theDate % 86400000));
-		theDate = new Date(theDate.getTime() - (theDate.getUTCDay() * 86400000));
+		theDate = new Date(theDate.getTime() - (theDate.getUTCDay() * 86400000) + 86399000);
 
 		for(var weekNumber = 0; weekNumber < 5; weekNumber++)
 		{
@@ -21,7 +21,7 @@ angular.module("jotc")
 				days.push({
 					date: theDate.getUTCDate(),
 					month: (i === 0 ? monthNames[theDate.getUTCMonth()] : false),
-					ts: theDate.getTime()
+					do: theDate
 				});
 				
 				theDate = new Date(theDate.getTime() + 86400000);

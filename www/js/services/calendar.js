@@ -19,7 +19,7 @@ angular.module("jotc")
 			
 			while(time < event.endDate.getTime())
 			{
-				addCalendarEvent(time, {
+				addCalendarEvent(event.startDate, {
 					title: event.title,
 					type: "calendar",
 					_id: event._id,
@@ -45,23 +45,23 @@ angular.module("jotc")
 			for(i = 0; i < $shows.list.upcoming.length; i++)
 			{
 				show = $shows.list.upcoming[i];
-				addCalendarEvent(show.registrationDeadline.getTime(), {
+				addCalendarEvent(show.registrationDeadline, {
 					title: "Registration deadline for " + show.title + " show",
 					type: "show",
 					showID: show._id
 				});
 
-				var time = show.startDate.getTime() - (show.startDate.getTime() % 86400000);
-				addCalendarEvent(time, {
+				var time = show.startDate.getTime();
+				addCalendarEvent(new Date(time), {
 					title: show.title + " show begins",
 					type: "show",
 					showID: show._id
 				});
 				time += 86400000;
 				
-				while(time < show.endDate.getTime() - 86400000)
+				while(time < show.endDate.getTime())
 				{
-					addCalendarEvent(time, {
+					addCalendarEvent(new Date(time), {
 						title: show.title + " show",
 						type: "show",
 						showID: show._id
@@ -69,7 +69,7 @@ angular.module("jotc")
 					time += 86400000;
 				}
 				
-				addCalendarEvent(show.endDate.getTime() - (show.endDate.getTime() % 86400000), {
+				addCalendarEvent(show.endDate, {
 					title: show.title + " show ends",
 					type: "show",
 					showID: show._id
@@ -81,10 +81,10 @@ angular.module("jotc")
 			{
 				clss = $classes.list[i];
 				
-				var time = clss.startDate.getTime() - (clss.startDate.getTime() % 86400000);
+				var time = clss.startDate.getTime();
 				while(time < clss.endDate.getTime())
 				{
-					addCalendarEvent(time, {
+					addCalendarEvent(new Date(time), {
 						title: "Class meets at " + clss.timeOfDay,
 						type: "class",
 						classID: clss._id
