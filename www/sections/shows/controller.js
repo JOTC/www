@@ -57,7 +57,7 @@ angular.module("jotc")
 			}
 			
 			$modal.open({
-				templateUrl: "jotc/sections/shows/shows.edit.html",
+				templateUrl: "jotc/sections/shows/edit-show.template.html",
 				controller: "editShow",
 				backdrop: "static",
 				size: "lg",

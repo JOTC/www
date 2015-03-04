@@ -15,31 +15,31 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 		
 		$routeProvider
 			.when("/home", {
-				templateUrl: "jotc/sections/home/home.html",
+				templateUrl: "jotc/sections/home/template.html",
 				controller: "home"
 			})
 			.when("/shows", {
-				templateUrl: "jotc/sections/shows/shows.html",
+				templateUrl: "jotc/sections/shows/template.html",
 				controller: "shows"
 			})
 			.when("/classes", {
-				templateUrl: "jotc/sections/classes/classes.html",
+				templateUrl: "jotc/sections/classes/template.html",
 				controller: "classes"
 			})
 			.when("/pictures", {
-				templateUrl: "jotc/sections/pictures/pictures.html",
+				templateUrl: "jotc/sections/pictures/template.html",
 				controller: "pictures"
 			})
 			.when("/calendar", {
-				templateUrl: "jotc/sections/calendar/calendar.html",
+				templateUrl: "jotc/sections/calendar/template.html",
 				controller: "calendar"
 			})
 			.when("/links", {
-				templateUrl: "jotc/sections/links/links.html",
+				templateUrl: "jotc/sections/links/template.html",
 				controller: "links"
 			})
 			.when("/about", {
-				templateUrl: "jotc/sections/about/about.html",
+				templateUrl: "jotc/sections/about/template.html",
 				controller: "about"
 			})
 			.otherwise({

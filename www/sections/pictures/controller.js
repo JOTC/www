@@ -142,7 +142,7 @@ angular.module("jotc")
 			if(gallery.images.length > 0)
 			{
 				$modal.open({
-					templateUrl: "jotc/sections/pictures/pictures.gallery.html",
+					templateUrl: "jotc/sections/pictures/gallery.template.html",
 					controller: "gallery",
 					backdrop: "static",
 					size: "lg",
@@ -167,7 +167,7 @@ angular.module("jotc")
 			}
 			
 			$modal.open({
-				templateUrl: "jotc/sections/pictures/pictures.edit.html",
+				templateUrl: "jotc/sections/pictures/edit-gallery.template.html",
 				controller: "editGallery",
 				backdrop: "static",
 				size: "lg",

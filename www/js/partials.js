@@ -1,7 +1,44 @@
 angular.module('jotc-partials', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('jotc/sections/about/about.html',
+  $templateCache.put('jotc/sections/about/edit-officer.template.html',
+    "<div class=\"modal-header\">{{ action }} Officer</div>\n" +
+    "\n" +
+    "<div class=\"modal-body\">\n" +
+    "\n" +
+    "<form>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Name</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"officer.name\">\n" +
+    "\t\t<div class=\"alert alert-danger\" ng-show=\"officer.name === ''\">Name is required</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Titles</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-repeat=\"title in titles\" ng-model=\"title.value\">\n" +
+    "\t\t<button class=\"btn btn-primary\" ng-click=\"addTitle()\">Add Title</button>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Contacts</label>\n" +
+    "\t\t<div ng-repeat=\"contact in officer.contacts\">\n" +
+    "\t\t\t<hr ng-if=\"$index > 0\">\n" +
+    "\t\t\t<label><input type=\"radio\" name=\"contact-type-{{ $index }}\" ng-model=\"contact.type\" value=\"email\"> Email</label>\n" +
+    "\t\t\t<label><input type=\"radio\" name=\"contact-type-{{ $index }}\" ng-model=\"contact.type\" value=\"phone\"> Phone</label>\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"contact.value\">\n" +
+    "\t\t</div>\n" +
+    "\t\t<button class=\"btn btn-primary\" ng-click=\"addContact()\">Add Contact</button>\n" +
+    "\t</div>\n" +
+    "</form>\n" +
+    "\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"modal-footer\">\n" +
+    "\t<button class=\"btn btn-primary\" ng-click=\"save()\">Save</button>\n" +
+    "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('jotc/sections/about/template.html',
     "<div id=\"about\">\n" +
     "\t<div class=\"title\">About JOTC</div>\n" +
     "\n" +
@@ -66,44 +103,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/about/officer.edit.html',
-    "<div class=\"modal-header\">{{ action }} Officer</div>\n" +
-    "\n" +
-    "<div class=\"modal-body\">\n" +
-    "\n" +
-    "<form>\n" +
-    "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Name</label>\n" +
-    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"officer.name\">\n" +
-    "\t\t<div class=\"alert alert-danger\" ng-show=\"officer.name === ''\">Name is required</div>\n" +
-    "\t</div>\n" +
-    "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Titles</label>\n" +
-    "\t\t<input type=\"text\" class=\"form-control\" ng-repeat=\"title in titles\" ng-model=\"title.value\">\n" +
-    "\t\t<button class=\"btn btn-primary\" ng-click=\"addTitle()\">Add Title</button>\n" +
-    "\t</div>\n" +
-    "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Contacts</label>\n" +
-    "\t\t<div ng-repeat=\"contact in officer.contacts\">\n" +
-    "\t\t\t<hr ng-if=\"$index > 0\">\n" +
-    "\t\t\t<label><input type=\"radio\" name=\"contact-type-{{ $index }}\" ng-model=\"contact.type\" value=\"email\"> Email</label>\n" +
-    "\t\t\t<label><input type=\"radio\" name=\"contact-type-{{ $index }}\" ng-model=\"contact.type\" value=\"phone\"> Phone</label>\n" +
-    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"contact.value\">\n" +
-    "\t\t</div>\n" +
-    "\t\t<button class=\"btn btn-primary\" ng-click=\"addContact()\">Add Contact</button>\n" +
-    "\t</div>\n" +
-    "</form>\n" +
-    "\n" +
-    "</div>\n" +
-    "\n" +
-    "<div class=\"modal-footer\">\n" +
-    "\t<button class=\"btn btn-primary\" ng-click=\"save()\">Save</button>\n" +
-    "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('jotc/sections/calendar/calendar.edit.html',
+  $templateCache.put('jotc/sections/calendar/edit-calendar.template.html',
     "<div class=\"modal-header\">{{ action }} Calendar Event</div>\n" +
     "\n" +
     "<div class=\"modal-body\">\n" +
@@ -152,7 +152,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/calendar/calendar.html',
+  $templateCache.put('jotc/sections/calendar/template.html',
     "<div id=\"calendar\">\n" +
     "\t<div class=\"title\">Calendar of Events</div>\n" +
     "\t\n" +
@@ -182,7 +182,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/classes/classes.edit.html',
+  $templateCache.put('jotc/sections/classes/edit-class.template.html',
     "<div class=\"modal-header\">{{ action }} Show</div>\n" +
     "\n" +
     "<div class=\"modal-body\">\n" +
@@ -238,7 +238,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/classes/classes.html',
+  $templateCache.put('jotc/sections/classes/template.html',
     "<div id=\"classes\">\n" +
     "\t<div class=\"title\">JOTC Obedience Classes</div>\n" +
     "\n" +
@@ -429,7 +429,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/home/home.html',
+  $templateCache.put('jotc/sections/home/template.html',
     "<div id=\"landing\">\n" +
     "\t<div class=\"title\">Welcome to JOTC</div>\n" +
     "\n" +
@@ -485,7 +485,29 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/links/links.edit.html',
+  $templateCache.put('jotc/sections/links/edit-group.template.html',
+    "<div class=\"modal-header\">{{ action }} Link Group</div>\n" +
+    "\n" +
+    "<div class=\"modal-body\">\n" +
+    "\n" +
+    "<form>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Name</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"group.name\">\n" +
+    "\t\t<div class=\"alert alert-danger\" ng-show=\"group.name === ''\">Name is required</div>\n" +
+    "\t</div>\n" +
+    "</form>\n" +
+    "\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"modal-footer\">\n" +
+    "\t<button class=\"btn btn-primary\" ng-click=\"save()\">Save</button>\n" +
+    "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('jotc/sections/links/edit-link.template.html',
     "<div class=\"modal-header\">{{ action }} Link</div>\n" +
     "\n" +
     "<div class=\"modal-body\">\n" +
@@ -512,29 +534,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/links/links.group.edit.html',
-    "<div class=\"modal-header\">{{ action }} Link Group</div>\n" +
-    "\n" +
-    "<div class=\"modal-body\">\n" +
-    "\n" +
-    "<form>\n" +
-    "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Name</label>\n" +
-    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"group.name\">\n" +
-    "\t\t<div class=\"alert alert-danger\" ng-show=\"group.name === ''\">Name is required</div>\n" +
-    "\t</div>\n" +
-    "</form>\n" +
-    "\n" +
-    "</div>\n" +
-    "\n" +
-    "<div class=\"modal-footer\">\n" +
-    "\t<button class=\"btn btn-primary\" ng-click=\"save()\">Save</button>\n" +
-    "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('jotc/sections/links/links.html',
+  $templateCache.put('jotc/sections/links/template.html',
     "<div id=\"links\">\n" +
     "\t<div class=\"title\">Useful Links</div>\n" +
     "\t\n" +
@@ -596,7 +596,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/pictures/pictures.edit.html',
+  $templateCache.put('jotc/sections/pictures/edit-gallery.template.html',
     "<div class=\"modal-header\">{{ action }} Gallery</div>\n" +
     "\n" +
     "<div class=\"modal-body\">\n" +
@@ -621,7 +621,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/pictures/pictures.gallery.html',
+  $templateCache.put('jotc/sections/pictures/gallery.template.html',
     "<div class=\"gallery-modal\">\n" +
     "\t<div class=\"modal-header\">\n" +
     "\t\t{{ gallery.name }}\n" +
@@ -652,7 +652,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/pictures/pictures.html',
+  $templateCache.put('jotc/sections/pictures/template.html',
     "<div id=\"pictures\">\n" +
     "\t<div class=\"title\">Pictures</div>\n" +
     "\t\n" +
@@ -696,7 +696,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/shows/shows.edit.html',
+  $templateCache.put('jotc/sections/shows/edit-show.template.html',
     "<div class=\"modal-header\">{{ action }} Show</div>\n" +
     "\n" +
     "<div class=\"modal-body\">\n" +
@@ -766,7 +766,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/shows/shows.html',
+  $templateCache.put('jotc/sections/shows/template.html',
     "<div id=\"shows\">\n" +
     "\t<div class=\"title\">JOTC Shows and Trials</div>\n" +
     "\n" +
@@ -855,7 +855,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/uploader/uploader.html',
+  $templateCache.put('jotc/sections/uploader/template.html',
     "<div class=\"drag-drop-uploader-container\" ng-controller=\"dragDropFileUploader.controller\">\n" +
     "\t<div ng-file-drop ng-if=\"uploadingFiles.length === 0\" class=\"upload-box\" ng-model=\"files\" drag-over-class=\"dragover\" multiple=\"false\" allow-dir=\"false\" accept=\".pdf,.pdf\" ng-file-change=\"fileDropped($files, $event, $rejectedFiles)\">\n" +
     "\t\tDrag and drop a PDF to add {{ documentName }}\n" +
