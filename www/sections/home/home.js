@@ -1,8 +1,25 @@
 angular.module("jotc")
+	.filter("orderEventObjects", function()
+	{
+		return function(items)
+		{
+			var filtered = [];
+			angular.forEach(items, function(item)
+			{
+				filtered.push(item);
+			});
+			filtered.sort(function(a, b)
+			{
+				return (a.date < b.date ? 1 : -1);
+			});
+			
+			return filtered;
+		};
+	})
 	.controller("home", [ "$scope", "$location", "jotc-api", function($scope, $location, $api)
 	{
 		$scope.calendar = $api.calendar.events;
-		$scope.events = { };
+		$scope.events = [ ];
 		
 		$scope.$watchCollection("calendar", function()
 		{
@@ -15,6 +32,7 @@ angular.module("jotc")
 					newEvents[ts] = [ ];
 				}
 				newEvents[ts].push(event);
+				event.date = ts;
 			};
 			
 			for(var i in $scope.calendar)
@@ -39,22 +57,26 @@ angular.module("jotc")
 				}
 			}
 			
-			for(var i in $scope.events)
+			var eventsArray = [ ];
+			for(var d in newEvents)
 			{
-				if($scope.events.hasOwnProperty(i))
-				{
-					delete $scope.events[i];
-				}
-			}
-			for(var i in newEvents)
+				eventsArray.push({
+					date: new Date(d),
+					events: newEvents[d]
+				});
+			};
+			eventsArray.sort(function(a, b)
 			{
-				$scope.events[i] = newEvents[i];
-			}
+				return (a.date > b.date) ? 1 : -1;
+			});
+			
+			Array.prototype.splice.apply($scope.events, [ 0, $scope.events.length ].concat(eventsArray));
 		});
 		
 		var pathsByTypes = {
 			"show": "shows",
-			"class": "classes"
+			"class": "classes",
+			"calendar": "calendar"
 		};
 		
 		$scope.imgUrl = "";
@@ -70,9 +92,9 @@ angular.module("jotc")
 			return $scope.imgUrl;
 		};
 		
-		$scope.isFuture = function(ts)
+		$scope.isFuture = function(eventGroup)
 		{
-			return ts > Date.now();
+			return eventGroup.date > new Date();
 		};
 		
 		$scope.click = function(event)
