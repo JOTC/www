@@ -588,7 +588,7 @@ div[ng-view] .title {
 #calendar .table .cal-row .cell.value .event {
   margin-left: 20px;
   padding: 3px;
-  background: #002244;
+  background: #115511;
   color: white;
   border-radius: 7px;
 }
@@ -596,10 +596,10 @@ div[ng-view] .title {
   margin-top: 2px;
 }
 #calendar .table .cal-row .cell.value .event.show {
-  background: red;
+  background: #AA3333;
 }
 #calendar .table .cal-row .cell.value .event.class {
-  background: green;
+  background: #333399;
 }
 #links {
   width: 100%;
