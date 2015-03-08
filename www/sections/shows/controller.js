@@ -208,9 +208,9 @@ angular.module("jotc")
 				fn = $api.shows.create;
 			}
 			
-			$scope.show.registrationDeadline = $scope.show.registrationDeadline.toMidnightUTC();
-			$scope.show.startDate = $scope.show.startDate.toMidnightUTC();
-			$scope.show.endDate = $scope.show.endDate.toMidnightUTC();
+			$scope.show.registrationDeadline = new Date($scope.show.registrationDeadline).toMidnightUTC();
+			$scope.show.startDate = new Date($scope.show.startDate).toMidnightUTC();
+			$scope.show.endDate = new Date($scope.show.endDate).toMidnightUTC();
 			
 			fn($scope.show, function()
 			{
