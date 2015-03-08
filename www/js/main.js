@@ -10,7 +10,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			var month = this.getMonth() + 1;
 			var date = this.getDate();
 			
-			return new Date(this.getFullYear() + "-" + (month > 10 ? "" : "0") + month + "-" + (date > 10 ? "" : "0") + date + "T23:59:59Z");
+			return new Date(this.getFullYear() + "-" + (month > 9 ? "" : "0") + month + "-" + (date > 9 ? "" : "0") + date + "T23:59:59Z");
 		};
 		
 		$routeProvider
