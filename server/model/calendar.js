@@ -6,7 +6,8 @@ var calendarSchema = mongoose.Schema({
 	endDate: Date,
 	link: String,
 	description: String,
-	isPublic: Boolean
+	location: String,
+	filePath: String
 });
 
 module.exports = mongoose.model("calendar", calendarSchema);
