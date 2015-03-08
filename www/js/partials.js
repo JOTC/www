@@ -119,6 +119,10 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"event.description\">\n" +
     "\t</div>\n" +
     "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Location</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"event.location\">\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
     "\t\t<label>Link</label>\n" +
     "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"event.link\">\n" +
     "\t</div>\n" +
