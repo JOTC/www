@@ -42,6 +42,10 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 				templateUrl: "jotc/sections/about/template.html",
 				controller: "about"
 			})
+			.when("/resetPassword", {
+				templateUrl: "jotc/sections/resetPassword/template.html",
+				controller: "resetPassword"
+			})
 			.otherwise({
 				redirectTo: "/home"
 			});

@@ -728,6 +728,30 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
+  $templateCache.put('jotc/sections/resetPassword/template.html',
+    "<div class=\"title\">Reset Password</div>\n" +
+    "\n" +
+    "<div class=\"resetPassword\">\n" +
+    "\t<form>\n" +
+    "\n" +
+    "\t\t<div class=\"form-group\">\n" +
+    "\t\t\t<label>New Password</label>\n" +
+    "\t\t\t<input type=\"password\" class=\"form-control\" ng-model=\"reset.password1\">\n" +
+    "\t\t\t<div class=\"alert alert-danger\" ng-hide=\"passwordIsSufficient()\">Password must be at least 8 characters longs and contain at least one letter and one number.</div>\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"form-group\">\n" +
+    "\t\t\t<label>Confirm New Password</label>\n" +
+    "\t\t\t<input type=\"password\" class=\"form-control\" ng-model=\"reset.password2\">\n" +
+    "\t\t\t<div class=\"alert alert-danger\" ng-hide=\"passwordsMatch()\">Passwords do not match</div>\n" +
+    "\t\t</div>\n" +
+    "\n" +
+    "\t\t<button class=\"btn btn-primary\" ng-click=\"resetPassword()\">Reset Password</button>\n" +
+    "\n" +
+    "\t</form>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('jotc/sections/shows/edit-show.template.html',
     "<div class=\"modal-header\">{{ action }} Show</div>\n" +
     "\n" +

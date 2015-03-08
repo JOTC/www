@@ -3,5 +3,9 @@
 	"session": {
 		"secret": "session-secret-key",
 		"lifetimeInDays": 10 
+	},
+	"gmail": {
+		"username": "gmail-username",
+		"password": "gmail-password"
 	}
 }
