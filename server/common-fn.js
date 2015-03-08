@@ -30,7 +30,7 @@ var getBasicBodyHandler = function(permissionName, logger, validationFn, handler
 };
 
 module.exports = {
-	getModelLister: function(model, logger, sort)
+	getModelLister: function(model, logger, sort, postProcessFn)
 	{
 		return function(req, res, next)
 		{
@@ -48,6 +48,10 @@ module.exports = {
 					res.send(500);
 				}
 				{
+					if(postProcessFn)
+					{
+						postProcessFn(objs, req);
+					}
 					res.send(200, objs);
 				}
 			});
