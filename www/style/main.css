@@ -591,6 +591,7 @@ div[ng-view] .title {
   background: #115511;
   color: white;
   border-radius: 7px;
+  cursor: pointer;
 }
 #calendar .table .cal-row .cell.value .event + .event {
   margin-top: 2px;
@@ -600,6 +601,18 @@ div[ng-view] .title {
 }
 #calendar .table .cal-row .cell.value .event.class {
   background: #333399;
+}
+.modal-body.calendar-popup {
+  text-align: center;
+}
+.modal-body.calendar-popup .description {
+  margin-top: 30px;
+}
+.modal-body.calendar-popup .map {
+  margin-top: 30px;
+}
+.modal-body.calendar-popup .link {
+  margin-top: 30px;
 }
 #links {
   width: 100%;

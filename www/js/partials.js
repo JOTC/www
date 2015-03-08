@@ -156,6 +156,34 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
+  $templateCache.put('jotc/sections/calendar/popup.template.html',
+    "<div class=\"modal-header\">{{ event.title }} - {{ dateRange }}</div>\n" +
+    "\n" +
+    "<div class=\"modal-body calendar-popup\">\n" +
+    "\n" +
+    "\t<div class=\"date\">{{ dateRange }}</div>\n" +
+    "\n" +
+    "\t<div class=\"description\" ng-if=\"event.description\">{{ event.description }}</div>\n" +
+    "\n" +
+    "\t<div class=\"map\" ng-if=\"event.location\">\n" +
+    "\t\t{{ event.location }}<br><br>\n" +
+    "\t\t<a href=\"{{ $location.getDirectionsURLForLocation(event.location) }}\" target=\"_blank\">\n" +
+    "\t\t\t<img ng-src=\"{{ $location.getImageURLForLocation(event.location); }}\">\n" +
+    "\t\t\t<br>\n" +
+    "\t\t\tClick for directions\n" +
+    "\t\t</a>\n" +
+    "\t</div>\n" +
+    "\t\n" +
+    "\t<div class=\"link\" ng-if=\"event.link\"><a ng-href=\"{{ event.link }}\">Click for more information<br>{{ event.link }}</a></div>\n" +
+    "\t\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"modal-footer\">\n" +
+    "\t<button class=\"btn btn-danger\" ng-click=\"close()\">Close</button>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('jotc/sections/calendar/template.html',
     "<div id=\"calendar\">\n" +
     "\t<div class=\"title\">Calendar of Events</div>\n" +
@@ -172,11 +200,11 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t<div class=\"cell value\" ng-repeat=\"day in week\">\n" +
     "\t\t\t\t<div class=\"date\">{{ day.date }}</div>\n" +
     "\t\t\t\t<div class=\"month\" ng-if=\"day.month\">{{ day.month }}</div>\n" +
-    "\t\t\t\t<div class=\"event\" ng-repeat=\"event in events[day.do]\" ng-class=\"event.type\">\n" +
+    "\t\t\t\t<div class=\"event\" ng-repeat=\"event in events[day.do]\" ng-class=\"event.type\" ng-click=\"gotoEvent(event)\">\n" +
     "\t\t\t\t\t{{ event.title }}\n" +
     "\t\t\t\t\t<div ng-if=\"auth.calendar && event.type === 'calendar'\">\n" +
-    "\t\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"editEvent(event)\">Edit</button>\n" +
-    "\t\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"deleteEvent(event)\">Delete</button>\n" +
+    "\t\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"editEvent(event, $event)\">Edit</button>\n" +
+    "\t\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"deleteEvent(event, $event)\">Delete</button>\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +

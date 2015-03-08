@@ -1,0 +1,24 @@
+<div class="modal-header">{{ event.title }} - {{ dateRange }}</div>
+
+<div class="modal-body calendar-popup">
+
+	<div class="date">{{ dateRange }}</div>
+
+	<div class="description" ng-if="event.description">{{ event.description }}</div>
+
+	<div class="map" ng-if="event.location">
+		{{ event.location }}<br><br>
+		<a href="{{ $location.getDirectionsURLForLocation(event.location) }}" target="_blank">
+			<img ng-src="{{ $location.getImageURLForLocation(event.location); }}">
+			<br>
+			Click for directions
+		</a>
+	</div>
+	
+	<div class="link" ng-if="event.link"><a ng-href="{{ event.link }}">Click for more information<br>{{ event.link }}</a></div>
+	
+</div>
+
+<div class="modal-footer">
+	<button class="btn btn-danger" ng-click="close()">Close</button>
+</div>

@@ -1,5 +1,5 @@
 angular.module("jotc")
-	.controller("calendar", [ "$scope", "$modal", "jotc-auth", "jotc-api", function($scope, $modal, $auth, $api)
+	.controller("calendar", [ "$scope", "$location", "$modal", "jotc-auth", "jotc-api", function($scope, $location, $modal, $auth, $api)
 	{
 		$scope.auth = $auth.permissions;
 		$scope.events = $api.calendar.events;
@@ -29,13 +29,43 @@ angular.module("jotc")
 			$scope.weeks.push(days);
 		}
 		
-		$scope.editEvent = function(event)
+		$scope.gotoEvent = function(event)
 		{
+			if(event.type === "show")
+			{
+				$location.path("/shows");
+			}
+			else if(event.type === "class")
+			{
+				$location.path("/classes");
+			}
+			else
+			{
+				$modal.open({
+					templateUrl: "jotc/sections/calendar/popup.template.html",
+					controller: "calendar.popup",
+					backdrop: "static",
+					size: "lg",
+					resolve: {
+						event: function()
+						{
+							return event.event;
+						}
+					}
+				});
+			}
+		};
+		
+		$scope.editEvent = function(event, $domEvent)
+		{
+			$domEvent.stopPropagation();
+			
 			if(!event)
 			{
 				event = {
 					title: "",
 					description: "",
+					location: "",
 					link: "",
 					startDate: null,
 					endDate: null
@@ -60,8 +90,9 @@ angular.module("jotc")
 			});
 		};
 		
-		$scope.deleteEvent = function(event)
+		$scope.deleteEvent = function(event, $domEvent)
 		{
+			$domEvent.stopPropagation();
 			if(confirm("Are you sure you want to delete the event titled " + event.title + "?  This cannot be undone."))
 			{
 				if(confirm("Please confirm again.  Do you wish to delete this event?"))
@@ -124,4 +155,20 @@ angular.module("jotc")
 		};
 		
 		$scope.cancel = $self.dismiss;
+	}])
+	.controller("calendar.popup", [ "$scope", "$modalInstance", "jotc-location", "event", function($scope, $self, locationService, event)
+	{
+		$scope.event = event;
+		$scope.close = $self.dismiss;
+		$scope.$location = locationService;
+		
+		var months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+		var days = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ];
+		
+		var getDateString = function(date)
+		{
+			return days[date.getUTCDay()] + ", " + months[date.getUTCMonth()] + " " + date.getUTCDate();
+		};
+		
+		$scope.dateRange = (event.startDate.getTime() === event.endDate.getTime() ? getDateString(event.startDate) : getDateString(event.startDate) + " through " + getDateString(event.endDate));
 	}]);
