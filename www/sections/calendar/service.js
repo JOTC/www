@@ -15,11 +15,11 @@ angular.module("jotc")
 		
 		var addEvent = function(event)
 		{
-			var time = event.startDate.getTime() - (event.startDate.getTime() % 86400000);
+			var time = event.startDate.getTime();
 			
-			while(time < event.endDate.getTime())
+			while(time <= event.endDate.getTime())
 			{
-				addCalendarEvent(event.startDate, {
+				addCalendarEvent(new Date(time), {
 					title: event.title,
 					type: "calendar",
 					_id: event._id,
