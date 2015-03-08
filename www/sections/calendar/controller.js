@@ -100,10 +100,10 @@ angular.module("jotc")
 		
 		$scope.save = function()
 		{
-			$scope.event.startDate = $scope.event.startDate.toMidnightUTC();
+			$scope.event.startDate = new Date($scope.event.startDate).toMidnightUTC();
 			if($scope.event.endDate)
 			{
-				$scope.event.endDate = $scope.event.endDate.toMidnightUTC();
+				$scope.event.endDate = new Date($scope.event.endDate).toMidnightUTC();
 			}
 			else
 			{
