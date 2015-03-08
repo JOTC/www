@@ -28,5 +28,5 @@ angular.module("jotc")
 					alert("Your password has been set.  You are now logged in and will be redirected to the front page.");
 				});
 			}
-		}
+		};
 	}]);

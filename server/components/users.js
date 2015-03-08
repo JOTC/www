@@ -1,22 +1,9 @@
-var restify = require("restify");
 var db = require("../model/db.js");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "users component", level: "debug" });
 var nodemailer = require('nodemailer');
 var config = JSON.parse(require("fs").readFileSync("config.json"));
 var bcrypt = require("bcryptjs");
-
-var isValidGroup = function(group)
-{
-	var valid = false;
-	if(group)
-	{
-		valid = true;
-		valid = valid && (group.name && typeof group.name === "string");
-	}
-	
-	return valid;
-};
 
 var isValidUser = function(user)
 {
@@ -115,7 +102,7 @@ module.exports = {
 				
 				emailOptions.text += permissionText + "\n\nSincerely,\nJOTC Website Admin";
 				
-				transporter.sendMail(emailOptions, function(error, info)
+				transporter.sendMail(emailOptions, function(error)
 				{
 					if(error)
 					{
@@ -180,7 +167,7 @@ module.exports = {
 						log.error("User is not in initialization/reset phase");
 						res.send(403);
 					}
-				})
+				});
 				next();
 			}
 		},
