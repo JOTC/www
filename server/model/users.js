@@ -8,13 +8,13 @@ var userSchema = mongoose.Schema({
 	name: String,
 	email: String,
 	permissions: {
-		links: Boolean,
-		officers: Boolean,
-		shows: Boolean,
-		classes: Boolean,
-		pictures: Boolean,
-		calendar: Boolean,
-		users: Boolean
+		links: { type: Boolean, default: false },
+		officers: { type: Boolean, default: false },
+		shows: { type: Boolean, default: false },
+		classes: { type: Boolean, default: false },
+		pictures: { type: Boolean, default: false },
+		calendar: { type: Boolean, default: false },
+		users: { type: Boolean, default: false }
 	}
 });
 
