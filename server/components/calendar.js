@@ -1,4 +1,3 @@
-var restify = require("restify");
 var db = require("../model/db.js");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "calendar component", level: "debug" });
@@ -31,8 +30,6 @@ module.exports = {
 		"/calendar": {
 			"get": function(req, res, next)
 			{
-				var events = { };
-				
 				db.calendar.find({ endDate: { "$gte": new Date() } }).exec(function(err, events)
 				{
 					if(err)
@@ -42,7 +39,7 @@ module.exports = {
 					}
 					else
 					{
-						res.send(200, events)
+						res.send(200, events);
 					}
 				});
 				

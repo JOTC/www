@@ -42,7 +42,7 @@ var isValidClass = function(clss)
 	}
 	
 	return valid;
-}
+};
 
 var getRegistrationFormFilename = function(clss)
 {
@@ -188,7 +188,7 @@ module.exports = {
 									}
 								});
 							}
-						})
+						});
 					}
 					else
 					{

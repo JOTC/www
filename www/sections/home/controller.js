@@ -64,7 +64,7 @@ angular.module("jotc")
 					date: new Date(d),
 					events: newEvents[d]
 				});
-			};
+			}
 			eventsArray.sort(function(a, b)
 			{
 				return (a.date > b.date) ? 1 : -1;

@@ -54,13 +54,13 @@ module.exports = {
 			next();
 		};
 	},
-	getModelCreator: function(model, permissionName, logger, validationFn, postProcessFn)
+	getModelCreator: function(DBModel, permissionName, logger, validationFn, postProcessFn)
 	{
 		return getBasicBodyHandler(permissionName, logger, validationFn, function(req, res, obj)
 		{
 			delete obj._id;
 			
-			var modelObj = new model(obj);
+			var modelObj = new DBModel(obj);
 			if(postProcessFn)
 			{
 				postProcessFn(modelObj);

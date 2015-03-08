@@ -17,7 +17,7 @@ var initializedModels = {
 	"./initial/links.js": module.exports.linkGroups
 };
 
-var getInserter = function(model, module)
+var getInserter = function(DBModel, module)
 {
 	return function(objs)
 	{
@@ -25,7 +25,7 @@ var getInserter = function(model, module)
 		{
 			require(module).forEach(function(obj)
 			{
-				var modelObj = new model(obj);
+				var modelObj = new DBModel(obj);
 				modelObj.save();
 			});
 		}

@@ -40,6 +40,7 @@ angular.module("jotc")
 			}
 			
 			var i = 0;
+			var time = 0;
 			
 			var show = null;
 			for(i = 0; i < $shows.list.upcoming.length; i++)
@@ -51,7 +52,7 @@ angular.module("jotc")
 					showID: show._id
 				});
 
-				var time = show.startDate.getTime();
+				time = show.startDate.getTime();
 				addCalendarEvent(new Date(time), {
 					title: show.title + " show begins",
 					type: "show",
@@ -81,7 +82,7 @@ angular.module("jotc")
 			{
 				clss = $classes.list[i];
 				
-				var time = clss.startDate.getTime();
+				time = clss.startDate.getTime();
 				while(time < clss.endDate.getTime())
 				{
 					addCalendarEvent(new Date(time), {
