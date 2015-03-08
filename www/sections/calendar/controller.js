@@ -148,7 +148,7 @@ angular.module("jotc")
 			}
 			else
 			{
-				fn = $calendar.create
+				fn = $calendar.create;
 			}
 			
 			fn($scope.event, $self.dismiss);

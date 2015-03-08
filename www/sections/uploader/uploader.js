@@ -52,4 +52,4 @@ angular.module("jotc")
 				$scope.uploadingFiles.splice(0, 1);
 			});
 		};
-	}])
+	}]);
