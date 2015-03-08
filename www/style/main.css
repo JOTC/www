@@ -319,6 +319,10 @@ div[ng-view] .title {
   color: blue;
   text-decoration: underline;
 }
+.resetPassword {
+  margin: 0 auto;
+  width: 400px;
+}
 #shows .header,
 #classes .header {
   text-align: center;
