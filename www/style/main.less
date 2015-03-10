@@ -88,11 +88,20 @@ div#header
 		top: 10px;
 		font-size: 0.8em;
 		font-family: sans-serif;
-	}
 
-	#userStatus span[ng-click]
-	{
-		cursor: pointer;
+		span[ng-click]
+		{
+			cursor: pointer;
+			&:hover
+			{
+				text-decoration: underline;
+			}
+		}
+		
+		a
+		{
+			color: white;
+		}
 	}
 }
 
@@ -204,6 +213,7 @@ div[ng-view]
 }
 
 @import "../sections/home/home.less";
+@import "../sections/users/users.less";
 @import "../sections/resetPassword/resetPassword.less";
 @import "../sections/shows/shows.less";
 @import "../sections/pictures/pictures.less";
