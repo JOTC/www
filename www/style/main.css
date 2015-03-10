@@ -215,6 +215,12 @@ div#header #userStatus {
 div#header #userStatus span[ng-click] {
   cursor: pointer;
 }
+div#header #userStatus span[ng-click]:hover {
+  text-decoration: underline;
+}
+div#header #userStatus a {
+  color: white;
+}
 div#navBar {
   position: absolute;
   left: 0;
@@ -318,6 +324,39 @@ div[ng-view] .title {
   font-size: 0.8em;
   color: blue;
   text-decoration: underline;
+}
+#manageUsers .userList {
+  background: white;
+  padding: 0;
+  border: 1px solid black;
+  border-radius: 10px;
+  overflow: hidden;
+}
+#manageUsers .userList div.user {
+  padding: 5px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #DDD;
+}
+#manageUsers .userList div.user:hover {
+  background: #DDF;
+}
+#manageUsers .userList div.user.selected {
+  background: #338;
+  color: white;
+}
+#manageUsers .userList hr {
+  margin: 10px;
+}
+#manageUsers .userList div.newUser {
+  margin: 10px 0;
+}
+#manageUsers .selectedUser {
+  padding: 0 30px;
+}
+#manageUsers .selectedUser .permission > div {
+  font-size: 0.8em;
+  font-style: italic;
+  padding: 0 30px;
 }
 .resetPassword {
   margin: 0 auto;

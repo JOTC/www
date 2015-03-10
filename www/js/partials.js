@@ -621,8 +621,8 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t</div>\n" +
     "\n" +
     "\t<div class=\"modal-footer\">\n" +
-    "\t\t<button class=\"btn btn-primary\" ng-click=\"login()\">Login</button>\n" +
-    "\t\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "\t\t<button class=\"btn btn-primary\" type=\"submit\">Login</button>\n" +
+    "\t\t<a class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</a>\n" +
     "\t</div>\n" +
     "</form>\n"
   );
@@ -925,6 +925,55 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t</div>\n" +
     "\t</div>\n" +
     "</div>\n"
+  );
+
+
+  $templateCache.put('jotc/sections/users/template.html',
+    "<div id=\"manageUsers\" ng-if=\"auth.permissions.users\">\n" +
+    "\t<div class=\"title\">Manage Users</div>\n" +
+    "\n" +
+    "\t<div class=\"flex container\">\n" +
+    "\t\t<div class=\"col-md-3 userList\">\n" +
+    "\t\t\t<div ng-repeat=\"user in users.list\" ng-click=\"selectUser(user)\" class=\"user\" ng-class=\"{ selected: user === selectedUserShadow }\">\n" +
+    "\t\t\t\t{{ user.name }}\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t<div class=\"center newUser\">\n" +
+    "\t\t\t\t<button class=\"btn btn-info\" ng-click=\"newUser()\">New User</button>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t</div>\n" +
+    "\t\t\n" +
+    "\t\t<div class=\"col-md-9 selectedUser\" ng-if=\"selectedUser\">\n" +
+    "\t\t\t<div class=\"form-group\">\n" +
+    "\t\t\t\t<label>Name</label>\n" +
+    "\t\t\t\t<input type=\"text\" ng-model=\"selectedUser.name\" class=\"form-control\">\n" +
+    "\t\t\t</div>\n" +
+    "\n" +
+    "\t\t\t<div class=\"form-group\">\n" +
+    "\t\t\t\t<label>Email</label>\n" +
+    "\t\t\t\t<input type=\"text\" ng-model=\"selectedUser.email\" class=\"form-control\">\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t\n" +
+    "\t\t\t<div class=\"permissions\">\n" +
+    "\t\t\t\t<div ng-repeat=\"(p,v) in selectedUser.permissions\" class=\"form-group permission\">\n" +
+    "\t\t\t\t\t<label>\n" +
+    "\t\t\t\t\t\t<input type=\"checkbox\" ng-model=\"selectedUser.permissions[p]\" ng-disabled=\"selectedUser._id === auth.getUserID() && p === 'users'\">\n" +
+    "\t\t\t\t\t\t{{ permissions[p] }}\n" +
+    "\t\t\t\t\t</label>\n" +
+    "\t\t\t\t\t<div ng-show=\"selectedUser._id === auth.getUserID() && p === 'users'\">You cannot remove this permission from yourself.</div>\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t\n" +
+    "\t\t\t<button class=\"btn btn-success\" ng-click=\"saveSelectedUser()\">Save</button>\n" +
+    "\t\t\t<button class=\"btn btn-primary\" ng-if=\"selectedUser._id\" ng-click=\"resetSelectedUser()\">Reset</button>\n" +
+    "\t\t\t\n" +
+    "\t\t\t<div ng-if=\"selectedUser._id && selectedUser._id !== auth.getUserID()\">\n" +
+    "\t\t\t\t<br>\n" +
+    "\t\t\t\t<button class=\"btn btn-warning\" ng-click=\"resetSelectedPassword()\">Reset Password</button>\n" +
+    "\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"deleteSelectedUser()\">Delete</button>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t</div>\n" +
+    "\t</div>\n" +
+    "</div>"
   );
 
 }]);

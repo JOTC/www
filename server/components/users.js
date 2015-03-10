@@ -13,6 +13,14 @@ var isValidUser = function(user)
 		valid = true;
 		valid = valid && (user.name && typeof user.name === "string");
 		valid = valid && (user.email && typeof user.email === "string");
+		valid = valid && (user.permissions && typeof user.permissions === "object");
+		valid = valid && (typeof user.permissions.shows === "boolean");
+		valid = valid && (typeof user.permissions.classes === "boolean");
+		valid = valid && (typeof user.permissions.pictures === "boolean");
+		valid = valid && (typeof user.permissions.calendar === "boolean");
+		valid = valid && (typeof user.permissions.links === "boolean");
+		valid = valid && (typeof user.permissions.officers === "boolean");
+		valid = valid && (typeof user.permissions.users === "boolean");
 	}
 	
 	return valid;
@@ -116,22 +124,10 @@ module.exports = {
 				});
 				
 			})
-			/* * /
-			"post": fn.getModelCreator(db.linkGroups, "links", log, isValidGroup, function(obj)
-			{
-				db.linkGroups.find({}).sort({ ordering: "desc" }).exec(function(err, groups)
-				{
-					if(groups && groups.length > 0)
-					{
-						obj.ordering = groups[0].ordering + 1;
-					}
-					else
-					{
-						obj.ordering = 1;
-					}
-				});
-			})
-			//*/
+		},
+		"/users/:userID": {
+			"put": fn.getModelUpdater(db.users, "userID", "users", log, isValidUser),
+			"delete": fn.getModelDeleter(db.users, "userID", "users", log)
 		},
 		"/auth/local/validate/:userID/:validationCode": {
 			"get": function(req, res, next)

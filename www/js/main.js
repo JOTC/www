@@ -42,6 +42,10 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 				templateUrl: "jotc/sections/about/template.html",
 				controller: "about"
 			})
+			.when("/users", {
+				templateUrl: "jotc/sections/users/template.html",
+				controller: "manage-users"
+			})
 			.when("/resetPassword", {
 				templateUrl: "jotc/sections/resetPassword/template.html",
 				controller: "resetPassword"
@@ -62,7 +66,12 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			users: false
 		};
 		
+		var users = {
+			list: [ ]
+		};
+		
 		var loggedIn = false;
+		var userID = "";
 		var username = "";
 
 		var getUser = function()
@@ -71,11 +80,13 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			.success(function(user)
 			{
 				loggedIn = false;
+				userID = "";
 				username = "";
 				
 				if(user && user.permissions)
 				{
 					loggedIn = true;
+					userID = user._id;
 					username = user.name;
 					
 					permissions.shows = user.permissions.shows;
@@ -85,6 +96,15 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 					permissions.links = user.permissions.links;
 					permissions.officers = user.permissions.officers;
 					permissions.users = user.permissions.users;
+					
+					if(permissions.users)
+					{
+						$http.get("/data2/users")
+						.success(function(list)
+						{
+							Array.prototype.splice.apply(users.list, [ 0, users.list.length ].concat(list));
+						});
+					}
 				}
 				else
 				{
@@ -103,9 +123,11 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 		
 		return {
 			isLoggedIn: function() { return loggedIn; },
+			getUserID: function() { return userID },
 			getUsername: function() { return username; },
 			refresh: getUser,
-			permissions: permissions
+			permissions: permissions,
+			users: users
 		};
 	}])
 	.service("jotc-api", [ "$http", "jotc-api.shows", "jotc-api.classes", "jotc-api.calendar", "jotc-api.pictures", "jotc-api.linkGroups", "jotc-api.officers", function($http, $shows, $classes, $calendar, $pictures, $linkGroups, $officers)

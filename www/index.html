@@ -20,7 +20,7 @@
 			[ <span ng-if="!auth.isLoggedIn()" ng-click="login();">Login</span>
 			<span ng-if="auth.isLoggedIn()">
 				Hello {{ auth.getUsername() }} | 
-				<span ng-if="auth.permissions.users">Manage Users | </span>
+				<span ng-if="auth.permissions.users"><a href="#/users">Manage Users</a> | </span>
 				<span ng-click="logout();">Logout</span>
 			</span> ]
 		</div>
@@ -60,6 +60,7 @@
 	<script src="js/sha256.js" type="text/javascript"></script>
 	<script src="sections/uploader/uploader.js" type="text/javascript"></script>
 	<script src="sections/login/controller.js" type="text/javascript"></script>
+	<script src="sections/users/controller.js" type="text/javascript"></script>
 	<script src="sections/resetPassword/controller.js" type="text/javascript"></script>
 
 	<script src="sections/home/controller.js" type="text/javascript"></script>
