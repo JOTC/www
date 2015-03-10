@@ -121,13 +121,86 @@ module.exports = {
 					{
 						log.info("Email successfully sent to %s", obj.email);
 					}
-				});
-				
+				});				
 			})
 		},
 		"/users/:userID": {
 			"put": fn.getModelUpdater(db.users, "userID", "users", log, isValidUser),
 			"delete": fn.getModelDeleter(db.users, "userID", "users", log)
+		},
+		"/auth/local/reset/": {
+			"put": function(req, res, next)
+			{
+				if(req.body && req.body.email)
+				{
+					db.users.findOne({ "local.username": req.body.email }).exec(function(err, user)
+					{
+						if(err)
+						{
+							log.error(err);
+							res.send(500);
+						}
+						else
+						{
+							var token = require("crypto").randomBytes(16).toString("hex");
+							user.local.secret = "---init---" + bcrypt.hashSync(token);
+							
+							user.save(function(err)
+							{
+								if(err)
+								{
+									log.error(err);
+									res.send(500);
+								}
+								else
+								{
+									var transporter = nodemailer.createTransport({
+									    service: "Gmail",
+									    auth: {
+									        user: config.gmail.username,
+									        pass: config.gmail.password
+									    }
+									});
+				
+									var emailOptions = {
+										from: "JOTC Website <" + config.gmail.username + ">",
+										to: user.name + " <" + user.email + ">",
+										subject: "JOTC Website Password Reset",
+										text:	"Dear " + user.name + ",\n\nYour password on Jackson Obedience Training Club " +
+												"website is ready to be reset.  To do that, please click the following link:\n\n" +
+												"http://jotc.org/data2/auth/local/validate/" + user._id + "/" + token + "\n\n" +
+												"After you have set your password, you will immediately be logged in and " +
+												"redirected to to the JOTC website. After that, you may log in again whenever " +
+												"you need to by simply visiting the JOTC website and clicking the [Login] link " +
+												"in the top-right corner of the front page.\n\nSincerely,\nJOTC Website Admin"
+									};
+							
+									transporter.sendMail(emailOptions, function(error)
+									{
+										if(error)
+										{
+											log.error("Error sending email to %s", obj.email);
+											log.error(error);
+										}
+										else
+										{
+											log.info("Email successfully sent to %s", obj.email);
+										}
+									});
+									
+									res.send(200);
+								}
+							});
+						}
+					});
+				}
+				else
+				{
+					res.send(400);
+				}
+				
+				next();
+			}
 		},
 		"/auth/local/validate/:userID/:validationCode": {
 			"get": function(req, res, next)

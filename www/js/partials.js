@@ -606,22 +606,24 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   $templateCache.put('jotc/sections/login/template.html',
     "<div class=\"modal-header\">Login</div>\n" +
     "\n" +
-    "<form ng-submit=\"login()\">\n" +
+    "<form ng-submit=\"formSubmit()\">\n" +
     "\t<div class=\"modal-body\">\n" +
     "\n" +
     "\t\t<div class=\"form-group\">\n" +
     "\t\t\t<label>Email</label>\n" +
     "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"credentials.username\">\n" +
     "\t\t</div>\n" +
-    "\t\t<div class=\"form-group\">\n" +
+    "\t\t<div class=\"form-group\" ng-if=\"!inReset\">\n" +
     "\t\t\t<label>Password</label>\n" +
     "\t\t\t<input type=\"password\" class=\"form-control\" ng-model=\"credentials.password\">\n" +
+    "\t\t\t<a ng-click=\"forgotPassword()\">Forgot Password</a>\n" +
     "\t\t</div>\n" +
     "\n" +
     "\t</div>\n" +
     "\n" +
     "\t<div class=\"modal-footer\">\n" +
-    "\t\t<button class=\"btn btn-primary\" type=\"submit\">Login</button>\n" +
+    "\t\t<button class=\"btn btn-primary\" type=\"submit\" ng-if=\"!inReset\">Login</button>\n" +
+    "\t\t<button class=\"btn btn-primary\" type=\"submit\" ng-if=\"inReset\">Reset Password</button>\n" +
     "\t\t<a class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</a>\n" +
     "\t</div>\n" +
     "</form>\n"
