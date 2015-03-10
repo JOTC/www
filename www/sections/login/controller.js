@@ -6,20 +6,38 @@ angular.module("jotc")
 			password: ""
 		};
 		
-		$scope.login = function()
+		$scope.inReset = false;
+		
+		$scope.formSubmit = function()
 		{
-			$http({
-				method: "POST",
-				url: "/data2/auth/local",
-				data: "username=" + $scope.credentials.username + "&password=" + SHA256($scope.credentials.password),
-				headers: { "Content-type": "application/x-www-form-urlencoded" }
-			})
-			.success(function()
+			if($scope.inReset)
 			{
-				$auth.refresh();
-				$self.dismiss();
-			});
-			
+				$http.put("/data2/auth/local/reset", { email: $scope.credentials.username })
+				.success(function()
+				{
+					alert("An email has been sent to you with instructions.");
+					$self.dismiss();
+				});
+			}
+			else
+			{
+				$http({
+					method: "POST",
+					url: "/data2/auth/local",
+					data: "username=" + $scope.credentials.username + "&password=" + SHA256($scope.credentials.password),
+					headers: { "Content-type": "application/x-www-form-urlencoded" }
+				})
+				.success(function()
+				{
+					$auth.refresh();
+					$self.dismiss();
+				});
+			}
+		};
+		
+		$scope.forgotPassword = function()
+		{
+			$scope.inReset = true;
 		};
 		
 		$scope.cancel = $self.dismiss;
