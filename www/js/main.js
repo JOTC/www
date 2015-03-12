@@ -169,7 +169,7 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 			}
 		});
 	}])
-	.controller("main", [ "$scope", "$modal", "$http", "jotc-auth", function($scope, $modal, $http, $auth)
+	.controller("main", [ "$scope", "$window", "$modal", "$http", "jotc-auth", function($scope, $window, $modal, $http, $auth)
 	{
 		$scope.login = function()
 		{
@@ -191,4 +191,21 @@ angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-p
 		};
 		
 		$scope.auth = $auth;
+		
+		$scope.navbar = {
+			fixed: false
+		};
+		
+		var $$window = $(window);
+		angular.element($window).bind("scroll", function()
+		{
+			var fixed = ($$window.scrollTop() > 200);
+			if(fixed !== $scope.navbar.fixed)
+			{
+				$scope.$apply(function()
+				{
+					$scope.navbar.fixed = fixed;
+				});
+			}
+		});
 	}]);
