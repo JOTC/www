@@ -234,6 +234,17 @@ div[ng-view]
 	color: #AAA;
 }
 
+div[ng-view].ng-enter
+{
+	.transition(opacity 300ms);
+	opacity: 0;
+
+	&.ng-enter-active
+	{
+		opacity: 1;
+	}
+}
+
 @import "../sections/home/home.less";
 @import "../sections/users/users.less";
 @import "../sections/resetPassword/resetPassword.less";
