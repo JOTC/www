@@ -1,4 +1,4 @@
-angular.module("jotc", [ "ngRoute", "ui.bootstrap", "angularFileUpload", "jotc-partials" ])
+angular.module("jotc", [ "ngRoute", "ngAnimate", "ui.bootstrap", "angularFileUpload", "jotc-partials" ])
 	.config([ "$routeProvider", function($routeProvider)
 	{
 		Date.prototype.toMidnightUTC = function()
