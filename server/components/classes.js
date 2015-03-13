@@ -14,7 +14,7 @@ var getFutureClasses = function(callback)
 {
 	var midnightToday = Date.now();
 	midnightToday = new Date(midnightToday - (midnightToday % 86400000));
-	db.classes.classes.find({ startDate: { $gte: midnightToday }}).sort({ startDate: "asc" }).exec(callback);
+	db.classes.classes.find({ endDate: { $gte: midnightToday }}).sort({ startDate: "asc" }).exec(callback);
 };
 
 var isValidClass = function(clss)
