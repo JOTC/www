@@ -7,7 +7,7 @@
 	
 	<div class="galleries container-fluid">
 		<div class="galleryRow" ng-repeat="row in getRows()">
-			<div class="col-md-4" ng-repeat="gallery in row">
+			<div class="col-md-6" ng-repeat="gallery in row">
 				<div class="gallery" ng-click="showGallery(gallery)">
 					<div class="preview">
 						<img ng-src="/galleryImages/{{ gallery.images[0].path }}" ng-if="gallery.images.length > 0">
