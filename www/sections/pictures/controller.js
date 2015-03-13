@@ -125,7 +125,7 @@ angular.module("jotc")
 			for(i = 0; i < $scope.galleries.length; i++)
 			{
 				row.push($scope.galleries[i]);
-				if(row.length === 3)
+				if(row.length === 2)
 				{
 					$scope.rows.push(row);
 					row = [ ];
