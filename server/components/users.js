@@ -2,7 +2,7 @@ var db = require("../model/db.js");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "users component", level: "debug" });
 var nodemailer = require('nodemailer');
-var config = JSON.parse(require("fs").readFileSync("config.json"));
+var config = require("../config");
 var bcrypt = require("bcryptjs");
 
 var isValidUser = function(user)

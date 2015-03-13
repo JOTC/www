@@ -5,6 +5,8 @@ var db = require("../model/db.js");
 var dates = require("../dateHelper.js");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "shows component", level: "debug" });
+var config = require("../config");
+var path = require("path");
 
 var isValidShow = function(show)
 {
@@ -22,7 +24,8 @@ var isValidShow = function(show)
 	return valid;
 };
 
-var __BASE_PATH = "/vagrant/www";
+var __WWW_PATH = "/files/shows";
+var __FILE_PATH = config.www.getPath(__WWW_PATH);
 
 var getObjectsInOrder = function(model, sortBy, callback)
 {
@@ -58,7 +61,7 @@ var getFileUploadHandler = function(filenameSuffix, showPropertyName)
 			else if(show)
 			{
 				var filename = show.title + " " + filenameSuffix + ".pdf";
-				mv(req.files.file.path, __BASE_PATH + "/shows/" + req.params.showID + "/" + filename, { mkdirp: true }, function(err)
+				mv(req.files.file.path, path.join(__FILE_PATH, req.params.showID, filename), { mkdirp: true }, function(err)
 				{
 					if(err)
 					{
@@ -67,13 +70,13 @@ var getFileUploadHandler = function(filenameSuffix, showPropertyName)
 					}
 					else
 					{
-						show[showPropertyName] = "/shows/" + req.params.showID + "/" + filename;
+						show[showPropertyName] = path.join(__WWW_PATH, req.params.showID, filename);
 						show.save(function(err)
 						{
 							if(err)
 							{
 								handleError(err);
-								require("fs").unlinkSync(__BASE_PATH + "/shows/" + req.params.showID + "/" + filename);
+								require("fs").unlinkSync(path.join(__FILE_PATH, req.params.showID, filename));
 							}
 							else
 							{
@@ -111,7 +114,7 @@ var getFileDeleteHandler = function(showPropertyName)
 			}
 			else
 			{
-				fs.unlink(__BASE_PATH + decodeURIComponent(show[showPropertyName]), function(err)
+				fs.unlink(config.www.getPath(decodeURIComponent(show[showPropertyName])), function(err)
 				{
 					if(err)
 					{
@@ -192,11 +195,11 @@ module.exports = {
 			{
 				if(show.premiumListPath)
 				{
-					fs.unlinkSync(__BASE_PATH + decodeURIComponent(show.premiumListPath));
+					fs.unlinkSync(path.join(__FILE_PATH, decodeURIComponent(show.premiumListPath)));
 				}
 				if(show.resultsPath)
 				{
-					fs.unlinkSync(__BASE_PATH + decodeURIComponent(show.resultsPath));
+					fs.unlinkSync(path.join(__FILE_PATH, decodeURIComponent(show.resultsPath)));
 				}
 			})
 		},

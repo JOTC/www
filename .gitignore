@@ -3,4 +3,3 @@ ubuntu1404-nginx-node-mongo.box
 .DS_Store
 node_modules
 bower_components
-old

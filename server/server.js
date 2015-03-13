@@ -2,7 +2,7 @@ var restify = require("restify");
 var passport = require("passport");
 var sessions = require("client-sessions");
 var fs = require("fs");
-var config = JSON.parse(fs.readFileSync("config.json"));
+var config = require("./config");
 
 var app = restify.createServer({ name: "JOTC Data API Server" });
 

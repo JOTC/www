@@ -3,10 +3,12 @@ var db = require("../model/db.js");
 var fs = require("fs");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "image component", level: "debug" });
+var config = require("../config");
 
 var imageMagick = require("gm").subClass({ imageMagick: true });
 
-var __SAVE_PATH = "/vagrant/www/galleryImages/";
+var __FILE_PATH = config.www.getPath("galleryImages");
+log.info(__FILE_PATH);
 
 var isValidGallery = function(gallery)
 {
@@ -33,7 +35,7 @@ module.exports = {
 			{
 				for(var i = 0; i < gallery.images.length; i++)
 				{
-					fs.unlinkSync(__SAVE_PATH + gallery.images[i]._id + gallery.images[i].path.replace(/.*\.(png|jpg|jpeg|gif)/g, ".$1"));
+					fs.unlinkSync(path.join(__FILE_PATH, gallery.images[i]._id.valueOf() + gallery.images[i].path.replace(/.*\.(png|jpg|jpeg|gif)/g, ".$1")));
 				}
 			})
 		},
@@ -60,7 +62,7 @@ module.exports = {
 					var ext = req.files.file.name.replace(/.*\.(jpg|jpeg|png|gif)$/, ".$1");				
 					img.path = img._id + ext;
 					
-					imageMagick(req.files.file.path).resize(1024, 1024, ">").write(__SAVE_PATH + img.path, function(err)
+					imageMagick(req.files.file.path).resize(1024, 1024, ">").write(path.join(__FILE_PATH, img.path), function(err)
 					{
 						if(err)
 						{
@@ -163,7 +165,7 @@ module.exports = {
 					{
 						if(gallery.images[i]._id.toString() === req.params.imageID)
 						{
-							fs.unlinkSync(__SAVE_PATH + gallery.images[i]._id + gallery.images[i].path.replace(/.*\.(png|jpg|jpeg|gif)/g, ".$1"));
+							fs.unlinkSync(path.join(__FILE_PATH, gallery.images[i]._id.valueOf() + gallery.images[i].path.replace(/.*\.(png|jpg|jpeg|gif)/g, ".$1")));
 							gallery.images.splice(i, 1);
 							break;
 						}

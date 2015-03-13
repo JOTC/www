@@ -4,8 +4,11 @@ var fs = require("fs");
 var db = require("../model/db.js");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "classes component", level: "debug" });
+var config = require("../config");
+var path = require("path");
 
-var __BASE_PATH = "/vagrant/www";
+var __WWW_PATH = "/files/classes";
+var __FILE_PATH = config.www.getPath(__WWW_PATH);
 
 var getFutureClasses = function(callback)
 {
@@ -87,7 +90,7 @@ module.exports = {
 			{
 				if(obj.registrationFormPath)
 				{
-					fs.unlinkSync(__BASE_PATH + "/classes/" + obj._id + "/" + getRegistrationFormFilename(obj));
+					fs.unlinkSync(path.join(__FILE_PATH, obj._id.valueOf(), getRegistrationFormFilename(obj)));
 				}
 			})
 		},
@@ -116,7 +119,7 @@ module.exports = {
 					else if(clss)
 					{
 						var filename = getRegistrationFormFilename(clss);
-						mv(req.files.file.path, __BASE_PATH + "/classes/" + req.params.classID + "/" + filename, { mkdirp: true }, function(err)
+						mv(req.files.file.path, path.join(__FILE_PATH, req.params.classID, filename), { mkdirp: true }, function(err)
 						{
 							if(err)
 							{
@@ -125,13 +128,13 @@ module.exports = {
 							}
 							else
 							{
-								clss.registrationFormPath = "/classes/" + req.params.classID + "/" + filename;
+								clss.registrationFormPath = path.join(__WWW_PATH, req.params.classID, filename);
 								clss.save(function(err)
 								{
 									if(err)
 									{
 										handleError(err);
-										require("fs").unlinkSync(__BASE_PATH + "/classes/" + req.params.classID + "/" + filename);
+										require("fs").unlinkSync(path.join(__FILE_PATH, req.params.classID, filename));
 									}
 									else
 									{
@@ -165,7 +168,7 @@ module.exports = {
 					}
 					else if(clss)
 					{
-						fs.unlink(__BASE_PATH + "/classes/" + clss._id + "/" + getRegistrationFormFilename(clss), function(err)
+						fs.unlink(path.join(__FILE_PATH, req.params.classID, getRegistrationFormFilename(clss)), function(err)
 						{
 							if(err)
 							{
