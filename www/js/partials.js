@@ -696,7 +696,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\n" +
     "\t<div class=\"galleries container-fluid\">\n" +
     "\t\t<div class=\"galleryRow\" ng-repeat=\"row in getRows()\">\n" +
-    "\t\t\t<div class=\"col-md-4\" ng-repeat=\"gallery in row\">\n" +
+    "\t\t\t<div class=\"col-md-6\" ng-repeat=\"gallery in row\">\n" +
     "\t\t\t\t<div class=\"gallery\" ng-click=\"showGallery(gallery)\">\n" +
     "\t\t\t\t\t<div class=\"preview\">\n" +
     "\t\t\t\t\t\t<img ng-src=\"/galleryImages/{{ gallery.images[0].path }}\" ng-if=\"gallery.images.length > 0\">\n" +

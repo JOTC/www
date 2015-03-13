@@ -507,13 +507,13 @@ div[ng-view].ng-enter.ng-enter-active {
   cursor: pointer;
 }
 #pictures .galleries .gallery .preview {
-  width: 75px;
-  height: 75px;
+  width: 150px;
+  height: 150px;
   float: left;
 }
 #pictures .galleries .gallery .preview img {
-  max-width: 75px;
-  max-height: 75px;
+  max-width: 150px;
+  max-height: 150px;
   border: 1px solid black;
 }
 #pictures .galleries .gallery .name {
