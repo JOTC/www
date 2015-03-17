@@ -662,9 +662,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t</div>\n" +
     "\n" +
     "\t<div class=\"modal-body\">\n" +
-    "\t\t<div class=\"image\">\n" +
-    "\t\t\t<img ng-src=\"/galleryImages/{{ gallery.images[index].path }}\">\n" +
-    "\t\t</div>\n" +
+    "\t\t<img ng-src=\"/galleryImages/{{ gallery.images[index].path }}\">\n" +
     "\t\t<div>\n" +
     "\t\t\t<div class=\"control prev\" ng-click=\"previous()\" ng-if=\"index > 0\"><i class=\"fa fa-step-backward\"></i> Previous</div>\n" +
     "\t\t\t<div class=\"control next\" ng-click=\"next()\" ng-if=\"index < gallery.images.length - 1\">Next <i class=\"fa fa-step-forward\"></i></div>\n" +
