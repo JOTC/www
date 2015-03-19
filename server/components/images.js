@@ -8,7 +8,6 @@ var config = require("../config");
 var imageMagick = require("gm").subClass({ imageMagick: true });
 
 var __FILE_PATH = config.www.getPath("galleryImages");
-log.info(__FILE_PATH);
 
 var isValidGallery = function(gallery)
 {
