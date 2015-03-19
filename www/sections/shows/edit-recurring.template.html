@@ -1,18 +1,34 @@
-<div class="modal-header">{{ action }} Show</div>
+<div class="modal-header">{{ action }} Recurring Show</div>
 
 <div class="modal-body">
 
 <form>
 	<div class="form-group">
-		<label>Show Title</label>
-		<input type="text" class="form-control" ng-model="show.title">
+		<label>Description</label>
+		<textarea class="form-control" rows="5" ng-model="recurringShow.description"></textarea>
 	</div>
-	<div class="form-group">
+	
+	<div class="showClassCategory" ng-repeat="category in recurringShow.categories">
+		<div class="form-group">
+			<input type="text" class="form-control" ng-model="category.name">
+		</div>
+		
+		<div class="classes">
+			<div class="form-group" ng-repeat="class in category.classes">
+				<input type="text" class="form-control" ng-model="class.name">
+			</div>
+			<button class="btn btn-success" ng-click="addClass(category)">Add Class</button>
+		</div>
+	</div>
+	
+	<button class="btn btn-success" ng-click="addClassCategory()">Add Class Category</button>
+	
+	<!--div class="form-group">
 		<label>Location</label>
 		<input type="text" class="form-control" ng-model="show.location">
 	</div>
 	<div class="form-group">
-		<label>Entries Close Date</label>
+		<label>Registration Close Date</label>
 		<div class="input-group">
 			<input type="text" class="form-control" ng-model="show.registrationDeadline" disabled datepicker-popup="dd MMM yyyy" is-open="dateOpen.reg">
 			<span class="input-group-btn">
@@ -48,11 +64,14 @@
 	</div>
 	<div class="form-group">
 		<label>Classes</label>
-		<div class="classes">
-			<input type="text" class="form-control" ng-model="class.name" ng-repeat="class in show.classes">
+		<div class="input-group container">
+			<div class="row" ng-repeat="row in getClassesByRow()">
+				<div class="col-md-6" ng-repeat="class in row">
+					<label class="control-label" style="margin-left: 1em; text-indent: -1em;"><input type="checkbox" ng-model="classesChecked[class._id]" ng-change="toggleClass(class)"> {{ class.name }}</label>
+				</div>
+			</div>
 		</div>
-		<button class="btn btn-success" ng-click="addClass()">Add Class</button>
-	</div>
+	</div-->
 </form>
 
 </div>

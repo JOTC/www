@@ -19,10 +19,41 @@ var isValidShow = function(show)
 		valid = valid && (show.startDate && typeof show.startDate === "string");
 		valid = valid && (show.endDate && typeof show.endDate === "string");
 		valid = valid && (show.registrationDeadline && typeof show.registrationDeadline === "string");
+		valid = valid && (show.classes && Array.isArray(show.classes));
 	}
 	
 	return valid;
 };
+
+var isValidRecurringShow = function(show)
+{
+	var valid = false;
+	if(show)
+	{
+		valid = true;
+		valid = valid && (show.description && typeof show.description === "string");
+		valid = valid && (show.categories && Array.isArray(show.categories));
+		
+		if(valid)
+		{
+			show.categories.forEach(function(category)
+			{
+				valid = valid && (category.name && typeof category.name === "string");
+				valid = valid && (category.classes && Array.isArray(category.classes));
+				
+				if(valid)
+				{
+					category.classes.forEach(function(c)
+					{
+						valid = valid && (c && typeof c === "string");
+					});
+				}
+			});
+		}
+	}
+	
+	return valid;
+}
 
 var __WWW_PATH = "/files/shows";
 var __FILE_PATH = config.www.getPath(__WWW_PATH);
@@ -211,20 +242,96 @@ module.exports = {
 			"post": getFileUploadHandler("Results", "resultsPath"),
 			"delete": getFileDeleteHandler("resultsPath")
 		},
-		"/shows/types/": {
-			"get": function(req, res, next)
+		"/shows/recurring": {
+			"post": fn.getModelCreator(db.shows.recurring, "shows", log, isValidRecurringShow, function(obj)
 			{
-				getObjectsInOrder(db.shows.showTypes, "priorityOrder", function(objs, err)
+				db.shows.recurring.find({}).sort({ ordering: "desc" }).exec(function(err, shows)
+				{
+					if(shows && shows.length > 0)
+					{
+						obj.ordering = shows[0].ordering + 1;
+					}
+					else
+					{
+						obj.ordering = 1;
+					}
+					obj.save();
+				});
+			}),
+			"get": fn.getModelLister(db.shows.recurring, log, "ordering")
+		},
+		"/shows/recurring/:showID": {
+			"put": fn.getModelUpdater(db.shows.recurring, "showID", "shows", log, isValidRecurringShow),
+			"delete": fn.getModelDeleter(db.shows.recurring, "showID", "shows", log)
+		},
+		"/shows/recurring/:showID/up": {
+			"put": function(req, res, next)
+			{
+				db.shows.recurring.findOne({ _id: req.params.showID }).exec(function(err, show)
 				{
 					if(err)
 					{
 						log.error(err);
 						res.send(500);
+						return;
 					}
-					else
+					
+					db.shows.recurring.findOne({ ordering: (show.ordering - 1) }).exec(function(err, swapShow)
 					{
-						res.send(objs);
+						if(err)
+						{
+							log.error(err);
+							res.send(500);
+							return;
+						}
+						
+						if(swapShow)
+						{
+							show.ordering--;
+							swapShow.ordering++;
+							
+							show.save();
+							swapShow.save();
+						}
+						
+						res.send(200);
+					});
+				});
+				next();
+			}
+		},
+		"/shows/recurring/:showID/down": {
+			"put": function(req, res, next)
+			{
+				db.shows.recurring.findOne({ _id: req.params.showID }).exec(function(err, show)
+				{
+					if(err)
+					{
+						log.error(err);
+						res.send(500);
+						return;
 					}
+					
+					db.shows.recurring.findOne({ ordering: (show.ordering + 1) }).exec(function(err, swapShow)
+					{
+						if(err)
+						{
+							log.error(err);
+							res.send(500);
+							return;
+						}
+						
+						if(swapShow)
+						{
+							show.ordering++;
+							swapShow.ordering--;
+							
+							show.save();
+							swapShow.save();
+						}
+						
+						res.send(200);
+					});
 				});
 				next();
 			}

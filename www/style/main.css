@@ -388,6 +388,14 @@ div[ng-view].ng-enter.ng-enter-active {
   margin: 0 auto;
   width: 400px;
 }
+.modal-body .showClassCategory {
+  border-bottom: 2px solid black;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+.modal-body .showClassCategory .classes {
+  margin-left: 40px;
+}
 #shows .header,
 #classes .header {
   text-align: center;
@@ -398,6 +406,18 @@ div[ng-view].ng-enter.ng-enter-active {
 #classes .auth {
   text-align: center;
   margin: 10px 0;
+}
+#shows .recurring,
+#classes .recurring {
+  margin-top: 1em;
+}
+#shows .recurring .description,
+#classes .recurring .description {
+  white-space: pre-line;
+}
+#shows .recurring hr,
+#classes .recurring hr {
+  border: 1px solid #888;
 }
 #shows .show,
 #classes .show,

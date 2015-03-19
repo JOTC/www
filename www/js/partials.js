@@ -752,17 +752,33 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('jotc/sections/shows/edit-show.template.html',
-    "<div class=\"modal-header\">{{ action }} Show</div>\n" +
+  $templateCache.put('jotc/sections/shows/edit-recurring.template.html',
+    "<div class=\"modal-header\">{{ action }} Recurring Show</div>\n" +
     "\n" +
     "<div class=\"modal-body\">\n" +
     "\n" +
     "<form>\n" +
     "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Show Title</label>\n" +
-    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"show.title\">\n" +
+    "\t\t<label>Description</label>\n" +
+    "\t\t<textarea class=\"form-control\" rows=\"5\" ng-model=\"recurringShow.description\"></textarea>\n" +
     "\t</div>\n" +
-    "\t<div class=\"form-group\">\n" +
+    "\t\n" +
+    "\t<div class=\"showClassCategory\" ng-repeat=\"category in recurringShow.categories\">\n" +
+    "\t\t<div class=\"form-group\">\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"category.name\">\n" +
+    "\t\t</div>\n" +
+    "\t\t\n" +
+    "\t\t<div class=\"classes\">\n" +
+    "\t\t\t<div class=\"form-group\" ng-repeat=\"class in category.classes\">\n" +
+    "\t\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"class.name\">\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t<button class=\"btn btn-success\" ng-click=\"addClass(category)\">Add Class</button>\n" +
+    "\t\t</div>\n" +
+    "\t</div>\n" +
+    "\t\n" +
+    "\t<button class=\"btn btn-success\" ng-click=\"addClassCategory()\">Add Class Category</button>\n" +
+    "\t\n" +
+    "\t<!--div class=\"form-group\">\n" +
     "\t\t<label>Location</label>\n" +
     "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"show.location\">\n" +
     "\t</div>\n" +
@@ -810,6 +826,73 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
+    "\t</div-->\n" +
+    "</form>\n" +
+    "\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"modal-footer\">\n" +
+    "\t<button class=\"btn btn-primary\" ng-click=\"save()\">Save</button>\n" +
+    "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('jotc/sections/shows/edit-show.template.html',
+    "<div class=\"modal-header\">{{ action }} Show</div>\n" +
+    "\n" +
+    "<div class=\"modal-body\">\n" +
+    "\n" +
+    "<form>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Show Title</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"show.title\">\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Location</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"show.location\">\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Entries Close Date</label>\n" +
+    "\t\t<div class=\"input-group\">\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"show.registrationDeadline\" disabled datepicker-popup=\"dd MMM yyyy\" is-open=\"dateOpen.reg\">\n" +
+    "\t\t\t<span class=\"input-group-btn\">\n" +
+    "\t\t\t\t<button class=\"btn btn-primary\" style=\"height: 34px;\" ng-click=\"dateOpen.open('reg', $event);\"><i class=\"fa fa-calendar\"></i></button>\n" +
+    "\t\t\t</span>\n" +
+    "\t\t</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Start Date</label>\n" +
+    "\t\t<div class=\"input-group\">\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"show.startDate\" disabled datepicker-popup=\"dd MMM yyyy\" is-open=\"dateOpen.start\" min-date=\"show.registrationDeadline\">\n" +
+    "\t\t\t<span class=\"input-group-btn\">\n" +
+    "\t\t\t\t<button class=\"btn btn-primary\" style=\"height: 34px;\" ng-click=\"dateOpen.open('start', $event);\"><i class=\"fa fa-calendar\"></i></button>\n" +
+    "\t\t\t</span>\n" +
+    "\t\t</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>End Date</label>\n" +
+    "\t\t<div class=\"input-group\">\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"show.endDate\" disabled datepicker-popup=\"dd MMM yyyy\" is-open=\"dateOpen.end\" min-date=\"show.startDate\">\n" +
+    "\t\t\t<span class=\"input-group-btn\">\n" +
+    "\t\t\t\t<button class=\"btn btn-primary\" style=\"height: 34px;\" ng-click=\"dateOpen.open('end', $event);\"><i class=\"fa fa-calendar\"></i></button>\n" +
+    "\t\t\t</span>\n" +
+    "\t\t</div>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Description</label>\n" +
+    "\t\t<textarea class=\"form-control\" rows=\"5\" ng-model=\"show.description\"></textarea>\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Registration Link</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"show.registrationLink\">\n" +
+    "\t</div>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>Classes</label>\n" +
+    "\t\t<div class=\"classes\">\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"class.name\" ng-repeat=\"class in show.classes\">\n" +
+    "\t\t</div>\n" +
+    "\t\t<button class=\"btn btn-success\" ng-click=\"addClass()\">Add Class</button>\n" +
     "\t</div>\n" +
     "</form>\n" +
     "\n" +
@@ -829,18 +912,30 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t<div class=\"container-fluid\">\n" +
     "\n" +
     "\t\t<div class=\"col-md-6\">\n" +
-    "\t\t\tThe Jackson Obedience Training Club sponsors annual back-to-back obedience and rally trials.  The\n" +
-    "\t\t\ttrials are held indoors at the Jackson Fairgrounds.  Competition obedience classes usually include:\n" +
-    "\n" +
-    "\t\t\t<ul><li ng-repeat=\"class in getShowClasses()\">{{ class.name }}</li></ul>\n" +
-    "\n" +
-    "\t\t\t<br>We also offer all levels of rally competition:\n" +
-    "\t\t\t<ul><li ng-repeat=\"class in getRallyClasses()\">{{ class.name }}</li></ul>\n" +
-    "\n" +
-    "\t\t\t<br>Ribbons and trophies are awarded in all classes.  The trials are licensed by the American Kennel\n" +
-    "\t\t\tClub and all qualifying scores in Novice, Open, and Utility may be counted towards AKC\n" +
-    "\t\t\tObedience titles.  Additionally, qualifying scores in the regular Rally competition may\n" +
-    "\t\t\tcount towards AKC Rally titles.\n" +
+    "\t\t\tThe Jackson Obedience Training Club sponsors two AKC Sanctioned Obedience and Rally events each year.\n" +
+    "\t\t\tBoth shows are held indoors, with enclosed, fully-matted rings and usually include four back-to-back\n" +
+    "\t\t\tObedience and four Rally Trials over the weekend.\n" +
+    "\t\t\t\n" +
+    "\t\t\t<div class=\"recurring\" ng-repeat=\"show in recurring.list\">\n" +
+    "\t\t\t\t<span class=\"description\">{{ show.description }}</span>\n" +
+    "\t\t\t\t<ul>\n" +
+    "\t\t\t\t\t<li ng-repeat=\"category in show.categories\">\n" +
+    "\t\t\t\t\t\t<span class=\"bold\">{{ category.name }}:</span><br>\n" +
+    "\t\t\t\t\t\t<span ng-repeat=\"class in category.classes\"><span ng-if=\"$index > 0\">, </span>{{ class }}</span>\n" +
+    "\t\t\t\t\t</li>\n" +
+    "\t\t\t\t</ul>\n" +
+    "\t\t\t\t<div ng-if=\"auth.shows\">\n" +
+    "\t\t\t\t\t<button class=\"btn btn-warning\" ng-click=\"recurring.edit(show)\">Edit Recurring Show</button>\n" +
+    "\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"recurring.delete(show)\">Delete Recurring Show</button>\n" +
+    "\t\t\t\t\t<button ng-if=\"auth.shows && $index > 0\" class=\"btn btn-success\" ng-click=\"recurring.up(show)\"><i class=\"fa fa-arrow-up\"></i></button>\n" +
+    "\t\t\t\t\t<button ng-if=\"auth.shows && $index < (recurring.list.length - 1)\" class=\"btn btn-success\" ng-click=\"recurring.down(show)\"><i class=\"fa fa-arrow-down\"></i></button>\n" +
+    "\t\t\t\t\t<hr>\n" +
+    "\t\t\t\t</div>\n" +
+    "\t\t\t</div>\n" +
+    "\t\t\t\n" +
+    "\t\t\t<div ng-if=\"auth.shows\">\n" +
+    "\t\t\t\t<button class=\"btn btn-success\" ng-click=\"recurring.edit()\">Add Recurring Show</button>\n" +
+    "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\n" +
     "\t\t<div class=\"col-md-6\">\n" +
@@ -864,12 +959,12 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t<div class=\"location\">{{ show.location }}</div>\n" +
     "\n" +
     "\t\t\t\t<div class=\"description\">\n" +
-    "\t\t\t\t\t{{ show.description }}<span ng-if=\"show.registrationDeadline\">  Registration ends {{ show.registrationDeadline | date }}.</span>\n" +
+    "\t\t\t\t\t{{ show.description }}<span ng-if=\"show.registrationDeadline\">  Entries close {{ show.registrationDeadline | date }}.</span>\n" +
     "\n" +
     "\t\t\t\t\t<br><br>\n" +
     "\t\t\t\t\tThe following competition classes are included:\n" +
     "\t\t\t\t\t<ul>\n" +
-    "\t\t\t\t\t\t<li ng-repeat=\"class in show.classes\">{{ class.name }}</li>\n" +
+    "\t\t\t\t\t\t<li ng-repeat=\"class in show.classes\">{{ class }}</li>\n" +
     "\t\t\t\t\t</ul>\n" +
     "\n" +
     "\t\t\t\t\t<div ng-if=\"show.premiumListPath\" class=\"premiumList\">\n" +

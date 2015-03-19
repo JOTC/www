@@ -13,7 +13,6 @@ module.exports = {
 
 var initializedModels = {
 	"./initial/classTypes.js": module.exports.classes.classTypes,
-	"./initial/showTypes.js": module.exports.shows.showTypes,
 	"./initial/links.js": module.exports.linkGroups
 };
 
