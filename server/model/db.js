@@ -13,7 +13,8 @@ module.exports = {
 
 var initializedModels = {
 	"./initial/classTypes.js": module.exports.classes.classTypes,
-	"./initial/links.js": module.exports.linkGroups
+	"./initial/links.js": module.exports.linkGroups,
+	"./initial/recurringShows.js": module.exports.shows.recurring
 };
 
 var getInserter = function(DBModel, module)
