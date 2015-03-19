@@ -47,7 +47,7 @@ angular.module("jotc")
 			{
 				show = $shows.list.upcoming[i];
 				addCalendarEvent(show.registrationDeadline, {
-					title: "Registration deadline for " + show.title + " show",
+					title: "Entries close for " + show.title + " show",
 					type: "show",
 					showID: show._id
 				});
