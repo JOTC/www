@@ -4,6 +4,45 @@ angular.module("jotc")
 		$scope.shows = $api.shows.list;
 		$scope.classes = $api.shows.classes;
 		
+		$scope.recurring = {
+			list: $api.shows.recurring.list,
+			delete: function(recurringShow)
+			{
+				if(confirm("Are you certain you wish to delete this recurring show description?  It cannot be undone."))
+				{
+					if(confirm("Please confirm again.  Do you want to permanently delete this recurring show description?"))
+					{
+						$api.shows.recurring.delete(recurringShow._id);
+					}
+				}
+			},
+			up: $api.shows.recurring.up,
+			down: $api.shows.recurring.down,
+			edit: function(recurringShow)
+			{
+				if(!recurringShow)
+				{
+					recurringShow = {
+						description: "",
+						categories: [ ]
+					};
+				}
+			
+				$modal.open({
+					templateUrl: "jotc/sections/shows/edit-recurring.template.html",
+					controller: "editRecurring",
+					backdrop: "static",
+					size: "lg",
+					resolve: {
+						recurringShow: function()
+						{
+							return recurringShow;
+						}
+					}
+				});
+			}
+		};
+		
 		var showClasses = [ ];
 		$scope.getShowClasses = function()
 		{
@@ -118,57 +157,19 @@ angular.module("jotc")
 		$scope.action = (show.title === "" ? "New" : "Edit");
 		$scope.show = JSON.parse(JSON.stringify(show));
 		
-		$scope.classes = $api.shows.classes;
-		$scope.classesChecked = { };
-		
-		var classesByRow = [ ];
-		$scope.getClassesByRow = function()
+		for(var i = 0; i < $scope.show.classes.length; i++)
 		{
-			var i = 0;
-			
-			if(classesByRow.length === 0)
-			{
-				var row;
-				for(i = 0; i < $scope.classes.length; i++)
-				{
-					if(i % 3 === 0)
-					{
-						row = [ ];
-						classesByRow.push(row);
-					}
-					row.push($scope.classes[i]);
-					
-					$scope.classesChecked[$scope.classes[i]._id] = false;
-				}
-			}
-			
-			for(i = 0; i < $scope.show.classes.length; i++)
-			{
-				$scope.classesChecked[$scope.show.classes[i]._id] = true;
-			}
-			
-			return classesByRow;
-		};
+			$scope.show.classes[i] = { name: $scope.show.classes[i] };
+		}
 		
-		$scope.toggleClass = function(toggledClass)
+		$scope.addClass = function()
 		{
-			if($scope.classesChecked[toggledClass._id])
+			if($scope.show.classes.length === 0 || $scope.show.classes[$scope.show.classes.length - 1].name !== "")
 			{
-				$scope.show.classes.push(toggledClass);
-			}
-			else
-			{
-				for(var i = 0; i < $scope.show.classes.length; i++)
-				{
-					if($scope.show.classes[i]._id === toggledClass._id)
-					{
-						$scope.show.classes.splice(i, 1);
-						break;
-					}
-				}
+				$scope.show.classes.push({ name: "" })
 			}
 		};
-		
+
 		$scope.dateOpen = {
 			reg: false,
 			start: false,
@@ -198,25 +199,107 @@ angular.module("jotc")
 		
 		$scope.save = function()
 		{
+			var show = JSON.parse(JSON.stringify($scope.show));
+			for(var i = 0; i < show.classes.length; i++)
+			{
+				if(show.classes[i].name === "")
+				{
+					show.classes.splice(i, 1);
+					i--;
+				}
+				else
+				{
+					show.classes[i] = show.classes[i].name;
+				}
+			}
+			
 			var fn;
 			if($scope.show._id)
 			{
-				fn = $api.shows.show($scope.show._id).update;
+				fn = $api.shows.show(show._id).update;
 			}
 			else
 			{
 				fn = $api.shows.create;
 			}
 			
-			$scope.show.registrationDeadline = new Date($scope.show.registrationDeadline).toMidnightUTC();
-			$scope.show.startDate = new Date($scope.show.startDate).toMidnightUTC();
-			$scope.show.endDate = new Date($scope.show.endDate).toMidnightUTC();
+			show.registrationDeadline = new Date(show.registrationDeadline).toMidnightUTC();
+			show.startDate = new Date(show.startDate).toMidnightUTC();
+			show.endDate = new Date(show.endDate).toMidnightUTC();
 			
-			fn($scope.show, function()
+			fn(show, function()
 			{
 				$modalInstance.dismiss();
 			});
 		};
+		
+		$scope.cancel = $modalInstance.dismiss;
+	}])
+	.controller("editRecurring", [ "$scope", "$modalInstance", "jotc-api", "recurringShow", function($scope, $modalInstance, $api, recurringShow)
+	{
+		$scope.action = (recurringShow.description === "" ? "New" : "Edit");
+		$scope.recurringShow = JSON.parse(JSON.stringify(recurringShow));
+		
+		$scope.recurringShow.categories.forEach(function(category)
+		{
+			for(var i = 0; i < category.classes.length; i++)
+			{
+				category.classes[i] = { name: category.classes[i] };
+			}
+		});
+		
+		$scope.addClass = function(category)
+		{
+			if(category.classes.length === 0 || category.classes[category.classes.length - 1].name !== "")
+			{
+				category.classes.push({ name: "" });
+			}
+		};
+		
+		$scope.addClassCategory = function()
+		{
+			if($scope.recurringShow.categories.length === 0)
+			{
+				$scope.recurringShow.categories.push({ name: "", classes: [ { name: "" } ]});
+			}
+			else
+			{
+				var last = $scope.recurringShow.categories[$scope.recurringShow.categories.length - 1];
+				if(last.classes.length === 0 || (last.name !== "" && last.classes[last.classes.length - 1].name !== ""))
+				{
+					$scope.recurringShow.categories.push({ name: "", classes: [ { name: "" } ]});
+				}
+			}
+		};
+		
+		$scope.save = function()
+		{
+			var recurringShow = JSON.parse(JSON.stringify($scope.recurringShow));
+			for(var j = 0; j < recurringShow.categories.length; j++)
+			{
+				var category = recurringShow.categories[j];
+				for(var i = 0; i < category.classes.length; i++)
+				{
+					if(category.classes[i].name !== "")
+					{
+						category.classes[i] = category.classes[i].name
+					}
+					else
+					{
+						category.classes.splice(i, 1);
+						i--;
+					}
+				}
+				
+				if(category.classes.length === 0)
+				{
+					recurringShow.categories.splice(j, 1);
+					j--;
+				}
+			};
+			
+			$api.shows.recurring.save(recurringShow, $modalInstance.dismiss);
+		}
 		
 		$scope.cancel = $modalInstance.dismiss;
 	}]);

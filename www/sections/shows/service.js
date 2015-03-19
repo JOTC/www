@@ -3,6 +3,101 @@ angular.module("jotc")
 	{
 		var _updateHandlers = [ ];
 		
+		var recurring = {
+			list: [ ],
+			save: function(recurringShow, callback)
+			{
+				var promise;
+				if(recurringShow._id)
+				{
+					$http.put("/data2/shows/recurring/" + recurringShow._id, recurringShow)
+						.success(function()
+						{
+							for(var i = 0; i < recurring.list.length; i++)
+							{
+								if(recurring.list[i]._id === recurringShow._id)
+								{
+									recurring.list[i] = recurringShow;
+									break;
+								}
+							}
+							
+							if(callback)
+							{
+								callback();
+							}
+						});
+				}
+				else
+				{
+					$http.post("/data2/shows/recurring", recurringShow)
+						.success(function(recurringShow)
+						{
+							recurring.list.push(recurringShow);
+							if(callback)
+							{
+								callback();
+							}
+						});
+				}
+			},
+			up: function(recurringShow)
+			{
+				$http.put("/data2/shows/recurring/" + recurringShow._id + "/up")
+					.success(function()
+					{
+						for(var i = 0; i < recurring.list.length; i++)
+						{
+							if(recurring.list[i]._id === recurringShow._id)
+							{
+								if(i > 0)
+								{
+									var tmp = recurring.list[i];
+									recurring.list[i] = recurring.list[i - 1];
+									recurring.list[i - 1] = tmp;
+								}
+								break;
+							}
+						}
+					});
+			},
+			down: function(recurringShow)
+			{
+				$http.put("/data2/shows/recurring/" + recurringShow._id + "/down")
+					.success(function()
+					{
+						for(var i = 0; i < recurring.list.length; i++)
+						{
+							if(recurring.list[i]._id === recurringShow._id)
+							{
+								if(i < recurring.list.length - 1)
+								{
+									var tmp = recurring.list[i];
+									recurring.list[i] = recurring.list[i + 1];
+									recurring.list[i + 1] = tmp;
+								}
+								break;
+							}
+						}
+					});
+			},
+			delete: function(recurringShowID)
+			{
+				$http.delete("/data2/shows/recurring/" + recurringShowID)
+					.success(function()
+					{
+						for(var i = 0; i < recurring.list.length; i++)
+						{
+							if(recurring.list[i]._id === recurringShowID)
+							{
+								recurring.list.splice(i, 1);
+								break;
+							}
+						}
+					});
+			}
+		};
+		
 		var shows = {
 			upcoming: [ ],
 			past: [ ]
@@ -32,10 +127,16 @@ angular.module("jotc")
 				triggerUpdateHandlers();
 			});
 		
-		$http.get("/data2/shows/types")
+		/*$http.get("/data2/shows/types")
 			.success(function(showClasses)
 			{
 				Array.prototype.splice.apply(classes, [0, classes.length].concat(showClasses));
+			});*/
+			
+		$http.get("/data2/shows/recurring")
+			.success(function(recurringShows)
+			{
+				Array.prototype.splice.apply(recurring.list, [0, recurring.list.length].concat(recurringShows));
 			});
 			
 		var getNoDataSuccessHandler = function(showID, callback, fn)
@@ -145,6 +246,7 @@ angular.module("jotc")
 		};
 		
 		return Object.freeze({
+			recurring: recurring,
 			list: shows,
 			classes: classes,
 			show: show,

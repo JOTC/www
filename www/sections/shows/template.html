@@ -4,18 +4,30 @@
 	<div class="container-fluid">
 
 		<div class="col-md-6">
-			The Jackson Obedience Training Club sponsors annual back-to-back obedience and rally trials.  The
-			trials are held indoors at the Jackson Fairgrounds.  Competition obedience classes usually include:
-
-			<ul><li ng-repeat="class in getShowClasses()">{{ class.name }}</li></ul>
-
-			<br>We also offer all levels of rally competition:
-			<ul><li ng-repeat="class in getRallyClasses()">{{ class.name }}</li></ul>
-
-			<br>Ribbons and trophies are awarded in all classes.  The trials are licensed by the American Kennel
-			Club and all qualifying scores in Novice, Open, and Utility may be counted towards AKC
-			Obedience titles.  Additionally, qualifying scores in the regular Rally competition may
-			count towards AKC Rally titles.
+			The Jackson Obedience Training Club sponsors two AKC Sanctioned Obedience and Rally events each year.
+			Both shows are held indoors, with enclosed, fully-matted rings and usually include four back-to-back
+			Obedience and four Rally Trials over the weekend.
+			
+			<div class="recurring" ng-repeat="show in recurring.list">
+				<span class="description">{{ show.description }}</span>
+				<ul>
+					<li ng-repeat="category in show.categories">
+						<span class="bold">{{ category.name }}:</span><br>
+						<span ng-repeat="class in category.classes"><span ng-if="$index > 0">, </span>{{ class }}</span>
+					</li>
+				</ul>
+				<div ng-if="auth.shows">
+					<button class="btn btn-warning" ng-click="recurring.edit(show)">Edit Recurring Show</button>
+					<button class="btn btn-danger" ng-click="recurring.delete(show)">Delete Recurring Show</button>
+					<button ng-if="auth.shows && $index > 0" class="btn btn-success" ng-click="recurring.up(show)"><i class="fa fa-arrow-up"></i></button>
+					<button ng-if="auth.shows && $index < (recurring.list.length - 1)" class="btn btn-success" ng-click="recurring.down(show)"><i class="fa fa-arrow-down"></i></button>
+					<hr>
+				</div>
+			</div>
+			
+			<div ng-if="auth.shows">
+				<button class="btn btn-success" ng-click="recurring.edit()">Add Recurring Show</button>
+			</div>
 		</div>
 
 		<div class="col-md-6">
@@ -44,7 +56,7 @@
 					<br><br>
 					The following competition classes are included:
 					<ul>
-						<li ng-repeat="class in show.classes">{{ class.name }}</li>
+						<li ng-repeat="class in show.classes">{{ class }}</li>
 					</ul>
 
 					<div ng-if="show.premiumListPath" class="premiumList">
