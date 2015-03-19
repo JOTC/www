@@ -258,18 +258,7 @@ angular.module("jotc")
 		
 		$scope.addClassCategory = function()
 		{
-			if($scope.recurringShow.categories.length === 0)
-			{
-				$scope.recurringShow.categories.push({ name: "", classes: [ { name: "" } ]});
-			}
-			else
-			{
-				var last = $scope.recurringShow.categories[$scope.recurringShow.categories.length - 1];
-				if(last.classes.length === 0 || (last.name !== "" && last.classes[last.classes.length - 1].name !== ""))
-				{
-					$scope.recurringShow.categories.push({ name: "", classes: [ { name: "" } ]});
-				}
-			}
+			$scope.recurringShow.categories.push({ name: "", classes: [ { name: "" } ]});
 		};
 		
 		$scope.save = function()
