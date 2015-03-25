@@ -4,7 +4,7 @@ angular.module("jotc")
 		var _updateHandlers = [ ];
 		var classes = [ ];
 		var classTypes = [ ];
-	
+
 		$http.get("/data2/classes")
 			.success(function(data)
 			{
@@ -21,7 +21,7 @@ angular.module("jotc")
 			{
 				Array.prototype.splice.apply(classTypes, [0, classTypes.length].concat(data));
 			});
-			
+
 		var create = function(newClass, callback)
 		{
 			$http.post("/data2/classes", newClass)
@@ -29,18 +29,18 @@ angular.module("jotc")
 			{
 				data.startDate = new Date(data.startDate);
 				data.endDate = new Date(data.endDate);
-				
+
 				classes.push(data);
-				
+
 				triggerUpdateHandler();
-				
+
 				if(callback)
 				{
 					callback();
 				}
 			});
-		}
-			
+		};
+
 		var clss = function(classID)
 		{
 			return Object.freeze({
@@ -58,9 +58,9 @@ angular.module("jotc")
 								break;
 							}
 						}
-						
+
 						triggerUpdateHandler();
-						
+
 						if(callback)
 						{
 							callback();
@@ -80,9 +80,9 @@ angular.module("jotc")
 								break;
 							}
 						}
-						
+
 						triggerUpdateHandler();
-						
+
 						if(callback)
 						{
 							callback();
@@ -102,7 +102,7 @@ angular.module("jotc")
 								break;
 							}
 						}
-						
+
 						if(callback)
 						{
 							callback();
@@ -110,8 +110,8 @@ angular.module("jotc")
 					});
 				}
 			});
-		}
-		
+		};
+
 		var addUpdateHandler = function(handler)
 		{
 			if(handler && typeof handler === "function")
@@ -119,7 +119,7 @@ angular.module("jotc")
 				_updateHandlers.push(handler);
 			}
 		};
-		
+
 		var triggerUpdateHandler = function()
 		{
 			for(var i in _updateHandlers)
@@ -127,7 +127,7 @@ angular.module("jotc")
 				_updateHandlers[i]();
 			}
 		};
-			
+
 		return {
 			list: classes,
 			types: classTypes,

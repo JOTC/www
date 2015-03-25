@@ -62,4 +62,4 @@ module.exports = [
 		description: "In February of each year, the two day show is a Novice Obedience and Rally event with one ring, held indoors at the McKenzie Arena on the campus of Hinds Community College in Raymond, MS. Classes offered at this event usually include:",
 		ordering: 2
 	}
-]
+];

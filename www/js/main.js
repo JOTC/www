@@ -6,13 +6,13 @@ angular.module("jotc", [ "ngRoute", "ngAnimate", "ui.bootstrap", "angularFileUpl
 			// Go to 23:59:59 UTC of the current day.  That pretty
 			// much puts the entire world on the same date.  This
 			// is handy since we're not interested in times.
-			
+
 			var month = this.getMonth() + 1;
 			var date = this.getDate();
-			
+
 			return new Date(this.getFullYear() + "-" + (month > 9 ? "" : "0") + month + "-" + (date > 9 ? "" : "0") + date + "T23:59:59Z");
 		};
-		
+
 		$routeProvider
 			.when("/home", {
 				templateUrl: "jotc/sections/home/template.html",
@@ -65,11 +65,11 @@ angular.module("jotc", [ "ngRoute", "ngAnimate", "ui.bootstrap", "angularFileUpl
 			officers: false,
 			users: false
 		};
-		
+
 		var users = {
 			list: [ ]
 		};
-		
+
 		var loggedIn = false;
 		var userID = "";
 		var username = "";
@@ -82,13 +82,13 @@ angular.module("jotc", [ "ngRoute", "ngAnimate", "ui.bootstrap", "angularFileUpl
 				loggedIn = false;
 				userID = "";
 				username = "";
-				
+
 				if(user && user.permissions)
 				{
 					loggedIn = true;
 					userID = user._id;
 					username = user.name;
-					
+
 					permissions.shows = user.permissions.shows;
 					permissions.classes = user.permissions.classes;
 					permissions.pictures = user.permissions.pictures;
@@ -96,7 +96,7 @@ angular.module("jotc", [ "ngRoute", "ngAnimate", "ui.bootstrap", "angularFileUpl
 					permissions.links = user.permissions.links;
 					permissions.officers = user.permissions.officers;
 					permissions.users = user.permissions.users;
-					
+
 					if(permissions.users)
 					{
 						$http.get("/data2/users")
@@ -118,12 +118,12 @@ angular.module("jotc", [ "ngRoute", "ngAnimate", "ui.bootstrap", "angularFileUpl
 				}
 			});
 		};
-		
+
 		getUser();
-		
+
 		return {
 			isLoggedIn: function() { return loggedIn; },
-			getUserID: function() { return userID },
+			getUserID: function() { return userID; },
 			getUsername: function() { return username; },
 			refresh: getUser,
 			permissions: permissions,
@@ -134,15 +134,15 @@ angular.module("jotc", [ "ngRoute", "ngAnimate", "ui.bootstrap", "angularFileUpl
 	{
 		return Object.freeze({
 			calendar: $calendar,
-			
+
 			shows: $shows,
-			
+
 			classes: $classes,
-			
+
 			galleries: $pictures,
-						
+
 			links: $linkGroups,
-			
+
 			officers: $officers
 		});
 	}])
@@ -157,7 +157,7 @@ angular.module("jotc", [ "ngRoute", "ngAnimate", "ui.bootstrap", "angularFileUpl
 				}
 				var loc = locationStr.replace(/ /g, "+");
 				return "http://maps.googleapis.com/maps/api/staticmap?sensor=false&zoom=11&size=200x150&center=" + loc + "&markers=" + loc;
-				
+
 			},
 			getDirectionsURLForLocation: function(locationStr)
 			{
@@ -180,7 +180,7 @@ angular.module("jotc", [ "ngRoute", "ngAnimate", "ui.bootstrap", "angularFileUpl
 				size: "sm"
 			});
 		};
-		
+
 		$scope.logout = function()
 		{
 			$http.get("/data2/auth/logout")
@@ -189,13 +189,13 @@ angular.module("jotc", [ "ngRoute", "ngAnimate", "ui.bootstrap", "angularFileUpl
 				$auth.refresh();
 			});
 		};
-		
+
 		$scope.auth = $auth;
-		
+
 		$scope.navbar = {
 			fixed: false
 		};
-		
+
 		var $$window = $(window);
 		angular.element($window).bind("scroll", function()
 		{

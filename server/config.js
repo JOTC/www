@@ -1,12 +1,12 @@
 var fs = require("fs");
 var path = require("path");
-var mkdirp = require("mkdirp")
+var mkdirp = require("mkdirp");
 
 var config = {
 	"port": 9931,
 	"session": {
 		"secret": "session-secret-key",
-		"lifetimeInDays": 10 
+		"lifetimeInDays": 10
 	},
 	"gmail": {
 		"username": "gmail-username",
@@ -21,7 +21,7 @@ var config = {
 			{
 				mkdirp.sync(fullPath);
 			}
-			
+
 			return fullPath;
 		}
 	}
@@ -60,7 +60,7 @@ try
 {
 	var configFile = JSON.parse(fs.readFileSync("config.json"));
 	mergeObjects(config, configFile);
-	
-} catch(e){ console.log(e); };
+
+} catch(e){ console.log(e); }
 
 module.exports = config;
