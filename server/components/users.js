@@ -76,31 +76,31 @@ module.exports = {
 				{
 					if(obj.permissions.shows)
 					{
-						permissionText += "\n • Add, edit, and remove shows";
+						permissionText += "\n * Add, edit, and remove shows";
 					}
 					if(obj.permissions.classes)
 					{
-						permissionText += "\n • Add, edit, and remove classes";
+						permissionText += "\n * Add, edit, and remove classes";
 					}
 					if(obj.permissions.pictures)
 					{
-						permissionText += "\n • Add, edit, and remove pictures and galleries";
+						permissionText += "\n * Add, edit, and remove pictures and galleries";
 					}
 					if(obj.permissions.calendar)
 					{
-						permissionText += "\n • Add, edit, and remove calendar events";
+						permissionText += "\n * Add, edit, and remove calendar events";
 					}
 					if(obj.permissions.links)
 					{
-						permissionText += "\n • Add, edit, and remove links";
+						permissionText += "\n * Add, edit, and remove links";
 					}
 					if(obj.permissions.officers)
 					{
-						permissionText += "\n • Add, edit, and remove officers";
+						permissionText += "\n * Add, edit, and remove officers";
 					}
 					if(obj.permissions.users)
 					{
-						permissionText += "\n • Add, edit, and remove users";
+						permissionText += "\n * Add, edit, and remove users";
 					}
 				}
 				if(permissionText.length > 0)
