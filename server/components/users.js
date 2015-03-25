@@ -22,7 +22,7 @@ var isValidUser = function(user)
 		valid = valid && (typeof user.permissions.officers === "boolean");
 		valid = valid && (typeof user.permissions.users === "boolean");
 	}
-	
+
 	return valid;
 };
 
@@ -36,7 +36,7 @@ module.exports = {
 				{
 					objs.splice(0, objs.length);
 				}
-				
+
 				objs.forEach(function(user)
 				{
 					user.local = null;
@@ -48,7 +48,7 @@ module.exports = {
 
 				obj.local.username = obj.email;
 				obj.local.secret = "---init---" + bcrypt.hashSync(token);
-				
+
 				var transporter = nodemailer.createTransport({
 				    service: "Gmail",
 				    auth: {
@@ -56,7 +56,7 @@ module.exports = {
 				        pass: config.gmail.password
 				    }
 				});
-				
+
 				var emailOptions = {
 					from: "JOTC Website <" + config.gmail.username + ">",
 					to: obj.name + " <" + obj.email + ">",
@@ -70,7 +70,7 @@ module.exports = {
 							"you need to by simply visiting the JOTC website and clicking the [Login] link " +
 							"in the top-right corner of the front page."
 				};
-				
+
 				var permissionText = "";
 				if(obj.permissions)
 				{
@@ -107,9 +107,9 @@ module.exports = {
 				{
 					permissionText = "\n\nYour account has been granted the following privileges:" + permissionText;
 				}
-				
+
 				emailOptions.text += permissionText + "\n\nSincerely,\nJOTC Website Admin";
-				
+
 				transporter.sendMail(emailOptions, function(error)
 				{
 					if(error)
@@ -121,7 +121,7 @@ module.exports = {
 					{
 						log.info("Email successfully sent to %s", obj.email);
 					}
-				});				
+				});
 			})
 		},
 		"/users/:userID": {
@@ -144,7 +144,7 @@ module.exports = {
 						{
 							var token = require("crypto").randomBytes(16).toString("hex");
 							user.local.secret = "---init---" + bcrypt.hashSync(token);
-							
+
 							user.save(function(err)
 							{
 								if(err)
@@ -161,7 +161,7 @@ module.exports = {
 									        pass: config.gmail.password
 									    }
 									});
-				
+
 									var emailOptions = {
 										from: "JOTC Website <" + config.gmail.username + ">",
 										to: user.name + " <" + user.email + ">",
@@ -174,20 +174,20 @@ module.exports = {
 												"you need to by simply visiting the JOTC website and clicking the [Login] link " +
 												"in the top-right corner of the front page.\n\nSincerely,\nJOTC Website Admin"
 									};
-							
+
 									transporter.sendMail(emailOptions, function(error)
 									{
 										if(error)
 										{
-											log.error("Error sending email to %s", obj.email);
+											log.error("Error sending email to %s", user.email);
 											log.error(error);
 										}
 										else
 										{
-											log.info("Email successfully sent to %s", obj.email);
+											log.info("Email successfully sent to %s", user.email);
 										}
 									});
-									
+
 									res.send(200);
 								}
 							});
@@ -198,7 +198,7 @@ module.exports = {
 				{
 					res.send(400);
 				}
-				
+
 				next();
 			}
 		},
@@ -264,7 +264,7 @@ module.exports = {
 							{
 								newSecret = newSecret.secret;
 								var secret = user.local.secret.substr(10);
-								
+
 								if(bcrypt.compareSync(req.session.resetPassword.validationCode, secret))
 								{
 									delete req.session.resetPassword;
