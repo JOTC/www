@@ -1,6 +1,7 @@
 var restify = require("restify");
 var db = require("../model/db.js");
 var fs = require("fs");
+var path = require("path");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "image component", level: "debug" });
 var config = require("../config");
@@ -17,7 +18,7 @@ var isValidGallery = function(gallery)
 		valid = true;
 		valid = valid && (gallery.name && typeof gallery.name === "string");
 	}
-	
+
 	return valid;
 };
 
@@ -34,7 +35,7 @@ module.exports = {
 			{
 				for(var i = 0; i < gallery.images.length; i++)
 				{
-					fs.unlinkSync(path.join(__FILE_PATH, gallery.images[i]._id.valueOf() + gallery.images[i].path.replace(/.*\.(png|jpg|jpeg|gif)/g, ".$1")));
+					fs.unlinkSync(path.join(__FILE_PATH, gallery.images[i].path));
 				}
 			})
 		},
@@ -45,7 +46,7 @@ module.exports = {
 				{
 					return next(new restify.UnauthorizedError());
 				}
-				
+
 				db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery)
 				{
 					if(err)
@@ -55,13 +56,16 @@ module.exports = {
 						next();
 						return;
 					}
-					
+
 					var img = new db.images.images();
 
-					var ext = req.files.file.name.replace(/.*\.(jpg|jpeg|png|gif)$/, ".$1");				
-					img.path = img._id + ext;
-					
-					imageMagick(req.files.file.path).resize(1024, 1024, ">").write(path.join(__FILE_PATH, img.path), function(err)
+					var ext = req.headers["content-type"].replace(/image\//, "");
+					img.path = img._id + "." + ext;
+
+					var filePath = path.join(__FILE_PATH, img.path);
+					fs.writeFileSync(filePath, req.body);
+
+					imageMagick(filePath).resize(1024, 1024, ">").write(filePath, function(err)
 					{
 						if(err)
 						{
@@ -70,7 +74,7 @@ module.exports = {
 							next();
 						}
 						else
-						{							
+						{
 							gallery.images.push(img);
 							gallery.save(function(err)
 							{
@@ -86,7 +90,7 @@ module.exports = {
 								next();
 							});
 						}
-					});					
+					});
 				});
 			}
 		},
@@ -97,12 +101,12 @@ module.exports = {
 				{
 					return next(new restify.UnauthorizedError());
 				}
-				
+
 				var image = req.body;
 				if(image && typeof image === 'object' && typeof image.description === 'string')
 				{
 					image = { description: image.description };
-					
+
 					db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery)
 					{
 						if(err)
@@ -111,7 +115,7 @@ module.exports = {
 							res.send(500);
 							return;
 						}
-					
+
 						for(var i = 0; i < gallery.images.length; i++)
 						{
 							if(gallery.images[i]._id.toString() === req.params.imageID)
@@ -121,7 +125,7 @@ module.exports = {
 								break;
 							}
 						}
-					
+
 						gallery.save(function(err)
 						{
 							if(err)
@@ -150,7 +154,7 @@ module.exports = {
 				{
 					return next(new restify.UnauthorizedError());
 				}
-				
+
 				db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery)
 				{
 					if(err)
@@ -159,17 +163,17 @@ module.exports = {
 						res.send(500);
 						return;
 					}
-					
+
 					for(var i = 0; i < gallery.images.length; i++)
 					{
 						if(gallery.images[i]._id.toString() === req.params.imageID)
 						{
-							fs.unlinkSync(path.join(__FILE_PATH, gallery.images[i]._id.valueOf() + gallery.images[i].path.replace(/.*\.(png|jpg|jpeg|gif)/g, ".$1")));
+							fs.unlinkSync(path.join(__FILE_PATH, gallery.images[i].path));
 							gallery.images.splice(i, 1);
 							break;
 						}
 					}
-					
+
 					gallery.save(function(err)
 					{
 						if(err)
