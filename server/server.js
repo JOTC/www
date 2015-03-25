@@ -3,6 +3,7 @@ var passport = require("passport");
 var sessions = require("client-sessions");
 var fs = require("fs");
 var config = require("./config");
+var log = require("bunyan").createLogger({ name: "main", level: "debug" });
 
 var app = restify.createServer({ name: "JOTC Data API Server" });
 
@@ -39,7 +40,7 @@ app.get("/auth/user", function(req, res, next)
 		user = JSON.parse(JSON.stringify(req.user));
 	}
 	delete user.local;
-	
+
 	res.send(user);
 	next();
 });
@@ -74,7 +75,7 @@ fs.readdirSync("./components").forEach(function(file)
 			if(typeof(handler) === "function")
 			{
 				app[verb.toLowerCase()](path, handler);
-				console.log("%s\t%s", verb.toUpperCase(), path);
+				log.info("%s\t%s", verb.toUpperCase(), path);
 			}
 		}
 	}
@@ -82,6 +83,6 @@ fs.readdirSync("./components").forEach(function(file)
 
 app.listen(config.port, function()
 {
-	console.log("%s ready at %s", app.name, app.url);
+	log.info("%s ready at %s", app.name, app.url);
 	require("./model/db.js");
 });
