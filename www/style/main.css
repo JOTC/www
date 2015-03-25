@@ -410,6 +410,8 @@ div[ng-view].ng-enter.ng-enter-active {
 #shows .recurring,
 #classes .recurring {
   margin-top: 1em;
+  border-top: 1px solid #BBB;
+  padding-top: 1em;
 }
 #shows .recurring .description,
 #classes .recurring .description {
