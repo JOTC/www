@@ -3,7 +3,7 @@ angular.module("jotc")
 	{
 		$scope.shows = $api.shows.list;
 		$scope.classes = $api.shows.classes;
-		
+
 		$scope.recurring = {
 			list: $api.shows.recurring.list,
 			delete: function(recurringShow)
@@ -27,7 +27,7 @@ angular.module("jotc")
 						categories: [ ]
 					};
 				}
-			
+
 				$modal.open({
 					templateUrl: "jotc/sections/shows/edit-recurring.template.html",
 					controller: "editRecurring",
@@ -42,7 +42,7 @@ angular.module("jotc")
 				});
 			}
 		};
-		
+
 		var showClasses = [ ];
 		$scope.getShowClasses = function()
 		{
@@ -58,7 +58,7 @@ angular.module("jotc")
 			}
 			return showClasses;
 		};
-		
+
 		var rallyClasses = [ ];
 		$scope.getRallyClasses = function()
 		{
@@ -74,11 +74,11 @@ angular.module("jotc")
 			}
 			return rallyClasses;
 		};
-		
+
 		$scope.$location = locationService;
-		
+
 		$scope.auth = $auth.permissions;
-		
+
 		$scope.openEditor = function(show)
 		{
 			if(!show)
@@ -94,7 +94,7 @@ angular.module("jotc")
 					registrationLink: "",
 				};
 			}
-			
+
 			$modal.open({
 				templateUrl: "jotc/sections/shows/edit-show.template.html",
 				controller: "editShow",
@@ -108,7 +108,7 @@ angular.module("jotc")
 				}
 			});
 		};
-		
+
 		$scope.delete = function(show)
 		{
 			if(confirm("Are you sure you wish to delete the show titled " + show.title + "?  This cannot be undone."))
@@ -119,7 +119,7 @@ angular.module("jotc")
 				}
 			}
 		};
-		
+
 		$scope.deletePremiumList = function(show)
 		{
 			if(confirm("Are you sure you wish to delete the premium list for the show " + show.title + "?  This cannot be undone."))
@@ -141,12 +141,12 @@ angular.module("jotc")
 				}
 			}
 		};
-		
+
 		$scope.safeURL = function(url)
 		{
 			return encodeURIComponent(url);
 		};
-		
+
 		$scope.openNewWindow = function(url)
 		{
 			$window.open(url, '_blank');
@@ -156,17 +156,17 @@ angular.module("jotc")
 	{
 		$scope.action = (show.title === "" ? "New" : "Edit");
 		$scope.show = JSON.parse(JSON.stringify(show));
-		
+
 		for(var i = 0; i < $scope.show.classes.length; i++)
 		{
 			$scope.show.classes[i] = { name: $scope.show.classes[i] };
 		}
-		
+
 		$scope.addClass = function()
 		{
 			if($scope.show.classes.length === 0 || $scope.show.classes[$scope.show.classes.length - 1].name !== "")
 			{
-				$scope.show.classes.push({ name: "" })
+				$scope.show.classes.push({ name: "" });
 			}
 		};
 
@@ -174,29 +174,29 @@ angular.module("jotc")
 			reg: false,
 			start: false,
 			end: false,
-			
+
 			open: function(which, $event)
 			{
 				$event.preventDefault();
 				$event.stopPropagation();
-				
+
 				switch(which)
 				{
 					case "reg":
 						$scope.dateOpen.reg = true;
 						break;
-						
+
 					case "start":
 						$scope.dateOpen.start = true;
 						break;
-						
+
 					case "end":
 						$scope.dateOpen.end = true;
 						break;
 				}
 			}
 		};
-		
+
 		$scope.save = function()
 		{
 			var show = JSON.parse(JSON.stringify($scope.show));
@@ -212,7 +212,7 @@ angular.module("jotc")
 					show.classes[i] = show.classes[i].name;
 				}
 			}
-			
+
 			var fn;
 			if($scope.show._id)
 			{
@@ -222,24 +222,24 @@ angular.module("jotc")
 			{
 				fn = $api.shows.create;
 			}
-			
+
 			show.registrationDeadline = new Date(show.registrationDeadline).toMidnightUTC();
 			show.startDate = new Date(show.startDate).toMidnightUTC();
 			show.endDate = new Date(show.endDate).toMidnightUTC();
-			
+
 			fn(show, function()
 			{
 				$modalInstance.dismiss();
 			});
 		};
-		
+
 		$scope.cancel = $modalInstance.dismiss;
 	}])
 	.controller("editRecurring", [ "$scope", "$modalInstance", "jotc-api", "recurringShow", function($scope, $modalInstance, $api, recurringShow)
 	{
 		$scope.action = (recurringShow.description === "" ? "New" : "Edit");
 		$scope.recurringShow = JSON.parse(JSON.stringify(recurringShow));
-		
+
 		$scope.recurringShow.categories.forEach(function(category)
 		{
 			for(var i = 0; i < category.classes.length; i++)
@@ -247,7 +247,7 @@ angular.module("jotc")
 				category.classes[i] = { name: category.classes[i] };
 			}
 		});
-		
+
 		$scope.addClass = function(category)
 		{
 			if(category.classes.length === 0 || category.classes[category.classes.length - 1].name !== "")
@@ -255,12 +255,12 @@ angular.module("jotc")
 				category.classes.push({ name: "" });
 			}
 		};
-		
+
 		$scope.addClassCategory = function()
 		{
 			$scope.recurringShow.categories.push({ name: "", classes: [ { name: "" } ]});
 		};
-		
+
 		$scope.save = function()
 		{
 			var recurringShow = JSON.parse(JSON.stringify($scope.recurringShow));
@@ -271,7 +271,7 @@ angular.module("jotc")
 				{
 					if(category.classes[i].name !== "")
 					{
-						category.classes[i] = category.classes[i].name
+						category.classes[i] = category.classes[i].name;
 					}
 					else
 					{
@@ -279,16 +279,16 @@ angular.module("jotc")
 						i--;
 					}
 				}
-				
+
 				if(category.classes.length === 0)
 				{
 					recurringShow.categories.splice(j, 1);
 					j--;
 				}
-			};
-			
+			}
+
 			$api.shows.recurring.save(recurringShow, $modalInstance.dismiss);
-		}
-		
+		};
+
 		$scope.cancel = $modalInstance.dismiss;
 	}]);

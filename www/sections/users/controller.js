@@ -5,7 +5,7 @@ angular.module("jotc")
 		$scope.users = $auth.users;
 		$scope.selectedUser = null;
 		$scope.selectedUserShadow = null;
-		
+
 		$scope.permissions = {
 			shows: "Can add, edit, and remove shows",
 			classes: "Can add, edit, and remove classes",
@@ -15,7 +15,7 @@ angular.module("jotc")
 			officers: "Can add, edit, and remove officers from the \"About\" page",
 			users: "Can add, remove, and modify permissions of other users"
 		};
-		
+
 		$scope.newUser = function()
 		{
 			$scope.selectUser({
@@ -30,19 +30,19 @@ angular.module("jotc")
 					officers: false,
 					users: false
 				}
-			})
+			});
 		};
-		
+
 		$scope.selectUser = function(user)
 		{
 			$scope.selectedUserShadow = user;
 			$scope.selectedUser = JSON.parse(JSON.stringify(user));
 		};
-		
+
 		$scope.saveSelectedUser = function()
 		{
 			var promise = null;
-			
+
 			if($scope.selectedUserShadow._id)
 			{
 				promise = $http.put("/data2/users/" + $scope.selectedUserShadow._id, $scope.selectedUser)
@@ -69,13 +69,13 @@ angular.module("jotc")
 						$scope.selectUser(user);
 					});
 			}
-			
+
 			promise.error(function()
 			{
 				alert("There was an error saving the user.");
 			});
 		};
-		
+
 		$scope.resetSelectedUser = function()
 		{
 			$scope.selectedUser.name = $scope.selectedUserShadow.name;
@@ -89,14 +89,14 @@ angular.module("jotc")
 				}
 			}
 		};
-		
+
 		$scope.resetSelectedPassword = function()
 		{
 			//if(confirm("Are you sure you wish to reset " + $scope.selectedUserShadow.name + "'s password?  They will receive an email instructing them to reset it."))
 			//{
 			//}
 		};
-		
+
 		$scope.deleteSelectedUser = function()
 		{
 			if(confirm("Are you sure you wish to remove " + $scope.selectedUserShadow.name + " as a user?"))
@@ -114,7 +114,7 @@ angular.module("jotc")
 								break;
 							}
 						}
-						
+
 						$scope.selectedUserShadow = null;
 						$scope.selectedUser = null;
 					})
