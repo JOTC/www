@@ -21,7 +21,7 @@ var isValidShow = function(show)
 		valid = valid && (show.registrationDeadline && typeof show.registrationDeadline === "string");
 		valid = valid && (show.classes && Array.isArray(show.classes));
 	}
-	
+
 	return valid;
 };
 
@@ -33,14 +33,14 @@ var isValidRecurringShow = function(show)
 		valid = true;
 		valid = valid && (show.description && typeof show.description === "string");
 		valid = valid && (show.categories && Array.isArray(show.categories));
-		
+
 		if(valid)
 		{
 			show.categories.forEach(function(category)
 			{
 				valid = valid && (category.name && typeof category.name === "string");
 				valid = valid && (category.classes && Array.isArray(category.classes));
-				
+
 				if(valid)
 				{
 					category.classes.forEach(function(c)
@@ -51,9 +51,52 @@ var isValidRecurringShow = function(show)
 			});
 		}
 	}
-	
+
 	return valid;
-}
+};
+
+var moveRecurringShow = function(showID, direction, res)
+{
+	if(+direction > 0)
+	{
+		direction = 1;
+	}
+	else
+	{
+		direction = -1;
+	}
+
+	db.shows.recurring.findOne({ _id: showID }).exec(function(err, show)
+	{
+		if(err)
+		{
+			log.error(err);
+			res.send(500);
+			return;
+		}
+
+		db.shows.recurring.findOne({ ordering: (show.ordering + direction) }).exec(function(err, swapShow)
+		{
+			if(err)
+			{
+				log.error(err);
+				res.send(500);
+				return;
+			}
+
+			if(swapShow)
+			{
+				show.ordering += direction;
+				swapShow.ordering -= direction;
+
+				show.save();
+				swapShow.save();
+			}
+
+			res.send(200);
+		});
+	});
+};
 
 var __WWW_PATH = "/files/shows";
 var __FILE_PATH = config.www.getPath(__WWW_PATH);
@@ -62,7 +105,7 @@ var getObjectsInOrder = function(model, sortBy, callback)
 {
 	var sort = { };
 	sort[sortBy] = "asc";
-	
+
 	model.find({}).sort(sort).exec().then(callback);
 };
 
@@ -74,14 +117,14 @@ var getFileUploadHandler = function(filenameSuffix, showPropertyName)
 		{
 			return next(new restify.UnauthorizedError());
 		}
-	
+
 		var handleError = function(err)
 		{
 			log.error(err);
 			res.send(500);
 			require("fs").unlinkSync(req.files.file.path);
 		};
-					
+
 		db.shows.shows.findOne({ _id: req.params.showID }).exec(function(err, show)
 		{
 			if(err)
@@ -135,7 +178,7 @@ var getFileDeleteHandler = function(showPropertyName)
 		{
 			return next(new restify.UnauthorizedError());
 		}
-		
+
 		db.shows.shows.findOne({ _id: req.params.showID }).exec(function(err, show)
 		{
 			if(err)
@@ -193,7 +236,7 @@ module.exports = {
 							upcoming: [ ],
 							past: [ ]
 						};
-						
+
 						var now = new Date();
 						objs.forEach(function(show)
 						{
@@ -267,72 +310,14 @@ module.exports = {
 		"/shows/recurring/:showID/up": {
 			"put": function(req, res, next)
 			{
-				db.shows.recurring.findOne({ _id: req.params.showID }).exec(function(err, show)
-				{
-					if(err)
-					{
-						log.error(err);
-						res.send(500);
-						return;
-					}
-					
-					db.shows.recurring.findOne({ ordering: (show.ordering - 1) }).exec(function(err, swapShow)
-					{
-						if(err)
-						{
-							log.error(err);
-							res.send(500);
-							return;
-						}
-						
-						if(swapShow)
-						{
-							show.ordering--;
-							swapShow.ordering++;
-							
-							show.save();
-							swapShow.save();
-						}
-						
-						res.send(200);
-					});
-				});
+				moveRecurringShow(req.params.showID, -1, res);
 				next();
 			}
 		},
 		"/shows/recurring/:showID/down": {
 			"put": function(req, res, next)
 			{
-				db.shows.recurring.findOne({ _id: req.params.showID }).exec(function(err, show)
-				{
-					if(err)
-					{
-						log.error(err);
-						res.send(500);
-						return;
-					}
-					
-					db.shows.recurring.findOne({ ordering: (show.ordering + 1) }).exec(function(err, swapShow)
-					{
-						if(err)
-						{
-							log.error(err);
-							res.send(500);
-							return;
-						}
-						
-						if(swapShow)
-						{
-							show.ordering++;
-							swapShow.ordering--;
-							
-							show.save();
-							swapShow.save();
-						}
-						
-						res.send(200);
-					});
-				});
+				moveRecurringShow(req.params.showID, 1, res);
 				next();
 			}
 		}
