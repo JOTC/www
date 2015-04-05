@@ -2,11 +2,13 @@ var restify = require("restify");
 var db = require("../model/db.js");
 var fs = require("fs");
 var path = require("path");
-var fn = require("../common-fn.js");
+var Corq = require("corq");
 var log = require("bunyan").createLogger({ name: "image component", level: "debug" });
+var fn = require("../common-fn.js");
 var config = require("../config");
+var sharp = require("sharp");
 
-var imageMagick = require("gm").subClass({ imageMagick: true });
+var ImageProcessor = require("./images.processor.js")();
 
 var __FILE_PATH = config.www.getPath("galleryImages");
 
@@ -40,58 +42,77 @@ module.exports = {
 			})
 		},
 		"/galleries/:galleryID/image": {
-			"post": function(req, res, next)
-			{
-				if(!req.user || !req.user.permissions.pictures)
+			"post": {
+				options: {
+					useBodyParser: false
+				},
+				function: function(req, res, next)
 				{
-					return next(new restify.UnauthorizedError());
-				}
-
-				db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery)
-				{
-					if(err)
+					if(!req.user || !req.user.permissions.pictures)
 					{
-						log.error(err);
-						res.send(500);
-						next();
-						return;
+						return next(new restify.UnauthorizedError());
 					}
 
-					var img = new db.images.images();
-
-					var ext = req.headers["content-type"].replace(/image\//, "");
-					img.path = img._id + "." + ext;
-
-					var filePath = path.join(__FILE_PATH, img.path);
-					fs.writeFileSync(filePath, req.body);
-
-					imageMagick(filePath).resize(1024, 1024, ">").write(filePath, function(err)
+					db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery)
 					{
 						if(err)
 						{
 							log.error(err);
 							res.send(500);
 							next();
+							return;
 						}
-						else
-						{
-							gallery.images.push(img);
-							gallery.save(function(err)
+
+						var img = new db.images.images();
+
+						var ext = req.headers["content-type"].replace(/image\//, "");
+						img.path = img._id + "." + ext;
+
+						var filePath = path.join(__FILE_PATH, "temp", img.path);
+						var out = fs.createWriteStream(filePath);
+						req.pipe(out);
+
+						req.once("end", function() {
+							if(err)
 							{
-								if(err)
+								log.error(err);
+								res.send(500);
+							}
+							else
+							{
+								ImageProcessor.process(filePath, path.join(__FILE_PATH, img.path), function(err)
 								{
-									log.error(err);
-									res.send(500);
-								}
-								else
-								{
-									res.send(img);
-								}
-								next();
-							});
-						}
+									fs.unlink(filePath);
+
+									if(err)
+									{
+										log.error(err);
+										res.send(500);
+									}
+									else
+									{
+										gallery.images.push(img);
+										gallery.save(function(err)
+										{
+											if(err)
+											{
+												log.error(err);
+												res.send(500);
+											}
+											else
+											{
+												res.send(img);
+											}
+										});
+									}
+								});
+							}
+						});
+						//});
+
+						next();
 					});
-				});
+				}
 			}
 		},
 		"/galleries/:galleryID/image/:imageID": {
