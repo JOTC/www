@@ -7,8 +7,12 @@ var log = require("bunyan").createLogger({ name: "main", level: "debug" });
 
 var app = restify.createServer({ name: "JOTC Data API Server" });
 
+app.use(function(req, res, next)
+{
+	log.debug("Got request: [%s] %s", req.route.method, req.url);
+	next();
+});
 app.use(restify.queryParser());
-app.use(restify.bodyParser({ mapParams: false }));
 app.use(sessions({
 	cookieName: "session",
 	secret: config.session.secret,
@@ -74,7 +78,18 @@ fs.readdirSync("./components").forEach(function(file)
 			var handler = component.paths[path][verb];
 			if(typeof(handler) === "function")
 			{
-				app[verb.toLowerCase()](path, handler);
+				app[verb.toLowerCase()](path, restify.bodyParser({ mapParams: false }), handler);
+				log.info("%s\t%s", verb.toUpperCase(), path);
+			}
+			else if(handler.options && handler.function)
+			{
+				var middleware = [ ];
+				if(handler.options.useBodyParser)
+				{
+					middleware.push(restify.bodyParser({ mapParams: false }));
+				}
+
+				app[verb.toLowerCase()](path, middleware, handler.function);
 				log.info("%s\t%s", verb.toUpperCase(), path);
 			}
 		}
