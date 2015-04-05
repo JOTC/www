@@ -193,77 +193,90 @@ angular.module("jotc")
 	}])
 	.controller("pictures.dragdrop", [ "$scope", "$attrs", "$upload", "jotc-api", function($scope, $attrs, $upload, $api)
 	{
+		var imageQueue = (function()
+		{
+			var _images = [ ];
+			var _running = 0;
+
+			var run = function()
+			{
+				if(_running > 4)
+				{
+					setTimeout(run, 200);
+					return;
+				}
+
+				_running++;
+				if(_images.length === 0)
+				{
+					_running = 0;
+					return;
+				}
+
+				var image = _images.shift();
+
+				$upload.http({
+					url: "/data2/galleries/" + $attrs.galleryId + "/image",
+					headers: {
+						"Content-Type": image.file.type,
+						"Content-Length": image.file.fileSize
+					},
+					data: image.file,
+					transformRequest: [ ]
+				})
+				.progress(function(e)
+				{
+					image.metadata.progress = Math.round(100 * e.loaded / e.total);
+				})
+				.success(function(data)
+				{
+					window.URL.revokeObjectURL(image.metadata.objUrl);
+					for(var i = 0; i < $scope.uploadingFiles.length; i++)
+					{
+						if($scope.uploadingFiles[i].file === image.file)
+						{
+							$scope.uploadingFiles.splice(i, 1);
+
+							var galleries = $api.galleries.list;
+							for(var j = 0; j < galleries.length; j++)
+							{
+								if(galleries[j]._id === $attrs.galleryId)
+								{
+									galleries[j].images.push(data);
+									break;
+								}
+							}
+							break;
+						}
+					}
+					_running--;
+				})
+				.error(function()
+				{
+					window.URL.revokeObjectURL(image.metadata.objUrl);
+					for(var i = 0; i < $scope.uploadingFiles.length; i++)
+					{
+						if($scope.uploadingFiles[i].file === image.file)
+						{
+							$scope.uploadingFiles.splice(i, 1);
+							break;
+						}
+					}
+					_running--;
+				});
+			}
+
+			return {
+				push: function(image)
+				{
+					_images.push(image);
+					run();
+				}
+			}
+		})();
+
 		$scope.files = [ ];
 		$scope.uploadingFiles = [ ];
-
-		var getUploader = function(file, metadata)
-		{
-			return function()
-			{
-				//var fileReader = new FileReader();
-    			//fileReader.readAsArrayBuffer(file);
-    			//fileReader.onload = function(e)
-				//{
-					$upload.http({
-						url: "/data2/galleries/" + $attrs.galleryId + "/image",
-						headers: {
-							"Content-Type": file.type,
-							"Content-Length": file.fileSize
-						},
-						data: file,//new DataView(fileReader.result),
-						transformRequest: [ ]
-					})
-					.progress(function(e)
-					{
-						metadata.progress = Math.round(100 * e.loaded / e.total);
-					})
-					.success(function(data)
-					{
-						window.URL.revokeObjectURL(metadata.objUrl);
-						for(var i = 0; i < $scope.uploadingFiles.length; i++)
-						{
-							if($scope.uploadingFiles[i].file === file)
-							{
-								$scope.uploadingFiles.splice(i, 1);
-
-								var galleries = $api.galleries.list;
-								for(var j = 0; j < galleries.length; j++)
-								{
-									if(galleries[j]._id === $attrs.galleryId)
-									{
-										galleries[j].images.push(data);
-										break;
-									}
-								}
-								break;
-							}
-						}
-					})
-					.error(function()
-					{
-						window.URL.revokeObjectURL(metadata.objUrl);
-						for(var i = 0; i < $scope.uploadingFiles.length; i++)
-						{
-							if($scope.uploadingFiles[i].file === file)
-							{
-								$scope.uploadingFiles.splice(i, 1);
-
-								/*var galleries = $api.galleries.list;
-								for(var j = 0; j < galleries.length; j++)
-								{
-									if(galleries[j]._id === $attrs.galleryId)
-									{
-										galleries[j].images.push(data);
-										break;
-									}
-								}*/
-								break;
-							}
-						}
-					});
-				//};
-			};
-		};
 
 		$scope.$watch("files", function()
 		{
@@ -277,7 +290,10 @@ angular.module("jotc")
 				};
 				$scope.uploadingFiles.push(uploadingFile);
 
-				getUploader($scope.files[i], uploadingFile)();
+				imageQueue.push({
+					metadata: uploadingFile,
+					file: $scope.files[i]
+				});
 			}
 		});
 	}]);
