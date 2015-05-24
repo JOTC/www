@@ -34,7 +34,7 @@ app.delete = app.del;
 
 require("./auth.js")(passport);
 
-app.post("/auth/local", passport.authenticate("custom-local"), function(req, res) { res.send(200); });
+app.post("/auth/local", restify.bodyParser({ mapParams: false }), passport.authenticate("custom-local"), function(req, res) { res.send(200); });
 
 app.get("/auth/user", function(req, res, next)
 {
