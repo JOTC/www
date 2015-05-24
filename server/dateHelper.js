@@ -6,25 +6,20 @@ module.exports = Object.freeze({
 	months: months,
 	shortMonths: shortMonths,
 	days: days,
-	stringDateRange: function(date1, date2)
-	{
-		if(date1 > date2)
-		{
+	stringDateRange: function(date1, date2) {
+		if(date1 > date2) {
 			var tmp = date1;
 			date1 = date2;
 			date2 = tmp;
 		}
-		
-		var stringDateRange = "";		
-		if(date1.getUTCMonth() === date2.getUTCMonth())
-		{
+
+		var stringDateRange = "";
+		if(date1.getUTCMonth() === date2.getUTCMonth()) {
 			stringDateRange = shortMonths[date1.getUTCMonth()] + " " + date1.getUTCDate() + "-" + date2.getUTCDate();
-		}
-		else
-		{
+		} else {
 			stringDateRange = shortMonths[date1.getUTCMonth()] + " " + date1.getUTCDate() + "-" + shortMonths[date2.getUTCMonth()] + " " + date2.getUTCDate();
 		}
-		
+
 		return stringDateRange;
 	}
 });

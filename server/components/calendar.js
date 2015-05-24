@@ -2,21 +2,16 @@ var db = require("../model/db.js");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "calendar component", level: "debug" });
 
-var isValidCalendarEvent = function(event)
-{
+var isValidCalendarEvent = function(event) {
 	var valid = false;
-	if(event)
-	{
+	if(event) {
 		valid = true;
 		valid = valid && (event.title && typeof event.title === "string");
 		valid = valid && (event.startDate && typeof event.startDate === "string");
-		
-		if(event.endDate)
-		{
+
+		if(event.endDate) {
 			valid = valid && (typeof event.endDate === "string");
-		}
-		else
-		{
+		} else {
 			event.endDate = event.startDate;
 		}
 	}
@@ -28,21 +23,16 @@ module.exports = {
 	name: "calendar",
 	paths: {
 		"/calendar": {
-			"get": function(req, res, next)
-			{
-				db.calendar.find({ endDate: { "$gte": new Date() } }).exec(function(err, events)
-				{
-					if(err)
-					{
+			"get": function(req, res, next) {
+				db.calendar.find({ endDate: { "$gte": new Date() } }).exec(function(err, events) {
+					if(err) {
 						log.error(err);
 						res.send(500);
-					}
-					else
-					{
+					} else {
 						res.send(200, events);
 					}
 				});
-				
+
 				next();
 			},
 			"post": fn.getModelCreator(db.calendar, "calendar", log, isValidCalendarEvent)

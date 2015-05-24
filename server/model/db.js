@@ -2,7 +2,7 @@ require("mongoose").connect('mongodb://localhost/jotc');
 
 module.exports = {
 	calendar: require("./calendar.js"),
-	classes: require("./classes.js"),	
+	classes: require("./classes.js"),
 	files: require("./files.js"),
 	shows: require("./shows.js"),
 	images: require("./images.js"),
@@ -17,14 +17,10 @@ var initializedModels = {
 	"./initial/recurringShows.js": module.exports.shows.recurring
 };
 
-var getInserter = function(DBModel, module)
-{
-	return function(objs)
-	{
-		if(objs.length === 0)
-		{
-			require(module).forEach(function(obj)
-			{
+var getInserter = function(DBModel, module) {
+	return function(objs) {
+		if(objs.length === 0) {
+			require(module).forEach(function(obj) {
 				var modelObj = new DBModel(obj);
 				modelObj.save();
 			});
@@ -32,10 +28,8 @@ var getInserter = function(DBModel, module)
 	};
 };
 
-for(var mod in initializedModels)
-{
-	if(initializedModels.hasOwnProperty(mod))
-	{
+for(var mod in initializedModels) {
+	if(initializedModels.hasOwnProperty(mod)) {
 		initializedModels[mod].find({}).exec().then(getInserter(initializedModels[mod], mod));
 	}
 }

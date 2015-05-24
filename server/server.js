@@ -7,8 +7,7 @@ var log = require("bunyan").createLogger({ name: "main", level: "debug" });
 
 var app = restify.createServer({ name: "JOTC Data API Server" });
 
-app.use(function(req, res, next)
-{
+app.use(function(req, res, next) {
 	log.debug("Got request: [%s] %s", req.route.method, req.url);
 	next();
 });
@@ -21,8 +20,7 @@ app.use(sessions({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(function(req, res, next)
-{
+app.use(function(req, res, next) {
 	res.redirect = function(address)
 	{
 		res.header("Location", address);
@@ -36,11 +34,9 @@ require("./auth.js")(passport);
 
 app.post("/auth/local", restify.bodyParser({ mapParams: false }), passport.authenticate("custom-local"), function(req, res) { res.send(200); });
 
-app.get("/auth/user", function(req, res, next)
-{
+app.get("/auth/user", function(req, res, next) {
 	var user = { };
-	if(req.user)
-	{
+	if(req.user) {
 		user = JSON.parse(JSON.stringify(req.user));
 	}
 	delete user.local;
@@ -49,43 +45,32 @@ app.get("/auth/user", function(req, res, next)
 	next();
 });
 
-app.get("/auth/logout", function(req, res, next)
-{
+app.get("/auth/logout", function(req, res, next) {
 	req.logout();
 	req.session.destroy();
 	res.send(200);
 	next();
 });
 
-fs.readdirSync("./components").forEach(function(file)
-{
+fs.readdirSync("./components").forEach(function(file) {
 	var component = require("./components/" + file);
-	for(var path in component.paths)
-	{
-
-		if(!component.paths.hasOwnProperty(path))
-		{
+	for(var path in component.paths) {
+		if(!component.paths.hasOwnProperty(path)) {
 			continue;
 		}
 
-		for(var verb in component.paths[path])
-		{
-			if(!component.paths[path].hasOwnProperty(verb))
-			{
+		for(var verb in component.paths[path]) {
+			if(!component.paths[path].hasOwnProperty(verb)) {
 				continue;
 			}
 
 			var handler = component.paths[path][verb];
-			if(typeof(handler) === "function")
-			{
+			if(typeof(handler) === "function") {
 				app[verb.toLowerCase()](path, restify.bodyParser({ mapParams: false }), handler);
 				log.info("%s\t%s", verb.toUpperCase(), path);
-			}
-			else if(handler.options && handler.function)
-			{
+			} else if(handler.options && handler.function) {
 				var middleware = [ ];
-				if(handler.options.useBodyParser)
-				{
+				if(handler.options.useBodyParser) {
 					middleware.push(restify.bodyParser({ mapParams: false }));
 				}
 
@@ -96,8 +81,7 @@ fs.readdirSync("./components").forEach(function(file)
 	}
 });
 
-app.listen(config.port, function()
-{
+app.listen(config.port, function() {
 	log.info("%s ready at %s", app.name, app.url);
 	require("./model/db.js");
 });

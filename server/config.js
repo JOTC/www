@@ -14,11 +14,9 @@ var config = {
 	},
 	"www": {
 		"root": "/vagrant/www",
-		"getPath": function(pathSegment)
-		{
+		"getPath": function(pathSegment) {
 			var fullPath = path.join(config.www.root, pathSegment);
-			if(!fs.existsSync(fullPath))
-			{
+			if(!fs.existsSync(fullPath)) {
 				mkdirp.sync(fullPath);
 			}
 
@@ -27,28 +25,18 @@ var config = {
 	}
 };
 
-function mergeObjects(obj1, obj2)
-{
-	for(var property in obj1)
-	{
-		if(obj1.hasOwnProperty(property))
-		{
-			if(typeof obj1[property] === "function")
-			{
+function mergeObjects(obj1, obj2) {
+	for(var property in obj1) {
+		if(obj1.hasOwnProperty(property)) {
+			if(typeof obj1[property] === "function") {
 				continue;
-			}
-			else if(typeof obj1[property] === "object")
-			{
-				if(obj2.hasOwnProperty(property) && typeof obj2[property] === "object")
-				{
+			} else if(typeof obj1[property] === "object") {
+				if(obj2.hasOwnProperty(property) && typeof obj2[property] === "object") {
 					mergeObjects(obj1[property], obj2[property]);
 				}
-			}
-			else if(obj2.hasOwnProperty(property))
-			{
+			} else if(obj2.hasOwnProperty(property)) {
 				var type = typeof obj2[property];
-				if(type !== "function" && type !== "object")
-				{
+				if(type !== "function" && type !== "object") {
 					obj1[property] = obj2[property];
 				}
 			}
@@ -56,11 +44,12 @@ function mergeObjects(obj1, obj2)
 	}
 }
 
-try
-{
+try {
 	var configFile = JSON.parse(fs.readFileSync("config.json"));
 	mergeObjects(config, configFile);
 
-} catch(e){ console.log(e); }
+} catch(e) {
+	console.log(e);
+}
 
 module.exports = config;

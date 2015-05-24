@@ -5,11 +5,9 @@ var nodemailer = require('nodemailer');
 var config = require("../config");
 var bcrypt = require("bcryptjs");
 
-var isValidUser = function(user)
-{
+var isValidUser = function(user) {
 	var valid = false;
-	if(user)
-	{
+	if(user) {
 		valid = true;
 		valid = valid && (user.name && typeof user.name === "string");
 		valid = valid && (user.email && typeof user.email === "string");
@@ -30,20 +28,16 @@ module.exports = {
 	name: "users",
 	paths: {
 		"/users": {
-			"get": fn.getModelLister(db.users, log, { name: "asc" }, function(objs, req)
-			{
-				if(!req.user || !req.user.permissions.users)
-				{
+			"get": fn.getModelLister(db.users, log, { name: "asc" }, function(objs, req) {
+				if(!req.user || !req.user.permissions.users) {
 					objs.splice(0, objs.length);
 				}
 
-				objs.forEach(function(user)
-				{
+				objs.forEach(function(user) {
 					user.local = null;
 				});
 			}),
-			"post": fn.getModelCreator(db.users, "users", log, isValidUser, function(obj)
-			{
+			"post": fn.getModelCreator(db.users, "users", log, isValidUser, function(obj) {
 				var token = require("crypto").randomBytes(16).toString("hex");
 
 				obj.local.username = obj.email;
@@ -72,53 +66,40 @@ module.exports = {
 				};
 
 				var permissionText = "";
-				if(obj.permissions)
-				{
-					if(obj.permissions.shows)
-					{
+				if(obj.permissions) {
+					if(obj.permissions.shows) {
 						permissionText += "\n * Add, edit, and remove shows";
 					}
-					if(obj.permissions.classes)
-					{
+					if(obj.permissions.classes) {
 						permissionText += "\n * Add, edit, and remove classes";
 					}
-					if(obj.permissions.pictures)
-					{
+					if(obj.permissions.pictures) {
 						permissionText += "\n * Add, edit, and remove pictures and galleries";
 					}
-					if(obj.permissions.calendar)
-					{
+					if(obj.permissions.calendar) {
 						permissionText += "\n * Add, edit, and remove calendar events";
 					}
-					if(obj.permissions.links)
-					{
+					if(obj.permissions.links) {
 						permissionText += "\n * Add, edit, and remove links";
 					}
-					if(obj.permissions.officers)
-					{
+					if(obj.permissions.officers) {
 						permissionText += "\n * Add, edit, and remove officers";
 					}
-					if(obj.permissions.users)
-					{
+					if(obj.permissions.users) {
 						permissionText += "\n * Add, edit, and remove users";
 					}
 				}
-				if(permissionText.length > 0)
-				{
+				if(permissionText.length > 0) {
 					permissionText = "\n\nYour account has been granted the following privileges:" + permissionText;
 				}
 
 				emailOptions.text += permissionText + "\n\nSincerely,\nJOTC Website Admin";
 
-				transporter.sendMail(emailOptions, function(error)
-				{
-					if(error)
-					{
+				transporter.sendMail(emailOptions, function(error) {
+					if(error) {
 						log.error("Error sending email to %s", obj.email);
 						log.error(error);
-					}
-					else
-					{
+					} else {
 						log.info("Email successfully sent to %s", obj.email);
 					}
 				});
@@ -129,31 +110,21 @@ module.exports = {
 			"delete": fn.getModelDeleter(db.users, "userID", "users", log)
 		},
 		"/auth/local/reset/": {
-			"put": function(req, res, next)
-			{
-				if(req.body && req.body.email)
-				{
-					db.users.findOne({ "local.username": req.body.email }).exec(function(err, user)
-					{
-						if(err)
-						{
+			"put": function(req, res, next) {
+				if(req.body && req.body.email) {
+					db.users.findOne({ "local.username": req.body.email }).exec(function(err, user) {
+						if(err) {
 							log.error(err);
 							res.send(500);
-						}
-						else
-						{
+						} else {
 							var token = require("crypto").randomBytes(16).toString("hex");
 							user.local.secret = "---init---" + bcrypt.hashSync(token);
 
-							user.save(function(err)
-							{
-								if(err)
-								{
+							user.save(function(err) {
+								if(err) {
 									log.error(err);
 									res.send(500);
-								}
-								else
-								{
+								} else {
 									var transporter = nodemailer.createTransport({
 									    service: "Gmail",
 									    auth: {
@@ -175,15 +146,11 @@ module.exports = {
 												"in the top-right corner of the front page.\n\nSincerely,\nJOTC Website Admin"
 									};
 
-									transporter.sendMail(emailOptions, function(error)
-									{
-										if(error)
-										{
+									transporter.sendMail(emailOptions, function(error) {
+										if(error) {
 											log.error("Error sending email to %s", user.email);
 											log.error(error);
-										}
-										else
-										{
+										} else {
 											log.info("Email successfully sent to %s", user.email);
 										}
 									});
@@ -193,9 +160,7 @@ module.exports = {
 							});
 						}
 					});
-				}
-				else
-				{
+				} else {
 					res.send(400);
 				}
 
@@ -203,36 +168,24 @@ module.exports = {
 			}
 		},
 		"/auth/local/validate/:userID/:validationCode": {
-			"get": function(req, res, next)
-			{
-				db.users.findOne({ _id: req.params.userID }).exec(function(err, user)
-				{
-					if(err)
-					{
+			"get": function(req, res, next) {
+				db.users.findOne({ _id: req.params.userID }).exec(function(err, user) {
+					if(err) {
 						log.error(err);
 						res.send(500);
-					}
-					else if(!user)
-					{
+					} else if(!user) {
 						log.error("User [%s] not found", req.params.userID);
 						res.send(404);
-					}
-					else if(user.local && user.local.secret && typeof user.local.secret === "string" && user.local.secret.substr(0, 10) === "---init---")
-					{
+					} else if(user.local && user.local.secret && typeof user.local.secret === "string" && user.local.secret.substr(0, 10) === "---init---") {
 						var secret = user.local.secret.substr(10);
-						if(bcrypt.compareSync(req.params.validationCode, secret))
-						{
+						if(bcrypt.compareSync(req.params.validationCode, secret)) {
 							req.session.resetPassword = { userID: req.params.userID, validationCode: req.params.validationCode };
 							res.redirect("/#/resetPassword");
-						}
-						else
-						{
+						} else {
 							log.error("Validation code failed.");
 							res.send(403);
 						}
-					}
-					else
-					{
+					} else {
 						log.error("User is not in initialization/reset phase");
 						res.send(403);
 					}
@@ -241,73 +194,50 @@ module.exports = {
 			}
 		},
 		"/auth/local/resetPassword": {
-			"put": function(req, res, next)
-			{
-				if(req.session && req.session.resetPassword)
-				{
-					db.users.findOne({ _id: req.session.resetPassword.userID }).exec(function(err, user)
-					{
-						if(err)
-						{
+			"put": function(req, res, next) {
+				if(req.session && req.session.resetPassword) {
+					db.users.findOne({ _id: req.session.resetPassword.userID }).exec(function(err, user) {
+						if(err) {
 							log.error(err);
 							res.send(500);
-						}
-						else if(!user)
-						{
+						} else if(!user) {
 							log.error("User [%s] not found", req.params.userID);
 							res.send(404);
-						}
-						else if(user.local && user.local.secret && typeof user.local.secret === "string" && user.local.secret.substr(0, 10) === "---init---")
-						{
+						} else if(user.local && user.local.secret && typeof user.local.secret === "string" && user.local.secret.substr(0, 10) === "---init---") {
 							var newSecret = req.body;
-							if(newSecret && newSecret.secret && typeof newSecret.secret === "string")
-							{
+							if(newSecret && newSecret.secret && typeof newSecret.secret === "string") {
 								newSecret = newSecret.secret;
 								var secret = user.local.secret.substr(10);
 
-								if(bcrypt.compareSync(req.session.resetPassword.validationCode, secret))
-								{
+								if(bcrypt.compareSync(req.session.resetPassword.validationCode, secret)) {
 									delete req.session.resetPassword;
 									user.local.secret = bcrypt.hashSync(newSecret);
-									user.save(function(err)
-									{
-										if(err)
-										{
+									user.save(function(err) {
+										if(err) {
 											log.error(err);
 											res.send(500);
-										}
-										else
-										{
+										} else {
 											req.session.passport.user = user._id;
 											res.send(200);
 										}
 									});
-								}
-								else
-								{
+								} else {
 									log.error("Validation code failed.");
 									res.send(403);
 								}
-							}
-							else
-							{
+							} else {
 								log.error("No new secret supplied.  Cannot reset password.");
 								res.send(400);
 							}
-						}
-						else
-						{
+						} else {
 							log.error("User is not in initialization/reset phase");
 							res.send(403);
 						}
 					});
-				}
-				else
-				{
+				} else {
 					log.error("No password reset session.  Cannot reset.");
 					res.send(400);
 				}
-				console.log(req.session.resetPassword);
 
 				next();
 			}
