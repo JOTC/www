@@ -10,7 +10,7 @@ var showSchema = mongoose.Schema({
 	description: String,
 	registrationLink: String,
 	classes: [ String ],
-	premiumListPath: String,
+	files: [ { name: String, path: String } ],
 	resultsPath: String
 });
 

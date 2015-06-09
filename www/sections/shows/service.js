@@ -192,12 +192,14 @@ angular.module("jotc")
 							arr.splice(i, 1);
 						}));
 				},
-				deletePremiumList: function(callback)
+				deleteFile: function(fileID, callback)
 				{
-					$http.delete("/data2/shows/" + showID + "/premiumList")
+					$http.delete("/data2/shows/" + showID + "/files/" + fileID)
 						.success(getNoDataSuccessHandler(showID, callback, function(show)
 						{
-							show.premiumListPath = "";
+							show.files = show.files.filter(function(file) {
+								return (file._id !== fileID);
+							});
 						}));
 				},
 				deleteResults: function(callback)

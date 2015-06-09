@@ -108,13 +108,23 @@ var getFileUploadHandler = function(filenameSuffix, showPropertyName) {
 				handleError(err);
 				next();
 			} else if(show) {
+				
+				if(showPropertyName === "files") {
+					filenameSuffix = "Files " + Date.now();
+				}
+				
 				var filename = show.title + " " + filenameSuffix + ".pdf";
 				mv(req.files.file.path, path.join(__FILE_PATH, req.params.showID, filename), { mkdirp: true }, function(err) {
 					if(err) {
 						handleError(err);
 						next();
 					} else {
-						show[showPropertyName] = path.join(__WWW_PATH, req.params.showID, filename);
+						var wwwPath = path.join(__WWW_PATH, req.params.showID, filename);
+						if(showPropertyName === "files") {
+							show.files.push({ name: req.params.name, path: wwwPath });
+						} else {
+							show[showPropertyName] = wwwPath;
+						}
 						show.save(function(err) {
 							if(err) {
 								handleError(err);
@@ -145,12 +155,39 @@ var getFileDeleteHandler = function(showPropertyName) {
 				log.error(err);
 				res.send(500);
 			} else {
-				fs.unlink(config.www.getPath(decodeURIComponent(show[showPropertyName])), function(err) {
+				
+				filename = "";
+				
+				if(showPropertyName === "files") {
+					var files = show.files.filter(function(file) {
+						return (file._id.toString() === req.params.fileID);
+					});
+					if(files.length > 0) {
+						filename = files[0].path;
+					}
+				} else {
+					filename = show[showPropertyName];
+				}
+				
+				if(!filename) {
+					res.send(400);
+					return;
+				}
+				
+				fs.unlink(config.www.getPath(decodeURIComponent(filename)), function(err) {
 					if(err) {
 						log.error(err);
 						res.send(500);
 					} else {
-						show[showPropertyName] = "";
+						
+						if(showPropertyName === "files") {
+							show.files = show.files.filter(function(file) {
+								return (file._id.toString() !== req.params.fileID);
+							});
+						} else {
+							show[showPropertyName] = "";
+						}
+						
 						show.save(function(err) {
 							if(err) {
 								log.error(err);
@@ -212,9 +249,11 @@ module.exports = {
 				}
 			})
 		},
-		"/shows/:showID/premiumList": {
-			"post": getFileUploadHandler("Premium List", "premiumListPath"),
-			"delete": getFileDeleteHandler("premiumListPath")
+		"/shows/:showID/file": {
+			"post": getFileUploadHandler("File", "files")
+		},
+		"/shows/:showID/files/:fileID": {
+			"delete": getFileDeleteHandler("files")
 		},
 		"/shows/:showID/results": {
 			"post": getFileUploadHandler("Results", "resultsPath"),
