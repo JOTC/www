@@ -2,7 +2,6 @@ var restify = require("restify");
 var db = require("../model/db.js");
 var fs = require("fs");
 var path = require("path");
-var Corq = require("corq");
 var log = require("bunyan").createLogger({ name: "image component", level: "debug" });
 var fn = require("../common-fn.js");
 var config = require("../config");
