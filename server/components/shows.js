@@ -1,6 +1,5 @@
 var restify = require("restify");
-var mv = require("mv");
-var fs = require("fs");
+var fs = require("fs-extra");
 var db = require("../model/db.js");
 var dates = require("../dateHelper.js");
 var fn = require("../common-fn.js");
@@ -114,7 +113,7 @@ var getFileUploadHandler = function(filenameSuffix, showPropertyName) {
 				}
 				
 				var filename = show.title + " " + filenameSuffix + ".pdf";
-				mv(req.files.file.path, path.join(__FILE_PATH, req.params.showID, filename), { mkdirp: true }, function(err) {
+				fs.move(req.files.file.path, path.join(__FILE_PATH, req.params.showID, filename), { mkdirp: true }, function(err) {
 					if(err) {
 						handleError(err);
 						next();

@@ -1,6 +1,5 @@
 var restify = require("restify");
-var mv = require("mv");
-var fs = require("fs");
+var fs = require("fs-extra");
 var db = require("../model/db.js");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "classes component", level: "debug" });
@@ -97,7 +96,7 @@ module.exports = {
 						next();
 					} else if(clss) {
 						var filename = getRegistrationFormFilename(clss);
-						mv(req.files.file.path, path.join(__FILE_PATH, req.params.classID, filename), { mkdirp: true }, function(err) {
+						fs.move(req.files.file.path, path.join(__FILE_PATH, req.params.classID, filename), { mkdirp: true }, function(err) {
 							if(err) {
 								handleError(err);
 								next();
