@@ -499,10 +499,10 @@ div[ng-view].ng-enter.ng-enter-active {
 #classes .show button.register,
 #shows .class button.register,
 #classes .class button.register,
-#shows .show div.premiumList,
-#classes .show div.premiumList,
-#shows .class div.premiumList,
-#classes .class div.premiumList {
+#shows .show div.fileList,
+#classes .show div.fileList,
+#shows .class div.fileList,
+#classes .class div.fileList {
   margin: 1em 0 0 0;
 }
 #shows .table .cell.right,

@@ -967,15 +967,15 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t\t<li ng-repeat=\"class in show.classes\">{{ class }}</li>\n" +
     "\t\t\t\t\t</ul>\n" +
     "\n" +
-    "\t\t\t\t\t<div ng-if=\"show.premiumListPath\" class=\"premiumList\">\n" +
-    "\t\t\t\t\t\t<a class=\"btn btn-success download\" ng-href=\"{{ show.premiumListPath }}\">Download Premium List</a>\n" +
-    "\t\t\t\t\t\t<button ng-if=\"auth.shows\" class=\"btn btn-danger\" ng-click=\"deletePremiumList(show)\">Delete Premium List</button>\n" +
+    "\t\t\t\t\t<div ng-repeat=\"file in show.files\" class=\"fileList\">\n" +
+    "\t\t\t\t\t\t<a class=\"btn btn-success download\" ng-href=\"{{ file.path }}\">Download {{ file.name }}</a>\n" +
+    "\t\t\t\t\t\t<button ng-if=\"auth.shows\" class=\"btn btn-danger\" ng-click=\"deleteFile(show, file)\">Delete {{ file.name }}</button>\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t\n" +
     "\t\t\t\t\t<button ng-if=\"show.registrationLink.length > 0\" ng-click=\"openNewWindow(show.registrationLink)\" class=\"btn btn-warning register\">Register</button>\n" +
     "\t\t\t\t</div>\n" +
     "\n" +
-    "\t\t\t\t<div drag-drop-file-uploader ng-if=\"auth.shows && !show.premiumListPath\" obj-type=\"shows\" obj=\"show\" doc-type=\"premiumList\" doc-name=\"premium list\"></div>\n" +
+    "\t\t\t\t<div drag-drop-file-uploader ng-if=\"auth.shows\" obj-type=\"shows\" obj=\"show\" doc-type=\"prompt\" doc-name=\"a file\"></div>\n" +
     "\n" +
     "\t\t\t\t<div ng-if=\"auth.shows\" style=\"text-align: right; padding: 10px;\">\n" +
     "\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"openEditor(show)\">Edit</button> <button class=\"btn btn-danger\" ng-click=\"delete(show)\">Delete</button>\n" +
@@ -990,12 +990,12 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t<div class=\"date\">{{ show.dateRange }}, {{ show.title }}</div>\n" +
     "\t\t\t\t<div class=\"location\">{{ show.location }}</div>\n" +
     "\t\t\t\t<div class=\"description\">\n" +
-    "\t\t\t\t\t<a ng-if=\"show.resultsPath\" class=\"btn btn-success\" ng-href=\"{{ show.resultsPath }}\">Download Results</a>\n" +
-    "\t\t\t\t\t<div ng-if=\"auth.shows && show.resultsPath\">\n" +
-    "\t\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"deleteResults(show)\">Delete Results</button>\n" +
+    "\t\t\t\t\t<div ng-repeat=\"file in show.files\" class=\"fileList\">\n" +
+    "\t\t\t\t\t\t<a class=\"btn btn-success download\" ng-href=\"{{ file.path }}\">Download {{ file.name }}</a>\n" +
+    "\t\t\t\t\t\t<button ng-if=\"auth.shows\" class=\"btn btn-danger\" ng-click=\"deleteFile(show, file)\">Delete {{ file.name }}</button>\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\n" +
-    "\t\t\t\t\t<div drag-drop-file-uploader ng-if=\"auth.shows && !show.resultsPath\" obj-type=\"shows\" obj=\"show\" doc-type=\"results\" doc-name=\"results\"></div>\n" +
+    "\t\t\t\t\t<div drag-drop-file-uploader ng-if=\"auth.shows\" obj-type=\"shows\" obj=\"show\" doc-type=\"prompt\" doc-name=\"results\"></div>\n" +
     "\t\t\t\t\t\n" +
     "\t\t\t\t</div>\t\t\t\t\n" +
     "\t\t\t</div>\n" +
@@ -1003,6 +1003,27 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\n" +
     "\t</div>\n" +
     "</div>\n"
+  );
+
+
+  $templateCache.put('jotc/sections/uploader/prompt.template.html',
+    "<div class=\"modal-header\">Upload File</div>\n" +
+    "\n" +
+    "<div class=\"modal-body\">\n" +
+    "\n" +
+    "<form>\n" +
+    "\t<div class=\"form-group\">\n" +
+    "\t\t<label>File title</label>\n" +
+    "\t\t<input type=\"text\" class=\"form-control\" rows=\"5\" ng-model=\"file.name\">\n" +
+    "\t</div>\t\n" +
+    "</form>\n" +
+    "\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"modal-footer\">\n" +
+    "\t<button class=\"btn btn-primary\" ng-click=\"upload()\">Upload</button>\n" +
+    "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>"
   );
 
 

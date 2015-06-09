@@ -120,13 +120,13 @@ angular.module("jotc")
 			}
 		};
 
-		$scope.deletePremiumList = function(show)
+		$scope.deleteFile = function(show, file)
 		{
-			if(confirm("Are you sure you wish to delete the premium list for the show " + show.title + "?  This cannot be undone."))
+			if(confirm("Are you sure you wish to delete the file named '" + file.name + "' for the show " + show.title + "?  This cannot be undone."))
 			{
-				if(confirm("Please confirm again.  This will delete the premium list for this show."))
+				if(confirm("Please confirm again.  This will delete the file named '" +  file.name + "' for this show."))
 				{
-					$api.shows.show(show._id).deletePremiumList();
+					$api.shows.show(show._id).deleteFile(file._id);
 				}
 			}
 		};
