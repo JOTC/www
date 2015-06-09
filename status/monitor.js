@@ -2,7 +2,7 @@ var request = require("request");
 var slackHookURL = "https://hooks.slack.com/services/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";
 var fs = require("fs");
 
-var status = "";
+var processStatus = "";
 var lastStatus = (new Date()).getTime();
 
 if(fs.existsSync("./statefile")) {
@@ -17,14 +17,14 @@ function readStateFile() {
 
         var now = (new Date()).getTime();
 
-        console.log("%s | %s | %s", status, newStatus, (now - lastStatus));
+        console.log("%s | %s | %s", processStatus, newStatus, (now - lastStatus));
 
         if(newStatus !== status) {
-            status = newStatus;
+            processStatus = newStatus;
             request
                 .post(slackHookURL)
                 .form({
-                    payload: '{"text": "The JOTC API server process is now ' + status + '.","username":"JOTC Webserver"}'
+                    payload: '{"text": "The JOTC API server process is now ' + processStatus + '.","username":"JOTC Webserver"}'
                 });
         } else if(newStatus === "running" && (now - lastStatus) > 100) {
             request

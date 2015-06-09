@@ -155,7 +155,7 @@ var getFileDeleteHandler = function(showPropertyName) {
 				res.send(500);
 			} else {
 				
-				filename = "";
+				var filename = "";
 				
 				if(showPropertyName === "files") {
 					var files = show.files.filter(function(file) {

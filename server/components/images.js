@@ -5,7 +5,6 @@ var path = require("path");
 var log = require("bunyan").createLogger({ name: "image component", level: "debug" });
 var fn = require("../common-fn.js");
 var config = require("../config");
-var sharp = require("sharp");
 
 var ImageProcessor = require("./images.processor.js")();
 

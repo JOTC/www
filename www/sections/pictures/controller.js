@@ -264,7 +264,7 @@ angular.module("jotc")
 					}
 					_running--;
 				});
-			}
+			};
 
 			return {
 				push: function(image)
@@ -272,7 +272,7 @@ angular.module("jotc")
 					_images.push(image);
 					run();
 				}
-			}
+			};
 		})();
 
 		$scope.files = [ ];

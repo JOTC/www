@@ -3,7 +3,6 @@ var log = require("bunyan").createLogger({ name: "image processor", level: "debu
 var timeout = null;
 var imagesProcessed = 0;
 process.on("message", function(info) {
-    var path = require("path");
     var sharp = require("sharp");
 
     sharp(info.inputPath).rotate().resize(1024, 1024).max().toFile(info.outputPath, function(err) {
@@ -35,7 +34,7 @@ module.exports = function ImageProcessor() {
             log.debug("New image processor being created");
             processor = fork("./components/images.processor.js");
 
-            processor.on("message", function(info) {
+            processor.on("message", function() {
                 current.callback();
                 current.success();
             });
@@ -47,10 +46,10 @@ module.exports = function ImageProcessor() {
         }
 
         return processor;
-    }
+    };
 
     var current = null;
-    queue.on("image", function(img, success, fail) {
+    queue.on("image", function(img, success) {
         current = { callback: img.callback, success: success };
         getProcessor().send({ inputPath: img.inputPath, outputPath: img.outputPath });
     });
