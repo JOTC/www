@@ -13,7 +13,7 @@ var config = {
 		"password": "gmail-password"
 	},
 	"www": {
-		"root": "/vagrant/www",
+		"root": "./www-root",
 		"getPath": function(pathSegment) {
 			var fullPath = path.join(config.www.root, pathSegment);
 			if(!fs.existsSync(fullPath)) {
@@ -45,7 +45,7 @@ function mergeObjects(obj1, obj2) {
 }
 
 try {
-	var configFile = JSON.parse(fs.readFileSync("config.json"));
+	var configFile = require("config.json");
 	mergeObjects(config, configFile);
 
 } catch(e) {

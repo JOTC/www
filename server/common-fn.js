@@ -33,7 +33,7 @@ module.exports = {
 			query.exec(function(err, objs) {
 				if(err) {
 					logger.error(err);
-					res.send(500);
+					res.send(new restify.InternalServerError());
 				} else {
 					if(postProcessFn) {
 						postProcessFn(objs, req);
@@ -48,35 +48,58 @@ module.exports = {
 		return getBasicBodyHandler(permissionName, logger, validationFn, function(req, res, obj) {
 			delete obj._id;
 
+			var save = function() {
+				modelObj.save(function(err) {
+					if(err) {
+						logger.error(err);
+						res.send(new restify.InternalServerError());
+					} else {
+						res.send(200, modelObj);
+					}
+				});
+			};
+
 			var modelObj = new DBModel(obj);
 			if(postProcessFn) {
-				postProcessFn(modelObj);
-			}
-
-			modelObj.save(function(err) {
-				if(err) {
-					logger.error(err);
-					res.send(500);
+				if(postProcessFn.length > 1) {
+					postProcessFn(modelObj, save);
 				} else {
-					res.send(200, modelObj);
+					postProcessFn(modelObj);
+					save();
 				}
-			});
+			} else {
+				save();
+			}
 		});
 	},
 	getModelUpdater: function(model, parameterName, permissionName, logger, validationFn, postProcessFn) {
 		return getBasicBodyHandler(permissionName, logger, validationFn, function(req, res, obj) {
 			delete obj._id;
 
-			if(postProcessFn) {
-				postProcessFn(obj);
+			if(!/[a-zA-Z0-9]{24}/.test(req.params[parameterName])) {
+				res.send(new restify.BadRequestError());
+				return;
 			}
 
-			model.update({ _id: req.params[parameterName] }, obj, { upsert: true }).exec(function(err) {
+			model.findOne({ _id: req.params[parameterName] }).exec(function(err, modelObj) {
 				if(err) {
 					logger.error(err);
-					res.send(500);
+					res.send(new restify.InternalServerError());
+				} else if(modelObj) {
+					if(postProcessFn) {
+						postProcessFn(modelObj);
+					}
+
+					model.update({ _id: req.params[parameterName] }, obj, { upsert: true }).exec(function(err) {
+						if(err) {
+							logger.error(err);
+							res.send(new restify.InternalServerError());
+						} else {
+							res.send(200, { });
+						}
+					});
 				} else {
-					res.send(200);
+					res.send(new restify.NotFoundError());
 				}
 			});
 		});
@@ -86,26 +109,30 @@ module.exports = {
 			if(!req.user || !req.user.permissions[permissionName]) {
 				return next(new restify.UnauthorizedError());
 			}
+			
+			if(!/[a-zA-Z0-9]{24}/.test(req.params[parameterName])) {
+				return next(new restify.BadRequestError());
+			}
 
 			model.findOne({ _id: req.params[parameterName] }).exec(function(err, modelObj) {
 				if(err) {
 					logger.error(err);
-					res.send(500);
+					res.send(new restify.InternalServerError());
 				} else if(modelObj) {
 					modelObj.remove(function(err)
 					{
 						if(err) {
 							logger.error(err);
-							res.send(500);
+							res.send(new restify.InternalServerError());
 						} else {
 							if(postProcessFn) {
 								postProcessFn(modelObj);
 							}
-							res.send(200);
+							res.send(200, { });
 						}
 					});
 				} else {
-					res.send(200);
+					res.send(new restify.NotFoundError());
 				}
 			});
 

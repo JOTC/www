@@ -1,6 +1,5 @@
 branches:
   only:
-    - master
     - travis
 
 language: node_js
@@ -10,7 +9,14 @@ node_js:
 # Dependencies
 services:
   - mongodb
-  
+
+sudo:
+  - required
+
 before_script:
   - sleep 15
-  - mongo ./travis/db.js
+  - mongo jotc travis/db.js
+  - cd server
+  - curl -s https://raw.githubusercontent.com/lovell/sharp/master/preinstall.sh | sudo bash -
+  - npm install
+  - node server &>/dev/null &
