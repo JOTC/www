@@ -1,6 +1,5 @@
 branches:
   only:
-    - master
     - travis
 
 language: node_js
