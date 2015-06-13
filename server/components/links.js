@@ -3,6 +3,24 @@ var db = require("../model/db.js");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "links component", level: "debug" });
 
+function validateRequest(req, requiredIDs) {
+	if(!req.user || !req.user.permissions.links) {
+		return new restify.UnauthorizedError();
+	}
+
+	var error;
+
+	if(requiredIDs && Array.isArray(requiredIDs)) {
+		requiredIDs.forEach(function(requiredID) {
+			if(!req.params[requiredID] || !/[0-9a-zA-Z]{24}/.test(req.params[requiredID])) {
+				error = new restify.BadRequestError();
+			}
+		});
+	}
+
+	return error;
+}
+
 var swapGroup = function(groupID, direction, res) {
 	if(direction < 0) {
 		direction = -1;
@@ -132,12 +150,9 @@ module.exports = {
 		"/links/:groupID": {
 			"put": fn.getModelUpdater(db.linkGroups, "groupID", "links", log, isValidGroup),
 			"post": function(req, res, next) {
-				if(!req.user || !req.user.permissions.links) {
-					return next(new restify.UnauthorizedError());
-				}
-
-				if(!req.params.groupID || !/[0-9a-zA-Z]{24}/.test(req.params.groupID)) {
-					return next(new restify.BadRequestError());
+				var error = validateRequest(req, ["groupID"]);
+				if(error) {
+					return next(error);
 				}
 
 				var link = req.body;
@@ -172,11 +187,9 @@ module.exports = {
 		},
 		"/links/:groupID/up": {
 			"put": function(req, res, next) {
-				if(!req.user || !req.user.permissions.links) {
-					return next(new restify.UnauthorizedError());
-				}
-				if(!req.params.groupID || !/[0-9a-zA-Z]{24}/.test(req.params.groupID)) {
-					return next(new restify.BadRequestError());
+				var error = validateRequest(req, ["groupID"]);
+				if(error) {
+					return next(error);
 				}
 
 				swapGroup(req.params.groupID, -1, res);
@@ -185,11 +198,9 @@ module.exports = {
 		},
 		"/links/:groupID/down": {
 			"put": function(req, res, next) {
-				if(!req.user || !req.user.permissions.links) {
-					return next(new restify.UnauthorizedError());
-				}
-				if(!req.params.groupID || !/[0-9a-zA-Z]{24}/.test(req.params.groupID)) {
-					return next(new restify.BadRequestError());
+				var error = validateRequest(req, ["groupID"]);
+				if(error) {
+					return next(error);
 				}
 
 				swapGroup(req.params.groupID, 1, res);
@@ -198,14 +209,9 @@ module.exports = {
 		},
 		"/links/:groupID/:linkID": {
 			"put": function(req, res, next) {
-				if(!req.user || !req.user.permissions.links) {
-					return next(new restify.UnauthorizedError());
-				}
-				if(!req.params.groupID || !/[0-9a-zA-Z]{24}/.test(req.params.groupID)) {
-					return next(new restify.BadRequestError());
-				}
-				if(!req.params.linkID || !/[0-9a-zA-Z]{24}/.test(req.params.linkID)) {
-					return next(new restify.BadRequestError());
+				var error = validateRequest(req, ["groupID", "linkID"]);
+				if(error) {
+					return next(error);
 				}
 
 				var link = req.body;
@@ -244,14 +250,9 @@ module.exports = {
 				next();
 			},
 			"delete": function(req, res, next) {
-				if(!req.user || !req.user.permissions.links) {
-					return next(new restify.UnauthorizedError());
-				}
-				if(!req.params.groupID || !/[0-9a-zA-Z]{24}/.test(req.params.groupID)) {
-					return next(new restify.BadRequestError());
-				}
-				if(!req.params.linkID || !/[0-9a-zA-Z]{24}/.test(req.params.linkID)) {
-					return next(new restify.BadRequestError());
+				var error = validateRequest(req, ["groupID", "linkID"]);
+				if(error) {
+					return next(error);
 				}
 
 				db.linkGroups.findOne({ _id: req.params.groupID }).exec(function(err, group) {
@@ -284,11 +285,9 @@ module.exports = {
 		},
 		"/links/:groupID/:linkID/up": {
 			"put": function(req, res, next) {
-				if(!req.user || !req.user.permissions.links) {
-					return next(new restify.UnauthorizedError());
-				}
-				if(!req.params.groupID || !req.params.linkID || !/[0-9a-zA-Z]{24}/.test(req.params.groupID) || !/[0-9a-zA-Z]{24}/.test(req.params.linkID)) {
-					return next(new restify.BadRequestError());
+				var error = validateRequest(req, ["groupID", "linkID"]);
+				if(error) {
+					return next(error);
 				}
 
 				swapLink(req.params.groupID, req.params.linkID, -1, res);
@@ -297,17 +296,14 @@ module.exports = {
 		},
 		"/links/:groupID/:linkID/down": {
 			"put": function(req, res, next) {
-				if(!req.user || !req.user.permissions.links) {
-					return next(new restify.UnauthorizedError());
-				}
-				if(!req.params.groupID || !req.params.linkID || !/[0-9a-zA-Z]{24}/.test(req.params.groupID) || !/[0-9a-zA-Z]{24}/.test(req.params.linkID)) {
-					return next(new restify.BadRequestError());
+				var error = validateRequest(req, ["groupID", "linkID"]);
+				if(error) {
+					return next(error);
 				}
 
 				swapLink(req.params.groupID, req.params.linkID, 1, res);
 				next();
 			}
 		}
-
 	}
 };
