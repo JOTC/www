@@ -16,6 +16,75 @@ function getCreatedLinkID() {
 var lib = require("./lib");
 lib.init();
 
+var groups = [
+	{
+		name: "With an invalid group ID",
+		groupID: function() { return "abcd1234" },
+		successCase: 400,
+		links: [
+			{
+				name: "With an invalid link ID",
+				linkID: function() { return "abcd1234"; },
+				successCase: 400
+			},
+			{
+				name: "With a valid but fake link ID",
+				linkID: function() { return "abcd1234abcd1234abcd1234"; },
+				successCase: 400
+			},
+			{
+				name: "With an valid and real link ID",
+				linkID: function() { return getCreatedLinkID(); },
+				successCase: 400
+			}
+		]
+	},
+	{
+		name: "With a valid but fake group ID",
+		groupID: function() { return "abcd1234abcd1234abcd1234"; },
+		successCase: 404,
+		links: [
+			{
+				name: "With an invalid link ID",
+				linkID: function() { return "abcd1234"; },
+				successCase: 400
+			},
+			{
+				name: "With a valid but fake link ID",
+				linkID: function() { return "abcd1234abcd1234abcd1234"; },
+				successCase: 404
+			},
+			{
+				name: "With an valid and real link ID",
+				linkID: function() { return getCreatedLinkID(); },
+				successCase: 404
+			}
+		]
+	},
+	{
+		name: "With a valid and real group ID",
+		groupID: function() { return getCreatedLinkGroupID(); },
+		successCase: 200,
+		links: [
+			{
+				name: "With an invalid link ID",
+				linkID: function() { return "abcd1234"; },
+				successCase: 400
+			},
+			{
+				name: "With a valid but fake link ID",
+				linkID: function() { return "abcd1234abcd1234abcd1234"; },
+				successCase: 404
+			},
+			{
+				name: "With an valid and real link ID",
+				linkID: function() { return getCreatedLinkID(); },
+				successCase: 200
+			}
+		]
+	}
+];
+
 describe("Links API", function() {
 	describe("Get list", lib.statusAndJSON("get", "/links", null, null, 200, function(response, body) {
 		it("should return an array", function() {
@@ -113,698 +182,145 @@ describe("Links API", function() {
 	});
 
 	describe("Edit link group", function() {
-		describe("With an invalid ID", function() {
-			var urlFn = function() {
-				return "/links/abcd1234";
-			};
+		groups.forEach(function(group) {
+			describe(group.name, function() {
+				var urlFn = function() {
+					return function() { return "/links/" + group.groupID(); };
+				};
 
-			describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-			describe("As real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), { }, 401));
+				describe("Unauthenticated", lib.statusAndJSON("put", urlFn(), null, { }, 401));
+				describe("As real user without permission", lib.statusAndJSON("put", urlFn(), lib.getCookie(false), { }, 401));
 
-			describe("As real user with permission", function() {
-				describe("With an empty group", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-				describe("With an empty name", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "" }, 400));
-				describe("With a non-string name", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 2 }, 400));
-				describe("With a valid group", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test Link Group Rename" }, 400));
-			});
-		});
-
-		describe("With a valid but fake ID", function() {
-			var urlFn = function() {
-				return "/links/abcd1234abcd1234abcd1234";
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-			describe("As real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), { }, 401));
-
-			describe("As real user with permission", function() {
-				describe("With an empty group", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-				describe("With an empty name", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "" }, 400));
-				describe("With a non-string name", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 2 }, 400));
-				describe("With a valid group", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test Link Group Rename" }, 404));
-			});
-		});
-
-		describe("With a valid and real ID", function() {
-			var urlFn = function() {
-				return "/links/" + getCreatedLinkGroupID();
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-			describe("As real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), { }, 401));
-
-			describe("As real user with permission", function() {
-				describe("With an empty group", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-				describe("With an empty name", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "" }, 400));
-				describe("With a non-string name", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 2 }, 400));
-				describe("With a valid group", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test Link Group Rename" }, 200));
+				describe("As real user with permission", function() {
+					describe("With an empty group", lib.statusAndJSON("put", urlFn(), lib.getCookie(true), { }, 400));
+					describe("With an empty name", lib.statusAndJSON("put", urlFn(), lib.getCookie(true), { name: "" }, 400));
+					describe("With a non-string name", lib.statusAndJSON("put", urlFn(), lib.getCookie(true), { name: 2 }, 400));
+					describe("With a valid group", lib.statusAndJSON("put", urlFn(), lib.getCookie(true), { name: "Test Link Group Rename" }, group.successCase));
+				});
 			});
 		});
 	});
 
 	describe("Add a link to a group", function() {
-		describe("With an invalid group ID", function() {
-			var urlFn = function() {
-				return "/links/abcd1234";
-			};
+		groups.forEach(function(group) {
+			describe(group.name, function() {
+				var urlFn = function(groupID) {
+					return function() { return "/links/" + group.groupID(); };
+				};
+				describe("Unauthenticated", lib.statusAndJSON("post", urlFn(group.groupID), null, { }, 401));
+				describe("As a real user without permission", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(false), { }, 401));
 
-			describe("Unauthenticated", lib.statusAndJSON("post", urlFn, null, { }, 401));
-			describe("As a real user without permission", lib.statusAndJSON("post", urlFn, lib.getCookie(false), { }, 401));
+				describe("As a real user with permission", function() {
+					describe("With an empty link", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(true), { }, 400));
+					describe("With a name but no URL", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(true), { name: "Test link" }, 400));
+					describe("With no name but a URL", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(true), { url: "test-url" }, 400));
+					describe("With a name and a non-string URL", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(true), { name: "Test link", url: 7 }, 400));
+					describe("With a non-string name and a URL", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(true), { name: 4, url: "test-url" }, 400));
+					describe("With a non-string name and a non-string URL", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(true), { name: 4, url: 7 }, 400));
+					describe("With a name and a URL", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(true), { name: "Test link", url: "test-url" }, group.successCase, function(response, body) {
+						if(group.successCase === 200) {
+							describe("returns a valid link", function() {
+								it("has an _id", function() {
+									body()._id.should.match(/[0-9a-zA-Z]{24}/);
+									createdLinkID = body()._id;
+								});
 
-			describe("As a real user with permission", function() {
-				describe("With an empty link", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { }, 400));
-				describe("With a name but no URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-				describe("With no name but a URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-				describe("With a name and a non-string URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-				describe("With a non-string name and a URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-				describe("With a non-string name and a non-string URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-				describe("With a name and a URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: "Test link", url: "test-url" }, 400));
-			});
-		});
+								it("has a name", function() {
+									body().name.should.exist;
+									body().name.should.be.a.string;
+								});
 
-		describe("With a valid but fake group ID", function() {
-			var urlFn = function() {
-				return "/links/abcd1234abcd1234abcd1234";
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("post", urlFn, null, { }, 401));
-			describe("As a real user without permission", lib.statusAndJSON("post", urlFn, lib.getCookie(false), { }, 401));
-
-			describe("As a real user with permission", function() {
-				describe("With an empty link", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { }, 400));
-				describe("With a name but no URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-				describe("With no name but a URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-				describe("With a name and a non-string URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-				describe("With a non-string name and a URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-				describe("With a non-string name and a non-string URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-				describe("With a name and a URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: "Test link", url: "test-url" }, 404));
-			});
-		});
-
-		describe("With a valid and real group ID", function() {
-			var urlFn = function() {
-				return "/links/" + getCreatedLinkGroupID();
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("post", urlFn, null, { }, 401));
-			describe("As a real user without permission", lib.statusAndJSON("post", urlFn, lib.getCookie(false), { }, 401));
-
-			describe("As a real user with permission", function() {
-				describe("With an empty link", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { }, 400));
-				describe("With a name but no URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-				describe("With no name but a URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-				describe("With a name and a non-string URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-				describe("With a non-string name and a URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-				describe("With a non-string name and a non-string URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-				describe("With a name and a URL", lib.statusAndJSON("post", urlFn, lib.getCookie(true), { name: "Test link", url: "test-url" }, 200, function(response, body) {
-					describe("returns a valid link", function() {
-						it("has an _id", function() {
-							body()._id.should.match(/[0-9a-zA-Z]{24}/);
-							createdLinkID = body()._id;
-						});
-
-						it("has a name", function() {
-							body().name.should.exist;
-							body().name.should.be.a.string;
-						});
-
-						it("has a URL", function() {
-							body().url.should.exist;
-							body().url.should.be.a.string;
-						});
-					});
-
-				}));
+								it("has a URL", function() {
+									body().url.should.exist;
+									body().url.should.be.a.string;
+								});
+							});
+						}
+					}));
+				});
 			});
 		});
 	});
 
 	describe("Edit a link", function() {
-		describe("With an invalid group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/abcd1234";
-				};
+		groups.forEach(function(group) {
+			describe(group.name, function() {
+				group.links.forEach(function(link) {
+					describe(link.name, function() {
+						var urlFn = function(groupID, linkID) {
+							return function() { return "/links/" + group.groupID() + "/" + link.linkID(); };
+						};
 
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, null, { }, 401));
+						describe("Unauthenticated", lib.statusAndJSON("put", urlFn(group.groupID, link.linkID), null, { }, 401));
+						describe("As a real user without permission", lib.statusAndJSON("put", urlFn(group.groupID, link.linkID), null, { }, 401));
 
-				describe("As a real user with permission", function() {
-					describe("With an empty link", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-					describe("With a name but no URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-					describe("With no name but a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-					describe("With a name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-					describe("With a non-string name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-					describe("With a non-string name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-					describe("With a name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link rename", url: "test-url-change" }, 400));
-				});
-			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/abcd1234abcd1234abcd1234";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, null, { }, 401));
-
-				describe("As a real user with permission", function() {
-					describe("With an empty link", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-					describe("With a name but no URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-					describe("With no name but a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-					describe("With a name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-					describe("With a non-string name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-					describe("With a non-string name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-					describe("With a name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link rename", url: "test-url-change" }, 400));
-				});
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/" + getCreatedLinkID();
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, null, { }, 401));
-
-				describe("As a real user with permission", function() {
-					describe("With an empty link", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-					describe("With a name but no URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-					describe("With no name but a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-					describe("With a name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-					describe("With a non-string name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-					describe("With a non-string name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-					describe("With a name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link rename", url: "test-url-change" }, 400));
-				});
-			});
-		});
-
-		describe("With a valid but fake group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/abcd1234";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, null, { }, 401));
-
-				describe("As a real user with permission", function() {
-					describe("With an empty link", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-					describe("With a name but no URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-					describe("With no name but a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-					describe("With a name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-					describe("With a non-string name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-					describe("With a non-string name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-					describe("With a name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link rename", url: "test-url-change" }, 400));
-				});
-			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/abcd1234abcd1234abcd1234";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, null, { }, 401));
-
-				describe("As a real user with permission", function() {
-					describe("With an empty link", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-					describe("With a name but no URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-					describe("With no name but a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-					describe("With a name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-					describe("With a non-string name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-					describe("With a non-string name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-					describe("With a name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link rename", url: "test-url-change" }, 404));
-				});
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/" + getCreatedLinkID();
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, null, { }, 401));
-
-				describe("As a real user with permission", function() {
-					describe("With an empty link", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-					describe("With a name but no URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-					describe("With no name but a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-					describe("With a name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-					describe("With a non-string name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-					describe("With a non-string name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-					describe("With a name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link rename", url: "test-url-change" }, 404));
-				});
-			});
-		});
-
-		describe("With a valid and real group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/abc1234";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, null, { }, 401));
-
-				describe("As a real user with permission", function() {
-					describe("With an empty link", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-					describe("With a name but no URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-					describe("With no name but a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-					describe("With a name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-					describe("With a non-string name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-					describe("With a non-string name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-					describe("With a name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link rename", url: "test-url-change" }, 400));
-				});
-			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/abcd1234abcd1234abcd1234";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, null, { }, 401));
-
-				describe("As a real user with permission", function() {
-					describe("With an empty link", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-					describe("With a name but no URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-					describe("With no name but a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-					describe("With a name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-					describe("With a non-string name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-					describe("With a non-string name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-					describe("With a name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link rename", url: "test-url-change" }, 404));
-				});
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/" + getCreatedLinkID();
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, { }, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, null, { }, 401));
-
-				describe("As a real user with permission", function() {
-					describe("With an empty link", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { }, 400));
-					describe("With a name but no URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link" }, 400));
-					describe("With no name but a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { url: "test-url" }, 400));
-					describe("With a name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link", url: 7 }, 400));
-					describe("With a non-string name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: "test-url" }, 400));
-					describe("With a non-string name and a non-string URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: 4, url: 7 }, 400));
-					describe("With a name and a URL", lib.statusAndJSON("put", urlFn, lib.getCookie(true), { name: "Test link rename", url: "test-url-change" }, 200));
+						describe("As a real user with permission", function() {
+							describe("With an empty link", lib.statusAndJSON("put", urlFn(group.groupID, link.linkID), lib.getCookie(true), { }, 400));
+							describe("With a name but no URL", lib.statusAndJSON("put", urlFn(group.groupID, link.linkID), lib.getCookie(true), { name: "Test link" }, 400));
+							describe("With no name but a URL", lib.statusAndJSON("put", urlFn(group.groupID, link.linkID), lib.getCookie(true), { url: "test-url" }, 400));
+							describe("With a name and a non-string URL", lib.statusAndJSON("put", urlFn(group.groupID, link.linkID), lib.getCookie(true), { name: "Test link", url: 7 }, 400));
+							describe("With a non-string name and a URL", lib.statusAndJSON("put", urlFn(group.groupID, link.linkID), lib.getCookie(true), { name: 4, url: "test-url" }, 400));
+							describe("With a non-string name and a non-string URL", lib.statusAndJSON("put", urlFn(group.groupID, link.linkID), lib.getCookie(true), { name: 4, url: 7 }, 400));
+							describe("With a name and a URL", lib.statusAndJSON("put", urlFn(group.groupID, link.linkID), lib.getCookie(true), { name: "Test link rename", url: "test-url-change" }, link.successCase));
+						});
+					});
 				});
 			});
 		});
 	});
 
-	describe("Move a link group up", function() {
-		describe("With an invalid group ID", function() {
-			var urlFn = function() {
-				return "/links/abcd1234/up";
+	var noBodyNoReturnTests = [
+		{
+			groupName: "Move a link group up",
+			linkName: "Move a link up",
+			verb: "put",
+			urlPostfix: "/up"
+		},
+		{
+			groupName: "Move a link group down",
+			linkName: "Move a link down",
+			verb: "put",
+			urlPostfix: "/down"
+		},
+		{
+			groupName: "Delete a link group",
+			linkName: "Delete a link",
+			verb: "delete",
+			urlPostfix: ""
+		}
+	];
+
+	noBodyNoReturnTests.forEach(function(test) {
+		describe(test.linkName, function() {
+			var urlFn = function(groupID, linkID) {
+				return function() { return "/links/" + groupID() + "/" + linkID() + test.urlPostfix; };
+			}
+
+			groups.forEach(function(group) {
+				describe(group.name, function() {
+					group.links.forEach(function(link) {
+						describe(link.name, function() {
+							describe("Unauthenticated", lib.statusAndJSON(test.verb, urlFn(group.groupID, link.linkID), null, null, 401));
+							describe("As a real user without permission", lib.statusAndJSON(test.verb, urlFn(group.groupID, link.linkID), lib.getCookie(false), null, 401));
+							describe("As a real user with permission", lib.statusAndJSON(test.verb, urlFn(group.groupID, link.linkID), lib.getCookie(true), null, link.successCase));
+						});
+					});
+				});
+			});
+		});
+
+		describe(test.groupName, function() {
+			var urlFn = function(groupID) {
+				return function() { return "/links/" + groupID() + test.urlPostfix; };
 			};
 
-			describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-			describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-			describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
-		});
-
-		describe("With a valid but fake group ID", function() {
-			var urlFn = function() {
-				return "/links/abcd1234abcd1234abcd1234/up";
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-			describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-			describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 404));
-		});
-
-		describe("With a valid and real group ID", function() {
-			var urlFn = function() {
-				return "/links/" + getCreatedLinkGroupID() + "/up";
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-			describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-			describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 200));
-		});
-	});
-
-	describe("Move a link group down", function() {
-		describe("With an invalid group ID", function() {
-			var urlFn = function() {
-				return "/links/abcd1234/down";
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-			describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-			describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
-		});
-
-		describe("With a valid but fake group ID", function() {
-			var urlFn = function() {
-				return "/links/abcd1234abcd1234abcd1234/down";
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-			describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-			describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 404));
-		});
-
-		describe("With a valid and real group ID", function() {
-			var urlFn = function() {
-				return "/links/" + getCreatedLinkGroupID() + "/down";
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-			describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-			describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 200));
-		});
-	});
-
-	describe("Move a link up", function() {
-		describe("With an invalid group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/abcd1234/up";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
+			groups.forEach(function(group) {
+				describe(group.name, function() {
+					describe("Unauthenticated", lib.statusAndJSON(test.verb, urlFn(group.groupID), null, null, 401));
+					describe("As a real user without permission", lib.statusAndJSON(test.verb, urlFn(group.groupID), lib.getCookie(false), null, 401));
+					describe("As a real user with permission", lib.statusAndJSON(test.verb, urlFn(group.groupID), lib.getCookie(true), null, group.successCase));
+				});
 			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/abcd1234abcd1234abcd1234/up";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/" + getCreatedLinkID() + "/up";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
-			});
-		});
-
-		describe("With a valid but fake group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/abcd1234/up";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
-			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/abcd1234abcd1234abcd1234/up";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 404));
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/" + getCreatedLinkID() + "/up";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 404));
-			});
-		});
-
-		describe("With a valid group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/abcd1234/up";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
-			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/abcd1234abcd1234abcd1234/up";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 404));
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/" + getCreatedLinkID() + "/up";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 200));
-			});
-		});
-	});
-
-	describe("Move a link down", function() {
-		describe("With an invalid group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/abcd1234/down";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
-			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/abcd1234abcd1234abcd1234/down";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/" + getCreatedLinkID() + "/down";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
-			});
-		});
-
-		describe("With a valid but fake group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/abcd1234/down";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
-			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/abcd1234abcd1234abcd1234/down";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 404));
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/" + getCreatedLinkID() + "/down";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 404));
-			});
-		});
-
-		describe("With a valid group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/abcd1234/down";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 400));
-			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/abcd1234abcd1234abcd1234/down";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 404));
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/" + getCreatedLinkID() + "/down";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("put", urlFn, lib.getCookie(true), null, 200));
-			});
-		});
-	});
-
-	describe("Delete a link", function() {
-		describe("With an invalid group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/abcd1234";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 400));
-			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/abcd1234abcd1234abcd1234";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 400));
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234/" + getCreatedLinkID();
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 400));
-			});
-		});
-
-		describe("With a valid but fake group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/abcd1234";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 400));
-			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/abcd1234abcd1234abcd1234";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 404));
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/abcd1234abcd1234abcd1234/" + getCreatedLinkID();
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 404));
-			});
-		});
-
-		describe("With a valid group ID", function() {
-			describe("With an invalid link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/abcd1234";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 400));
-			});
-
-			describe("With a valid but fake link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/abcd1234abcd1234abcd1234";
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 404));
-			});
-
-			describe("With a valid and real link ID", function() {
-				var urlFn = function() {
-					return "/links/" + getCreatedLinkGroupID() + "/" + getCreatedLinkID();
-				};
-
-				describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-				describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-				describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 200));
-			});
-		});
-	});
-
-	describe("Delete a link group", function() {
-		describe("With an invalid group ID", function() {
-			var urlFn = function() {
-				return "/links/abcd1234";
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-			describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-			describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 400));
-		});
-
-		describe("With a valid but fake group ID", function() {
-			var urlFn = function() {
-				return "/links/abcd1234abcd1234abcd1234";
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-			describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-			describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 404));
-		});
-
-		describe("With a valid and real group ID", function() {
-			var urlFn = function() {
-				return "/links/" + getCreatedLinkGroupID();
-			};
-
-			describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
-			describe("As a real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
-			describe("As a real user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 200));
 		});
 	});
 });
