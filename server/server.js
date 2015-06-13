@@ -85,3 +85,8 @@ app.listen(config.port, function() {
 	log.info("%s ready at %s", app.name, app.url);
 	require("./model/db.js");
 });
+
+process.on("SIGINT", function() {
+  console.log('CLOSING [SIGINT]');
+  process.exit();
+});
