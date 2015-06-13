@@ -1,6 +1,7 @@
 branches:
   only:
-    - travis
+    - master
+	- tests
 
 language: node_js
 node_js:
