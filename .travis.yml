@@ -1,7 +1,6 @@
 branches:
   only:
     - master
-    - tests
 
 notifications:
   slack: jotc:Ok7TY1zpz3fxsdpZqnqZovfi
