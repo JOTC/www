@@ -2,18 +2,13 @@ var dbUsers = require("../model/db").users;
 var should = require("should");
 var request = require("request");
 var crypto = require("crypto");
+var bcrypt = require("bcryptjs");
 
 var _user = {
 	db: null,
-	username: "test2",
-	password: crypto.createHash("sha256").update("test-password-2").digest("hex"),
+	username: "test",
+	password: crypto.createHash("sha256").update("test-password").digest("hex"),
 	cookie: ""
-};
-
-function getCookie(withPermission) {
-	return function() {
-		return _users[withPermission ? "withPermission" : "withoutPermission"].cookie;
-	};
 };
 
 function statusAndJSON(verb, url, cookieFn, body, expectedStatus, after) {
@@ -58,27 +53,10 @@ function statusAndJSON(verb, url, cookieFn, body, expectedStatus, after) {
 }
 
 before(function(done) {
-	_user.db = new dbUsers({ name: "Test User 1", email: "", local: { username: _user.username, secret: "$2a$10$YZR8NMyyDzFY5ixvNerUneTr/2qGkxVgi.uzGBQxhv9koEj//6zrK" }, permissions: { "links": false, "officers": false, "shows": false, "classes": false, "pictures": false, "calendar": false, "users": false }});
+	var pwHash = bcrypt.hashSync(_user.password);
+	_user.db = new dbUsers({ name: "Test User 1", email: "", local: { username: _user.username, secret: pwHash }, permissions: { "links": false, "officers": false, "shows": false, "classes": false, "pictures": false, "calendar": false, "users": false }});
 	_user.db.save(done);
 });
-
-/* * /
-before(function(done) {
-	request.post("http://127.0.0.1:9931/auth/local", { form: { username: _users.withoutPermission.username, password: _users.withoutPermission.password }}, function(err, response, body) {
-		var cookie = response.headers["set-cookie"].toString();
-		_users.withoutPermission.cookie = cookie.substr(0, cookie.indexOf(";"));
-		done();
-	});
-});
-
-before(function(done) {
-	request.post("http://127.0.0.1:9931/auth/local", { form: { username: _users.withPermission.username, password: _users.withPermission.password }}, function(err, response, body) {
-		var cookie = response.headers["set-cookie"].toString();
-		_users.withPermission.cookie = cookie.substr(0, cookie.indexOf(";"));
-		done();
-	});
-});
-//*/
 
 after(function(done) {
 	_user.db.remove(done);

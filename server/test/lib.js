@@ -2,6 +2,7 @@ var dbUsers = require("../model/db").users;
 var should = require("should");
 var request = require("request");
 var crypto = require("crypto");
+var bcrypt = require("bcryptjs");
 
 request.delete = request.del;
 
@@ -32,11 +33,11 @@ function statusAndJSON(verb, url, cookieFn, body, expectedStatus, after) {
 		var _body;
 
 		before(function(done) {
-			
+
 			if(typeof url === "function") {
 				url = url();
 			}
-			
+
 			var urlOptions = { url: "http://127.0.0.1:9931" + url, json: true };
 			if(body && typeof body === "object") {
 				urlOptions.body = body;
@@ -72,8 +73,8 @@ module.exports = {
 	statusAndJSON: statusAndJSON,
 	init: function() {
 		before(function(done) {
-			_users.withoutPermission.db = new dbUsers({ name: "Test User 1", email: "", local: { username: "test1", secret: "$2a$10$YZR8NMyyDzFY5ixvNerUneTr/2qGkxVgi.uzGBQxhv9koEj//6zrK" }, permissions: { "links": false, "officers": false, "shows": false, "classes": false, "pictures": false, "calendar": false, "users": false }});
-			_users.withPermission.db = new dbUsers({ name: "Test User 2", email: "", local: { username: "test2", secret: "$2a$10$X/zlr3SzwNgTnKLs/YztQeZxbxTJwy0GZelyJPrrjbFIzyRFvm9Z2" }, permissions: { "links": true, "officers": true, "shows": true, "classes": true, "pictures": true, "calendar": true, "users": true }});
+			_users.withoutPermission.db = new dbUsers({ name: "Test User 1", email: "", local: { username: _users.withoutPermission.username, secret: bcrypt.hashSync(_users.withoutPermission.password) }, permissions: { "links": false, "officers": false, "shows": false, "classes": false, "pictures": false, "calendar": false, "users": false }});
+			_users.withPermission.db = new dbUsers({ name: "Test User 2", email: "", local: { username: _users.withPermission.username, secret: bcrypt.hashSync(_users.withPermission.password) }, permissions: { "links": true, "officers": true, "shows": true, "classes": true, "pictures": true, "calendar": true, "users": true }});
 
 			_users.withoutPermission.db.save(function() {
 				_users.withPermission.db.save(done);
