@@ -23,6 +23,10 @@ module.exports = function(passport) {
 				done(err);
 				return;
 			}
+			if(!user) {
+				done(null, false);
+				return;
+			}
 
 			if(bcrypt.compareSync(password, user.local.secret)) {
 				done(null, user);
