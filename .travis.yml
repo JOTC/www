@@ -13,3 +13,4 @@ services:
   
 before_script:
   - sleep 15
+  - cd server
