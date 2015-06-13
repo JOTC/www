@@ -19,4 +19,5 @@ before_script:
   - cd server
   - curl -s https://raw.githubusercontent.com/lovell/sharp/master/preinstall.sh | sudo bash -
   - npm install
-  - node server &>/dev/null &
+  - node server &
+  - sleep 5
