@@ -1,16 +1,26 @@
 branches:
   only:
     - master
-	- tests
+    - travis
+
+notifications:
+  slack: jotc:Ok7TY1zpz3fxsdpZqnqZovfi
 
 language: node_js
 node_js:
   - "0.12"
-  
+
 # Dependencies
 services:
   - mongodb
-  
+
+sudo:
+  - required
+
 before_script:
   - sleep 15
-  - mongo ./travis/db.js
+  - cd server
+  - curl -s https://raw.githubusercontent.com/lovell/sharp/master/preinstall.sh | sudo bash -
+  - npm install
+  - node server &>/dev/null &
+  - sleep 5

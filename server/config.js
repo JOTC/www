@@ -13,7 +13,7 @@ var config = {
 		"password": "gmail-password"
 	},
 	"www": {
-		"root": "/vagrant/www",
+		"root": "./www-root",
 		"getPath": function(pathSegment) {
 			var fullPath = path.join(config.www.root, pathSegment);
 			if(!fs.existsSync(fullPath)) {
