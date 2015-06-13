@@ -153,6 +153,7 @@ describe("Links API", function() {
 		describe("As real user without permission", lib.statusAndJSON("post", "/links", lib.getCookie(false), { }, 401));
 
 		describe("As real user with permission", function() {
+			describe("With no group", lib.statusAndJSON("post", "/links", lib.getCookie(true), null, 400));
 			describe("With an empty group", lib.statusAndJSON("post", "/links", lib.getCookie(true), { }, 400));
 			describe("With an empty name", lib.statusAndJSON("post", "/links", lib.getCookie(true), { name: "" }, 400));
 			describe("With a non-string name", lib.statusAndJSON("post", "/links", lib.getCookie(true), { name: 2 }, 400));
@@ -211,6 +212,7 @@ describe("Links API", function() {
 				describe("As a real user without permission", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(false), { }, 401));
 
 				describe("As a real user with permission", function() {
+					describe("With no link", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(true), null, 400));
 					describe("With an empty link", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(true), { }, 400));
 					describe("With a name but no URL", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(true), { name: "Test link" }, 400));
 					describe("With no name but a URL", lib.statusAndJSON("post", urlFn(group.groupID), lib.getCookie(true), { url: "test-url" }, 400));

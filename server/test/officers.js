@@ -87,6 +87,7 @@ describe("Officers API", function() {
 
 		describe("As real user with permission", function() {
 
+			describe("With no officer", lib.statusAndJSON("post", "/officers", lib.getCookie(true), null, 400));
 			describe("With an empty officer", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { }, 400));
 			describe("With an officer with a name but no titles or contacts", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer" }, 400));
 			describe("With an officer with a titles array but no name or contacts", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { titles: [ ] }, 400));
@@ -96,7 +97,12 @@ describe("Officers API", function() {
 			describe("With an officer with a titles and contacts array but no name", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { titles: [ ], contacts: [ ] }, 400));
 			describe("With an officer with a name, a titles array, and a contacts non-array", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer", titles: [ ], contacts: { } }, 400));
 			describe("With an officer with a name, a contacts array, and a titles non-array", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer", titles: { }, contacts: [ ] }, 400));
-			describe("With an officer with a name, a titles array, and a contacts array containing a non-string", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer", titles: [ ], contacts: [ 1 ] }, 400));
+			describe("With an officer with a name, a titles array, and a contacts array containing a non-object", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer", titles: [ ], contacts: [ 1 ] }, 400));
+			describe("With an officer with a name, a titles array, and a contacts array containing an empty object", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer", titles: [ ], contacts: [ { } ] }, 400));
+			describe("With an officer with a name, a titles array, and a contacts array containing an object with a non-string type and a non-string value", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer", titles: [ ], contacts: [ { type: 3, value: 9 } ] }, 400));
+			describe("With an officer with a name, a titles array, and a contacts array containing an object with an invalid type and a non-string value", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer", titles: [ ], contacts: [ { type: "junk", value: 9 } ] }, 400));
+			describe("With an officer with a name, a titles array, and a contacts array containing an object with an email type and a non-string value", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer", titles: [ ], contacts: [ { type: "email", value: 9 } ] }, 400));
+			describe("With an officer with a name, a titles array, and a contacts array containing an object with a phont type and a non-string value", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer", titles: [ ], contacts: [ { type: "phone", value: 9 } ] }, 400));
 			describe("With an officer with a name, a titles array containing a non-string, and a contacts array", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer", titles: [ 1 ], contacts: [ ] }, 400));
 
 			describe("With an officer with a name, a titles array, and a contacts array", lib.statusAndJSON("post", "/officers", lib.getCookie(true), { name: "Test Officer", titles: [ ], contacts: [ ] }, 200, function(response, body) {
