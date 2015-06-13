@@ -6,7 +6,7 @@ branches:
 language: node_js
 node_js:
   - "0.12"
-  
+
 # Dependencies
 services:
   - mongodb
@@ -19,5 +19,5 @@ before_script:
   - cd server
   - curl -s https://raw.githubusercontent.com/lovell/sharp/master/preinstall.sh | sudo bash -
   - npm install
-  - node server &
+  - node server &>/dev/null &
   - sleep 5
