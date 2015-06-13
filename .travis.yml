@@ -1,7 +1,7 @@
 branches:
   only:
     - master
-	- tests
+    - tests
 
 language: node_js
 node_js:
