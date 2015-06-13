@@ -5,6 +5,10 @@ branches:
 notifications:
   slack: jotc:Ok7TY1zpz3fxsdpZqnqZovfi
 
+addons:
+  code_climate:
+    repo_token: c8614cdb6659a8322430f42670387eb189eb2f6a9e5d75e1ea4f1e3ff3f1c0c1
+
 language: node_js
 node_js:
   - "0.12"
@@ -20,5 +24,10 @@ before_script:
   - cd server
   - curl -s https://raw.githubusercontent.com/lovell/sharp/master/preinstall.sh | sudo bash -
   - npm install
-  - node server &>/dev/null &
+  - ./node_modules/istanbul/lib/cli.js cover server.js -- --ui bdd -R spec -t 5000 &>/dev/null &
   - sleep 5
+
+after_script:
+  - killall node
+  - sleep 5
+  - codeclimate < coverage/lcov.info
