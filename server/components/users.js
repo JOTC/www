@@ -1,3 +1,4 @@
+var restify = require("restify");
 var db = require("../model/db.js");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "users component", level: "debug" });
@@ -127,15 +128,15 @@ module.exports = {
 					db.users.findOne({ "local.username": req.body.email }).exec(function(err, user) {
 						if(err) {
 							log.error(err);
-							res.send(500);
-						} else {
+							res.send(new restify.InternalServerError());
+						} else if(user) {
 							var token = require("crypto").randomBytes(16).toString("hex");
 							user.local.secret = "---init---" + bcrypt.hashSync(token);
 
 							user.save(function(err) {
 								if(err) {
 									log.error(err);
-									res.send(500);
+									res.send(new restify.InternalServerError());
 								} else {
 									var transporter = nodemailer.createTransport({
 									    service: "Gmail",
@@ -167,13 +168,15 @@ module.exports = {
 										}
 									});
 
-									res.send(200);
+									res.send(200, { });
 								}
 							});
+						} else {
+							res.send(new restify.NotFoundError());
 						}
 					});
 				} else {
-					res.send(400);
+					res.send(new restify.BadRequestError());
 				}
 
 				next();
@@ -181,13 +184,17 @@ module.exports = {
 		},
 		"/auth/local/validate/:userID/:validationCode": {
 			"get": function(req, res, next) {
+				if(!/[0-9a-zA-Z]{24}/.test(req.params.userID)) {
+					return next(new restify.BadRequestError());
+				};
+
 				db.users.findOne({ _id: req.params.userID }).exec(function(err, user) {
 					if(err) {
 						log.error(err);
-						res.send(500);
+						res.send(new restify.InternalServerError());
 					} else if(!user) {
 						log.error("User [%s] not found", req.params.userID);
-						res.send(404);
+						res.send(new restify.NotFoundError());
 					} else if(user.local && user.local.secret && typeof user.local.secret === "string" && user.local.secret.substr(0, 10) === "---init---") {
 						var secret = user.local.secret.substr(10);
 						if(bcrypt.compareSync(req.params.validationCode, secret)) {
@@ -195,11 +202,11 @@ module.exports = {
 							res.redirect("/#/resetPassword");
 						} else {
 							log.error("Validation code failed.");
-							res.send(403);
+							res.send(new restify.ForbiddenError());
 						}
 					} else {
 						log.error("User is not in initialization/reset phase");
-						res.send(403);
+						res.send(new restify.ForbiddenError());
 					}
 				});
 				next();
@@ -211,10 +218,10 @@ module.exports = {
 					db.users.findOne({ _id: req.session.resetPassword.userID }).exec(function(err, user) {
 						if(err) {
 							log.error(err);
-							res.send(500);
+							res.send(new restify.InternalServerError());
 						} else if(!user) {
 							log.error("User [%s] not found", req.params.userID);
-							res.send(404);
+							res.send(new restify.NotFoundError());
 						} else if(user.local && user.local.secret && typeof user.local.secret === "string" && user.local.secret.substr(0, 10) === "---init---") {
 							var newSecret = req.body;
 							if(newSecret && newSecret.secret && typeof newSecret.secret === "string") {
@@ -227,28 +234,28 @@ module.exports = {
 									user.save(function(err) {
 										if(err) {
 											log.error(err);
-											res.send(500);
+											res.send(new restify.InternalServerError());
 										} else {
 											req.session.passport.user = user._id;
-											res.send(200);
+											res.send(200, { });
 										}
 									});
 								} else {
 									log.error("Validation code failed.");
-									res.send(403);
+									res.send(new restify.ForbiddenError());
 								}
 							} else {
 								log.error("No new secret supplied.  Cannot reset password.");
-								res.send(400);
+								res.send(new restify.BadRequestError());
 							}
 						} else {
 							log.error("User is not in initialization/reset phase");
-							res.send(403);
+							res.send(new restify.ForbiddenError());
 						}
 					});
 				} else {
 					log.error("No password reset session.  Cannot reset.");
-					res.send(400);
+					res.send(new restify.BadRequestError());
 				}
 
 				next();
