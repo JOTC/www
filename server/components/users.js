@@ -122,7 +122,7 @@ module.exports = {
 			"put": fn.getModelUpdater(db.users, "userID", "users", log, isValidUser),
 			"delete": fn.getModelDeleter(db.users, "userID", "users", log)
 		},
-		"/auth/local/reset/": {
+		"/auth/local/reset": {
 			"put": function(req, res, next) {
 				if(req.body && req.body.email) {
 					db.users.findOne({ "local.username": req.body.email }).exec(function(err, user) {
