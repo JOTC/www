@@ -2,9 +2,9 @@ var should = require("should");
 var request = require("request");
 request.delete = request.del;
 
-var createdOfficerID;
-function getCreatedOfficerID() {
-	return createdOfficerID;
+var createdUserID;
+function getCreatedUserID() {
+	return createdUserID;
 };
 
 var lib = require("./lib");
@@ -110,7 +110,31 @@ describe("Users API", function() {
             describe("With a non-boolean links permission", lib.statusAndJSON("post", "/users", lib.getCookie(true), validUser.mod({ permissions: { links: 7 } }), 400));
             describe("With a non-boolean officers permission", lib.statusAndJSON("post", "/users", lib.getCookie(true), validUser.mod({ permissions: { officers: 7 } }), 400));
             describe("With a non-boolean users permission", lib.statusAndJSON("post", "/users", lib.getCookie(true), validUser.mod({ permissions: { users: 7 } }), 400));
-            describe("With a valid user", lib.statusAndJSON("post", "/users", lib.getCookie(true), validUser, 200));
+            describe("With a valid user", lib.statusAndJSON("post", "/users", lib.getCookie(true), validUser, 200, function(response, body) {
+                describe("Returns a valid user object", function() {
+                    it("has a valid id", function() {
+                        body()._id.should.match(/[0-9a-zA-Z]{24}/);
+                        createdUserID = body()._id;
+                    });
+
+                    it("has a name", function() {
+                        body().name.should.be.a.string;
+                        body().name.should.be.ok;
+                    });
+
+                    it("has an email", function() {
+                        body().email.should.be.a.string;
+                        body().email.should.be.ok;
+                    });
+
+                    it("has valid permissions", function() {
+                        body().permissions.should.be.an.object;
+                        Object.keys(body().permissions).forEach(function(p) {
+                            body().permissions[p].should.be.a.boolean;
+                        });
+                    });
+                });
+            }));
         });
     });
 });
