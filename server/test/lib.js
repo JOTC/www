@@ -9,12 +9,14 @@ request.delete = request.del;
 var _users = {
 	withoutPermission: {
 		db: null,
+		email: "em@il.com",
 		username: "test1",
 		password: crypto.createHash("sha256").update("test-password-1").digest("hex").toString(16),
 		cookie: ""
 	},
 	withPermission: {
 		db: null,
+		email: "em@il.com",
 		username: "test2",
 		password: crypto.createHash("sha256").update("test-password-2").digest("hex"),
 		cookie: ""
@@ -25,6 +27,10 @@ function getCookie(withPermission) {
 	return function() {
 		return _users[withPermission ? "withPermission" : "withoutPermission"].cookie;
 	};
+};
+
+function getAUserEmail() {
+	return _users.withoutPermission.email;
 };
 
 function statusAndJSON(verb, url, cookieFn, body, expectedStatus, after) {
@@ -77,8 +83,8 @@ module.exports = {
 			hasInitialized = true;
 
 			before(function(done) {
-				_users.withoutPermission.db = new dbUsers({ name: "Test User 1", email: "em@il.com", local: { username:_users.withoutPermission.username, secret: bcrypt.hashSync(_users.withoutPermission.password) }, permissions: { "links": false, "officers": false, "shows": false, "classes": false, "pictures": false, "calendar": false, "users": false }});
-				_users.withPermission.db = new dbUsers({ name: "Test User 2", email: "em@il.com", local: { username: _users.withPermission.username, secret: bcrypt.hashSync(_users.withPermission.password) }, permissions: { "links": true, "officers": true, "shows": true, "classes": true, "pictures": true, "calendar": true, "users": true }});
+				_users.withoutPermission.db = new dbUsers({ name: "Test User 1", email: _users.withoutPermission.email, local: { username: _users.withoutPermission.username, secret: bcrypt.hashSync(_users.withoutPermission.password) }, permissions: { "links": false, "officers": false, "shows": false, "classes": false, "pictures": false, "calendar": false, "users": false }});
+				_users.withPermission.db = new dbUsers({ name: "Test User 2", email: _users.withoutPermission.email, local: { username: _users.withPermission.username, secret: bcrypt.hashSync(_users.withPermission.password) }, permissions: { "links": true, "officers": true, "shows": true, "classes": true, "pictures": true, "calendar": true, "users": true }});
 
 				_users.withoutPermission.db.save(function() {
 					_users.withPermission.db.save(done);
@@ -107,5 +113,9 @@ module.exports = {
 				});
 			});
 		}
-	}
+	},
+	getFullURL: function(path) {
+		return baseURL + path;
+	},
+	getEmail: getAUserEmail
 };
