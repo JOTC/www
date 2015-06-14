@@ -46,14 +46,14 @@ module.exports = {
 
 				var token = require("crypto").randomBytes(16).toString("hex");
 
-				// Wait a second before changing this object, so
+				// Wait a tick before changing this object, so
 				// the user's local data won't be sent back in
 				// the response.
 				setTimeout(function() {
 					obj.local.username = obj.email;
 					obj.local.secret = "---init---" + bcrypt.hashSync(token);
 					obj.save();
-				}, 1000);
+				}, 0);
 
 				var transporter = nodemailer.createTransport({
 				    service: "Gmail",
