@@ -38,11 +38,22 @@ module.exports = {
 					user.local = null;
 				});
 			}),
-			"post": fn.getModelCreator(db.users, "users", log, isValidUser, function(obj) {
+			"post": fn.getModelCreator(db.users, "users", log, isValidUser, function(obj, done) {
+
+				// Tell the common-fn to go ahead and save+send
+				// the response.  We're good from here on out.
+				done();
+
 				var token = require("crypto").randomBytes(16).toString("hex");
 
-				obj.local.username = obj.email;
-				obj.local.secret = "---init---" + bcrypt.hashSync(token);
+				// Wait a second before changing this object, so
+				// the user's local data won't be sent back in
+				// the response.
+				setTimeout(function() {
+					obj.local.username = obj.email;
+					obj.local.secret = "---init---" + bcrypt.hashSync(token);
+					obj.save();
+				}, 1000);
 
 				var transporter = nodemailer.createTransport({
 				    service: "Gmail",
