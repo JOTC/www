@@ -39,14 +39,14 @@ describe("Users API", function() {
                 it("each has a name", function() {
                     body().forEach(function(user) {
                         user.name.should.be.a.string;
-                        user.name.length.should.be.above(0);
+                        user.name.should.be.ok;
                     });
                 });
 
                 it("each has an email", function() {
                     body().forEach(function(user) {
                         user.email.should.be.a.string;
-                        user.email.length.should.be.above(0);
+                        user.email.should.be.ok;
                     });
                 });
 
