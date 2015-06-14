@@ -28,6 +28,6 @@ before_script:
   - sleep 5
 
 after_script:
-  - killall node
+  - killall -SIGINT node
   - sleep 5
   - codeclimate < coverage/lcov.info

@@ -45,7 +45,7 @@ function mergeObjects(obj1, obj2) {
 }
 
 try {
-	var configFile = require("config.json");
+	var configFile = require("./config.json");
 	mergeObjects(config, configFile);
 
 } catch(e) {
