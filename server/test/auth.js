@@ -54,7 +54,7 @@ function statusAndJSON(verb, url, cookieFn, body, expectedStatus, after) {
 
 before(function(done) {
 	var pwHash = bcrypt.hashSync(_user.password);
-	_user.db = new dbUsers({ name: "Test User 1", email: "", local: { username: _user.username, secret: pwHash }, permissions: { "links": false, "officers": false, "shows": false, "classes": false, "pictures": false, "calendar": false, "users": false }});
+	_user.db = new dbUsers({ name: "Test User 1", email: "em@il.com", local: { username: _user.username, secret: pwHash }, permissions: { "links": false, "officers": false, "shows": false, "classes": false, "pictures": false, "calendar": false, "users": false }});
 	_user.db.save(done);
 });
 
