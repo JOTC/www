@@ -23,6 +23,8 @@ var _users = {
 	}
 };
 
+var baseURL = "http://127.0.0.1:9931";
+
 function getCookie(withPermission) {
 	return function() {
 		return _users[withPermission ? "withPermission" : "withoutPermission"].cookie;
@@ -43,7 +45,7 @@ function statusAndJSON(verb, url, cookieFn, body, expectedStatus, after) {
 				url = url();
 			}
 
-			var urlOptions = { url: "http://127.0.0.1:9931" + url, json: true };
+			var urlOptions = { url: baseURL + url, json: true };
 			if(body && typeof body === "object") {
 				urlOptions.body = body;
 			};
