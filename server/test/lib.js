@@ -93,7 +93,7 @@ module.exports = {
 
 			before(function(done) {
 				request.post("http://127.0.0.1:9931/auth/local", { form: { username: _users.withoutPermission.username, password: _users.withoutPermission.password }}, function(err, response, body) {
-					var cookie = response.headers["set-cookie"].toString();
+					var cookie = response.headers["set-cookie"][0];
 					_users.withoutPermission.cookie = cookie.substr(0, cookie.indexOf(";"));
 					done();
 				});
@@ -101,7 +101,7 @@ module.exports = {
 
 			before(function(done) {
 				request.post("http://127.0.0.1:9931/auth/local", { form: { username: _users.withPermission.username, password: _users.withPermission.password }}, function(err, response, body) {
-					var cookie = response.headers["set-cookie"].toString();
+					var cookie = response.headers["set-cookie"][0];
 					_users.withPermission.cookie = cookie.substr(0, cookie.indexOf(";"));
 					done();
 				});
