@@ -24,7 +24,7 @@ before_script:
   - cd server
   - curl -s https://raw.githubusercontent.com/lovell/sharp/master/preinstall.sh | sudo bash -
   - npm install
-  - ./node_modules/istanbul/lib/cli.js cover server.js -- --ui bdd -R spec -t 5000 &
+  - ./node_modules/istanbul/lib/cli.js cover server.js -- --ui bdd -R spec -t 5000 &>/dev/null &
   - sleep 5
 
 after_script:

@@ -21,6 +21,15 @@ function validateRequest(req, requiredIDs) {
 	return error;
 }
 
+function handleError(err, res, continueFn) {
+	if(err) {
+		log.error(err);
+		res.send(new restify.InternalServerError());
+	} else if(typeof continueFn === "function") {
+		continueFn();
+	}
+}
+
 var swapGroup = function(groupID, direction, res) {
 	if(direction < 0) {
 		direction = -1;
@@ -29,43 +38,33 @@ var swapGroup = function(groupID, direction, res) {
 	}
 
 	db.linkGroups.findOne({ _id: groupID }).exec(function(err, group) {
-		if(err) {
-			log.error(err);
-			res.send(new restify.InternalServerError());
-		} else if(group) {
-			db.linkGroups.findOne({ ordering: (group.ordering + direction) }).exec(function(err, swapGroup) {
-				if(err) {
-					log.error(err);
-					res.send(new restify.InternalServerError());
-				} else {
-					if(swapGroup) {
-						var newOrder = swapGroup.ordering;
-						swapGroup.ordering = group.ordering;
-						group.ordering = newOrder;
+		handleError(err, res, function() {
+			if(group) {
+				db.linkGroups.findOne({ ordering: (group.ordering + direction) }).exec(function(err, swapGroup) {
+					handleError(err, res, function() {
+						if(swapGroup) {
+							var newOrder = swapGroup.ordering;
+							swapGroup.ordering = group.ordering;
+							group.ordering = newOrder;
 
-						swapGroup.save(function(err) {
-							if(err) {
-								log.error(err);
-								res.send(new restify.InternalServerError());
-							} else {
-								group.save(function(err) {
-									if(err) {
-										log.error(err);
-										res.send(new restify.InternalServerError());
-									} else {
-										res.send(200, { });
-									}
+							swapGroup.save(function(err) {
+								handleError(err, res, function() {
+									group.save(function(err) {
+										handleError(err, res, function() {
+											res.send(200, { });
+										});
+									});
 								});
-							}
-						});
-					} else {
-						res.send(new restify.NotFoundError());
-					}
-				}
-			});
-		} else {
-			res.send(new restify.NotFoundError());
-		}
+							});
+						} else {
+							res.send(new restify.NotFoundError());
+						}
+					});
+				});
+			} else {
+				res.send(new restify.NotFoundError());
+			}
+		});
 	});
 };
 
@@ -77,36 +76,32 @@ var swapLink = function(groupID, linkID, direction, res) {
 	}
 
 	db.linkGroups.findOne({ _id: groupID }).exec(function(err, group) {
-		if(err) {
-			log.error(err);
-			res.send(new restify.InternalServerError());
-		} else if(group) {
-			var index = group.links.indexOf(group.links.id(linkID));
-			if(index < 0) {
-				res.send(new restify.NotFoundError());
-				return;
-			}
+		handleError(err, res, function() {
+			if(group) {
+				var index = group.links.indexOf(group.links.id(linkID));
+				if(index < 0) {
+					res.send(new restify.NotFoundError());
+					return;
+				}
 
-			if((index + direction) >= 0 && (index + direction) < group.links.length) {
-				var tmp = group.links[index + direction];
-				group.links[index + direction] = group.links[index];
-				group.links[index] = tmp;
+				if((index + direction) >= 0 && (index + direction) < group.links.length) {
+					var tmp = group.links[index + direction];
+					group.links[index + direction] = group.links[index];
+					group.links[index] = tmp;
 
-				group.markModified("links");
-				group.save(function(err) {
-					if(err) {
-						log.error(err);
-						res.send(new restify.InternalServerError());
-					} else {
-						res.send(200, { });
-					}
-				});
+					group.markModified("links");
+					group.save(function(err) {
+						handleError(err, res, function() {
+							res.send(200, { });
+						});
+					});
+				} else {
+					res.send(200, { });
+				}
 			} else {
-				res.send(200, { });
+				res.send(new restify.NotFoundError());
 			}
-		} else {
-			res.send(new restify.NotFoundError());
-		}
+		});
 	});
 };
 
@@ -159,23 +154,19 @@ module.exports = {
 				if(isValidLink(link)) {
 					delete link._id;
 					db.linkGroups.findOne({ _id: req.params.groupID }).exec(function(err, group) {
-						if(err) {
-							log.error(err);
-							res.send(new restify.InternalServerError());
-						} else if(group) {
-							group.links.push(link);
-							group.save(function(err) {
-								if(err) {
-									log.error(err);
-									res.send(new restify.InternalServerError());
-								} else {
-									res.send(200, group.links[group.links.length - 1]);
-								}
-							});
-						} else {
-							log.error("No such group");
-							res.send(new restify.NotFoundError());
-						}
+						handleError(err, res, function() {
+							if(group) {
+								group.links.push(link);
+								group.save(function(err) {
+									handleError(err, res, function() {
+										res.send(200, group.links[group.links.length - 1]);
+									});
+								});
+							} else {
+								log.error("No such group");
+								res.send(new restify.NotFoundError());
+							}
+						});
 					});
 				} else {
 					return next(new restify.BadRequestError());
@@ -218,30 +209,26 @@ module.exports = {
 				if(isValidLink(link)) {
 					delete link._id;
 					db.linkGroups.findOne({ _id: req.params.groupID }).exec(function(err, group) {
-						if(err) {
-							log.error(err);
-							res.send(new restify.InternalServerError());
-						} else if(group) {
-							var dbLink = group.links.id(req.params.linkID);
-							if(dbLink) {
-								dbLink.name = link.name;
-								dbLink.url = link.url;
+						handleError(err, res, function() {
+							if(group) {
+								var dbLink = group.links.id(req.params.linkID);
+								if(dbLink) {
+									dbLink.name = link.name;
+									dbLink.url = link.url;
 
-								group.markModified("links");
-								group.save(function(err) {
-									if(err) {
-										log.error(err);
-										res.send(new restify.InternalServerError());
-									} else {
-										res.send(200, { });
-									}
-								});
+									group.markModified("links");
+									group.save(function(err) {
+										handleError(err, res, function() {
+											res.send(200, { });
+										});
+									});
+								} else {
+									res.send(new restify.NotFoundError());
+								}
 							} else {
 								res.send(new restify.NotFoundError());
 							}
-						} else {
-							res.send(new restify.NotFoundError());
-						}
+						});
 					});
 				} else {
 					return next(new restify.BadRequestError());
@@ -256,28 +243,24 @@ module.exports = {
 				}
 
 				db.linkGroups.findOne({ _id: req.params.groupID }).exec(function(err, group) {
-					if(err) {
-						log.error(err);
-						res.send(new restify.InternalServerError());
-					} else if(group) {
-						var linkID = group.links.id(req.params.linkID);
-						if(!linkID) {
-							res.send(new restify.NotFoundError());
-							return;
-						}
-
-						linkID.remove();
-						group.save(function(err) {
-							if(err) {
-								log.error(err);
-								res.send(new restify.InternalServerError());
-							} else {
-								res.send(200, { });
+					handleError(err, res, function() {
+						if(group) {
+							var linkID = group.links.id(req.params.linkID);
+							if(!linkID) {
+								res.send(new restify.NotFoundError());
+								return;
 							}
-						});
-					} else {
-						res.send(new restify.NotFoundError());
-					}
+
+							linkID.remove();
+							group.save(function(err) {
+								handleError(err, res, function() {
+									res.send(200, { });
+								});
+							});
+						} else {
+							res.send(new restify.NotFoundError());
+						}
+					});
 				});
 
 				next();
