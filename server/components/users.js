@@ -11,6 +11,7 @@ var isValidUser = function(user) {
 		valid = true;
 		valid = valid && (user.name && typeof user.name === "string");
 		valid = valid && (user.email && typeof user.email === "string");
+		valid = valid && (/.+@.+\..+/.test(user.email));
 		valid = valid && (user.permissions && typeof user.permissions === "object");
 		valid = valid && (typeof user.permissions.shows === "boolean");
 		valid = valid && (typeof user.permissions.classes === "boolean");
