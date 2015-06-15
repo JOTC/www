@@ -48,58 +48,6 @@ var userIDs = [
 var resetSessionCookie;
 
 describe("Users API", function() {
-    /* */
-    describe("Get list", function() {
-        describe("Unauthenticated", lib.statusAndJSON("get", "/users", null, null, 200, function(response, body) {
-            it("should be an empty array", function() {
-                body().should.be.instanceOf(Array);
-                body().length.should.be.exactly(0);
-            });
-        }));
-        describe("Valid user without permission", lib.statusAndJSON("get", "/users", lib.getCookie(false), null, 200, function(response, body) {
-            it("should be an empty array", function() {
-                body().should.be.instanceOf(Array);
-                body().length.should.be.exactly(0);
-            });
-        }));
-        describe("Valid user with permission", lib.statusAndJSON("get", "/users", lib.getCookie(true), null, 200, function(response, body) {
-            it("should be an array", function() {
-                body().should.be.instanceOf(Array);
-            });
-
-            describe("each user is valid", function() {
-                it("each has an _id", function() {
-                    body().forEach(function(user) {
-                        user._id.should.match(/[0-9a-zA-Z]{24}/);
-                    });
-                });
-
-                it("each has a name", function() {
-                    body().forEach(function(user) {
-                        user.name.should.be.a.string;
-                        user.name.should.be.ok;
-                    });
-                });
-
-                it("each has an email", function() {
-                    body().forEach(function(user) {
-                        user.email.should.be.a.string;
-                        user.email.should.be.ok;
-                    });
-                });
-
-                it("each has valid permissions", function() {
-                    body().forEach(function(user) {
-                        user.permissions.should.be.instanceOf(Object);
-                        Object.keys(user.permissions).forEach(function(p) {
-                            user.permissions[p].should.be.a.boolean;
-                        });
-                    });
-                });
-            });
-        }));
-    });
-
     // This tests adding a new user to the database
     // with a randomized password.  The server will
     // email the user with instructions of how to
@@ -151,6 +99,57 @@ describe("Users API", function() {
                 });
             }));
         });
+    });
+
+    describe("Get list", function() {
+        describe("Unauthenticated", lib.statusAndJSON("get", "/users", null, null, 200, function(response, body) {
+            it("should be an empty array", function() {
+                body().should.be.instanceOf(Array);
+                body().length.should.be.exactly(0);
+            });
+        }));
+        describe("Valid user without permission", lib.statusAndJSON("get", "/users", lib.getCookie(false), null, 200, function(response, body) {
+            it("should be an empty array", function() {
+                body().should.be.instanceOf(Array);
+                body().length.should.be.exactly(0);
+            });
+        }));
+        describe("Valid user with permission", lib.statusAndJSON("get", "/users", lib.getCookie(true), null, 200, function(response, body) {
+            it("should be an array", function() {
+                body().should.be.instanceOf(Array);
+            });
+
+            describe("each user is valid", function() {
+                it("each has an _id", function() {
+                    body().forEach(function(user) {
+                        user._id.should.match(/[0-9a-zA-Z]{24}/);
+                    });
+                });
+
+                it("each has a name", function() {
+                    body().forEach(function(user) {
+                        user.name.should.be.a.string;
+                        user.name.should.be.ok;
+                    });
+                });
+
+                it("each has an email", function() {
+                    body().forEach(function(user) {
+                        user.email.should.be.a.string;
+                        user.email.should.be.ok;
+                    });
+                });
+
+                it("each has valid permissions", function() {
+                    body().forEach(function(user) {
+                        user.permissions.should.be.instanceOf(Object);
+                        Object.keys(user.permissions).forEach(function(p) {
+                            user.permissions[p].should.be.a.boolean;
+                        });
+                    });
+                });
+            });
+        }));
     });
 
     describe("Edit a user", function() {
@@ -284,7 +283,6 @@ describe("Users API", function() {
         describe("With a valid session that is not in reset mode", lib.statusAndJSON("put", "/auth/local/resetPassword", getCookie(true), null, 403));
     });
 
-    /* */
     describe("Delete a user", function() {
         userIDs.forEach(function(userID) {
             var urlFn = function() {
@@ -296,5 +294,4 @@ describe("Users API", function() {
             describe("Valid user with permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, userID.successStatus));
         });
     });
-    //*/
 });

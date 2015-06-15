@@ -86,67 +86,6 @@ var groups = [
 ];
 
 describe("Links API", function() {
-	describe("Get list", lib.statusAndJSON("get", "/links", null, null, 200, function(response, body) {
-		it("should return an array", function() {
-			body().should.be.instanceOf(Array);
-		});
-
-		describe("each link group must be valid", function() {
-			it("each has an _id", function() {
-				body().forEach(function(group) {
-					group._id.should.match(/[0-9a-zA-Z]{24}/);
-				})
-			});
-
-			it("each has a name", function() {
-				body().forEach(function(group) {
-					group.name.should.exist;
-					group.name.should.be.a.string;
-				});
-			});
-
-			it("each has an ordering", function() {
-				body().forEach(function(group) {
-					group.ordering.should.be.a.number;
-				})
-			});
-
-			it("each has a list of links", function() {
-				body().forEach(function(group) {
-					group.links.should.be.instanceOf(Array);
-				});
-			});
-
-			describe("each link is valid", function() {
-				it("each has an _id", function() {
-					body().forEach(function(group) {
-						group.links.forEach(function(link) {
-							link._id.should.match(/[0-9a-zA-Z]{24}/);
-						});
-					});
-				});
-
-				it("each has a URL", function() {
-					body().forEach(function(group) {
-						group.links.forEach(function(link) {
-							link.url.should.exist;
-							link.url.should.be.a.string;
-						});
-					});
-				});
-
-				it("each has a name", function() {
-					body().forEach(function(group) {
-						group.links.forEach(function(link) {
-							link.name.should.exist;
-							link.name.should.be.a.string;
-						});
-					});
-				});
-			});
-		});
-	}));
-
 	describe("Add link group", function() {
 		describe("Unauthenticated", lib.statusAndJSON("post", "/links", null, { }, 401));
 
@@ -270,6 +209,67 @@ describe("Links API", function() {
 			});
 		});
 	});
+
+	describe("Get list", lib.statusAndJSON("get", "/links", null, null, 200, function(response, body) {
+		it("should return an array", function() {
+			body().should.be.instanceOf(Array);
+		});
+
+		describe("each link group must be valid", function() {
+			it("each has an _id", function() {
+				body().forEach(function(group) {
+					group._id.should.match(/[0-9a-zA-Z]{24}/);
+				})
+			});
+
+			it("each has a name", function() {
+				body().forEach(function(group) {
+					group.name.should.exist;
+					group.name.should.be.a.string;
+				});
+			});
+
+			it("each has an ordering", function() {
+				body().forEach(function(group) {
+					group.ordering.should.be.a.number;
+				})
+			});
+
+			it("each has a list of links", function() {
+				body().forEach(function(group) {
+					group.links.should.be.instanceOf(Array);
+				});
+			});
+
+			describe("each link is valid", function() {
+				it("each has an _id", function() {
+					body().forEach(function(group) {
+						group.links.forEach(function(link) {
+							link._id.should.match(/[0-9a-zA-Z]{24}/);
+						});
+					});
+				});
+
+				it("each has a URL", function() {
+					body().forEach(function(group) {
+						group.links.forEach(function(link) {
+							link.url.should.exist;
+							link.url.should.be.a.string;
+						});
+					});
+				});
+
+				it("each has a name", function() {
+					body().forEach(function(group) {
+						group.links.forEach(function(link) {
+							link.name.should.exist;
+							link.name.should.be.a.string;
+						});
+					});
+				});
+			});
+		});
+	}));
 
 	var noBodyNoReturnTests = [
 		{
