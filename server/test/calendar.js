@@ -94,15 +94,42 @@ describe("Calendar API", function() {
 		});
 	}));
 	
+	describe("Edit event", function() {
+		describe("Unauthenticated", lib.statusAndJSON("put", "/calendar/abcd1234abcd1234abcd1234", null, null, 401));
+		describe("Real user without permission", lib.statusAndJSON("put", "/calendar/abcd1234abcd1234abcd1234", lib.getCookie(false), null, 401));
+		describe("Real user with permissions", function() {
+			describe("Invalid event ID", lib.statusAndJSON("put", "/calendar/abcd1234", lib.getCookie(true), { title: "bob", startDate: new Date() }, 400));
+			describe("Valid but fake event ID", lib.statusAndJSON("put", "/calendar/abcd1234abcd1234abcd1234", lib.getCookie(true), { title: "bob", startDate: new Date() }, 404));
+			describe("Valid and real event ID", function() {
+				var urlFn = function() {
+					return "/calendar/" + getCreatedEventID();
+				};
+				
+				[
+					{ name: "No event", value: null, status: 400 },
+					{ name: "Empty object", value: { }, status: 400 },
+					{ name: "Valid start date, non-string title", value: { title: 7, startDate: new Date() }, status: 400 },
+					{ name: "Valid title, non-date start date", value: { title: "Title", startDate: "bob" }, status: 400 },
+					{ name: "Valid title and start date, non-date end date", value: { title: "Title", startDate: new Date(), endDate: "bob" }, status: 400 },
+					{ name: "Valid event", value: { title: "Title", startDate: new Date() }, status: 200 },
+				].forEach(function(event) {
+					describe(event.name, lib.statusAndJSON("put", urlFn, lib.getCookie(true), event.value, event.status));
+				});
+			});
+		});
+	});
+	
 	describe("Delete event", function() {
-		var urlFn = function() { return "/calendar/" + getCreatedEventID(); }
+		var urlFn = function() {
+			return "/calendar/" + getCreatedEventID();
+		}
 		
 		describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
 		describe("Real user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
 		describe("Real user with permissions", function() {
 			describe("Invalid event ID", lib.statusAndJSON("delete", "/calendar/abcd1234", lib.getCookie(true), null, 400));
 			describe("Valid but fake event ID", lib.statusAndJSON("delete", "/calendar/abcd1234abcd1234abcd1234", lib.getCookie(true), null, 404));
-			describe("Valid but fake event ID", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 200));
+			describe("Valid and real event ID", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 200));
 		});
 	});
 });
