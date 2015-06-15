@@ -1,6 +1,7 @@
 var db = require("../model/db.js");
 var fn = require("../common-fn.js");
 var log = require("bunyan").createLogger({ name: "calendar component", level: "debug" });
+var restify = require("restify");
 
 var isValidCalendarEvent = function(event) {
 	var valid = false;
@@ -8,9 +9,11 @@ var isValidCalendarEvent = function(event) {
 		valid = true;
 		valid = valid && (event.title && typeof event.title === "string");
 		valid = valid && (event.startDate && typeof event.startDate === "string");
+		valid = valid && (!isNaN(Date.parse(event.startDate)));
 
 		if(event.endDate) {
 			valid = valid && (typeof event.endDate === "string");
+			valid = valid && (!isNaN(Date.parse(event.endDate)));
 		} else {
 			event.endDate = event.startDate;
 		}
@@ -27,7 +30,7 @@ module.exports = {
 				db.calendar.find({ endDate: { "$gte": new Date() } }).exec(function(err, events) {
 					if(err) {
 						log.error(err);
-						res.send(500);
+						res.send(new restify.InternalServerError());
 					} else {
 						res.send(200, events);
 					}
