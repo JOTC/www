@@ -189,7 +189,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t<div class=\"title\">Calendar of Events</div>\n" +
     "\t\n" +
     "\t<div class=\"center auth\" ng-if=\"auth.calendar\">\n" +
-    "\t\t<button class=\"btn btn-success\" ng-click=\"editEvent()\">New Event</button>\n" +
+    "\t\t<button class=\"btn btn-success\" ng-click=\"editEvent(null, $event)\">New Event</button>\n" +
     "\t</div>\n" +
     "\t\n" +
     "\t<div class=\"table\">\n" +
