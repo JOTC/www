@@ -2,7 +2,7 @@
 	<div class="title">Calendar of Events</div>
 	
 	<div class="center auth" ng-if="auth.calendar">
-		<button class="btn btn-success" ng-click="editEvent()">New Event</button>
+		<button class="btn btn-success" ng-click="editEvent(null, $event)">New Event</button>
 	</div>
 	
 	<div class="table">
