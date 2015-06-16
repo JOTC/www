@@ -22,8 +22,9 @@ var isValidClass = function(clss) {
 		valid = true;
 		valid = valid && (clss.location && typeof clss.location === "string");
 		valid = valid && (clss.startDate && typeof clss.startDate === "string");
-		valid = valid && (clss.numberOfWeeks && typeof +clss.numberOfWeeks === "number");
-		valid = valid && (clss.hoursPerWeek && typeof +clss.hoursPerWeek === "number");
+		valid = valid && (!isNaN(Date.parse(clss.startDate)));
+		valid = valid && !isNaN(clss.numberOfWeeks);
+		valid = valid && !isNaN(clss.hoursPerWeek);
 		valid = valid && (clss.classTypes && Array.isArray(clss.classTypes));
 
 		if(valid) {
@@ -48,7 +49,7 @@ var getRegistrationFormFilename = function(clss) {
 module.exports = {
 	name: "classes",
 	paths: {
-		"/classes/": {
+		"/classes": {
 			"get": function(req, res, next) {
 				getFutureClasses(function(error, classes) {
 					if(error) {
@@ -158,7 +159,7 @@ module.exports = {
 				db.classes.classTypes.find({}).sort({ priorityOrder: "asc" }).exec(function(err, classTypes) {
 					if(err) {
 						log.error(err);
-						res.send(500);
+						res.send(new restify.InternalServerError());
 					} else {
 						res.send(classTypes);
 					}
