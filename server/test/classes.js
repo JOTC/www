@@ -174,4 +174,73 @@ describe("Classes API", function() {
 			});
 		});
 	}));
+	
+	describe("Edit a class", function() {
+		var validClass = {
+			location: "A place",
+			startDate: new Date(),
+			numberOfWeeks: 6,
+			hoursPerWeek: 1,
+			classTypes: [ ]
+		};
+		
+		var urlFn = function() {
+			return "/classes/" + getCreatedClassID();
+		};
+		
+		before(function() {
+			validClass.classTypes.push(getClassType());
+		});
+		
+		describe("Unauthenticated", lib.statusAndJSON("put", urlFn, null, validClass, 401));
+		describe("As a valid user without permission", lib.statusAndJSON("put", urlFn, lib.getCookie(false), validClass, 401));
+		describe("As a valid user with permission", function() {
+			
+			var invalidCases = {
+				"with no class": null,
+				"with empty class": { },
+				"missing location": { startDate: new Date(), numberOfWeeks: 6, hoursPerWeek: 1, classTypes: [{ _id: "asdf", name: "asdf", description: "asdf", isAdvanced: false }] },
+				"non-string location": { location: 7, startDate: new Date(), numberOfWeeks: 6, hoursPerWeek: 1, classTypes: [{ _id: "asdf", name: "asdf", description: "asdf", isAdvanced: false }] },
+				"missing startDate": { location: "place", numberOfWeeks: 6, hoursPerWeek: 1, classTypes: [{ _id: "asdf", name: "asdf", description: "asdf", isAdvanced: false }] },
+				"non-date startDate": { location: "place", startDate: "bob", numberOfWeeks: 6, hoursPerWeek: 1, classTypes: [{ _id: "asdf", name: "asdf", description: "asdf", isAdvanced: false }] },
+				"missing numberOfWeeks": { location: "place", startDate: new Date(), hoursPerWeek: 1, classTypes: [{ _id: "asdf", name: "asdf", description: "asdf", isAdvanced: false }] },
+				"non-numeric numberOfWeeks": { location: "place", startDate: new Date(), numberOfWeeks: "hello", hoursPerWeek: 1, classTypes: [{ _id: "asdf", name: "asdf", description: "asdf", isAdvanced: false }] },
+				"missing hoursPerWeek": { location: "place", startDate: new Date(), numberOfWeeks: 6, classTypes: [{ _id: "asdf", name: "asdf", description: "asdf", isAdvanced: false }] },
+				"non-numeric hoursPerWeek": { location: "place", startDate: new Date(), numberOfWeeks: 6, hoursPerWeek: "hello", classTypes: [{ _id: "asdf", name: "asdf", description: "asdf", isAdvanced: false }] },
+				"missing classTypes": { location: "place", startDate: new Date(), numberOfWeeks: 6, hoursPerWeek: 1 },
+				"class type missing _id": { location: "place", startDate: new Date(), numberOfWeeks: 6, hoursPerWeek: 1, classTypes: [{ name: "asdf", description: "asdf", isAdvanced: false }] },
+				"class type missing name": { location: "place", startDate: new Date(), numberOfWeeks: 6, hoursPerWeek: 1, classTypes: [{ _id: "asdf", description: "asdf", isAdvanced: false }] },
+				"class type missing description": { location: "place", startDate: new Date(), numberOfWeeks: 6, hoursPerWeek: 1, classTypes: [{ _id: "asdf", name: "asdf", isAdvanced: false }] },
+				"class type missing isAdvanced": { location: "place", startDate: new Date(), numberOfWeeks: 6, hoursPerWeek: 1, classTypes: [{ _id: "asdf", name: "asdf", description: "asdf" }] }
+			};
+			
+			Object.keys(invalidCases).forEach(function(name) {
+				describe(name, lib.statusAndJSON("put", urlFn, lib.getCookie(true), invalidCases[name], 400));
+			});
+			
+			describe("with a valid class", function() {
+				describe("with an invalid ID", lib.statusAndJSON("put", "/classes/abcd1234", lib.getCookie(true), validClass, 400));
+				describe("with a valid but fake ID", lib.statusAndJSON("put", "/classes/abcd1234abcd1234abcd1234", lib.getCookie(true), validClass, 404));
+				describe("with a valid and real ID", lib.statusAndJSON("put", urlFn, lib.getCookie(true), validClass, 200));
+			});
+		});
+	});
+	
+	describe("Add a registration form to a class", function() { });
+	
+	describe("Delete a registration form from a class", function() { });
+	
+	describe("Delete a class", function() {
+		var urlFn = function() {
+			return "/classes/" + getCreatedClassID();
+		};
+
+		describe("Unauthenticated", lib.statusAndJSON("delete", urlFn, null, null, 401));
+		describe("As a valid user without permission", lib.statusAndJSON("delete", urlFn, lib.getCookie(false), null, 401));
+		describe("As a valid user with permission", function() {
+			describe("With invalid ID", lib.statusAndJSON("delete", "/classes/abcd1234", lib.getCookie(true), null, 400));
+			describe("With a valid but fake ID", lib.statusAndJSON("delete", "/classes/abcd1234abcd1234abcd1234", lib.getCookie(true), null, 404));
+			describe("With a valid and real ID", lib.statusAndJSON("delete", urlFn, lib.getCookie(true), null, 200));
+		});
+	});
 });
