@@ -54,7 +54,7 @@ module.exports = {
 				getFutureClasses(function(error, classes) {
 					if(error) {
 						log.error(error);
-						res.send(500);
+						res.send(new restify.InternalServerError());
 					} else {
 						res.send(classes);
 					}
@@ -87,7 +87,7 @@ module.exports = {
 
 				var handleError = function(err) {
 					log.error(err);
-					res.send(500);
+					res.send(new restify.InternalServerError());
 					require("fs").unlinkSync(req.files.file.path);
 				};
 
@@ -128,26 +128,26 @@ module.exports = {
 				db.classes.classes.findOne({ _id: req.params.classID }).exec(function(err, clss) {
 					if(err) {
 						log.error(err);
-						res.send(500);
+						res.send(new restify.InternalServerError());
 					} else if(clss) {
 						fs.unlink(path.join(__FILE_PATH, req.params.classID, getRegistrationFormFilename(clss)), function(err) {
 							if(err) {
 								log.error(err);
-								res.send(500);
+								res.send(new restify.InternalServerError());
 							} else {
 								clss.registrationFormPath = "";
 								clss.save(function(err) {
 									if(err) {
 										log.error(err);
-										res.send(500);
+										res.send(new restify.InternalServerError());
 									} else {
-										res.send(200);
+										res.send(200, { });
 									}
 								});
 							}
 						});
 					} else {
-						res.send(200);
+						res.send(200, { });
 					}
 				});
 
