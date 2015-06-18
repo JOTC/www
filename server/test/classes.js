@@ -40,7 +40,6 @@ describe("Classes API", function() {
 			
 			it("each has a description", function() {
 				body().forEach(function(classType) {
-					classType.description.should.be.ok;
 					classType.description.should.be.a.string;
 				});
 			});
