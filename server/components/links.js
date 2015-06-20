@@ -57,7 +57,7 @@ var swapGroup = function(groupID, direction, res) {
 								});
 							});
 						} else {
-							res.send(new restify.NotFoundError());
+							res.send(200, { });
 						}
 					});
 				});
