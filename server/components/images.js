@@ -2,6 +2,7 @@ var restify = require("restify");
 var db = require("../model/db.js");
 var fs = require("fs");
 var path = require("path");
+var mkdirp = require("mkdirp");
 var log = require("bunyan").createLogger({ name: "image component", level: "debug" });
 var fn = require("../common-fn.js");
 var config = require("../config");
@@ -18,6 +19,21 @@ var isValidGallery = function(gallery) {
 	}
 
 	return valid;
+};
+
+function validatePermissionsAndParameters(req, res, params) {
+	if(!req.user || !req.user.permissions.pictures) {
+		res.send(new restify.UnauthorizedError());
+		return false;
+	}
+	
+	return params.every(function(param) {
+		if(/[0-9a-zA-Z]{24}/.test(req.params[param])) {
+			 return true;
+		}
+		res.send(new restify.BadRequestError());
+		return false;
+	});
 };
 
 module.exports = {
@@ -41,12 +57,9 @@ module.exports = {
 					useBodyParser: false
 				},
 				function: function(req, res, next) {
-					if(!req.user || !req.user.permissions.pictures) {
-						return next(new restify.UnauthorizedError());
-					}
 					
-					if(!/[0-9a-zA-Z]{24}/.test(req.params.galleryID)) {
-						return next(new restify.BadRequestError());
+					if(!validatePermissionsAndParameters(req, res, [ "galleryID" ])) {
+						return next();
 					}
 
 					db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery) {
@@ -64,7 +77,11 @@ module.exports = {
 						var ext = req.headers["content-type"].replace(/image\//, "");
 						img.path = img._id + "." + ext;
 
-						var filePath = path.join(__FILE_PATH, "temp", img.path);
+						var filePath = path.join(__FILE_PATH, "temp");
+						if(!fs.existsSync(filePath)) {
+							mkdirp.sync(filePath);
+						}
+						filePath = path.join(filePath, img.path);
 						var out = fs.createWriteStream(filePath);
 						req.pipe(out);
 
@@ -101,13 +118,8 @@ module.exports = {
 		},
 		"/galleries/:galleryID/image/:imageID": {
 			"put": function(req, res, next) {
-				if(!req.user || !req.user.permissions.pictures) {
-					return next(new restify.UnauthorizedError());
-				}
-				
-				var regex = /[0-9a-zA-Z]{24}/;
-				if(!regex.test(req.params.galleryID) || !regex.test(req.params.imageID)) {
-					return next(new restify.BadRequestError());
+				if(!validatePermissionsAndParameters(req, res, [ "galleryID", "imageID" ])) {
+					return next();
 				}
 
 				var image = req.body;
@@ -160,13 +172,8 @@ module.exports = {
 				next();
 			},
 			"delete": function(req, res, next) {
-				if(!req.user || !req.user.permissions.pictures) {
-					return next(new restify.UnauthorizedError());
-				}
-
-				var regex = /[0-9a-zA-Z]{24}/;
-				if(!regex.test(req.params.galleryID) || !regex.test(req.params.imageID)) {
-					return next(new restify.BadRequestError());
+				if(!validatePermissionsAndParameters(req, res, [ "galleryID", "imageID" ])) {
+					return next();
 				}
 
 				db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery) {
