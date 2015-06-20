@@ -44,13 +44,19 @@ module.exports = {
 					if(!req.user || !req.user.permissions.pictures) {
 						return next(new restify.UnauthorizedError());
 					}
+					
+					if(!/[0-9a-zA-Z]{24}/.test(req.params.galleryID)) {
+						return next(new restify.BadRequestError());
+					}
 
 					db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery) {
 						if(err) {
 							log.error(err);
-							res.send(500);
-							next();
-							return;
+							return next(new restify.InternalServerError());
+						}
+						
+						if(!gallery) {
+							return next(new restify.NotFoundError());
 						}
 
 						var img = new db.images.images();
@@ -65,29 +71,28 @@ module.exports = {
 						req.once("end", function() {
 							if(err) {
 								log.error(err);
-								res.send(500);
+								res.send(new restify.InternalServerError());
 							} else {
 								ImageProcessor.process(filePath, path.join(__FILE_PATH, img.path), function(err) {
 									fs.unlink(filePath);
 
 									if(err) {
 										log.error(err);
-										res.send(500);
+										res.send(new restify.InternalServerError());
 									} else {
 										gallery.images.push(img);
 										gallery.save(function(err) {
 											if(err) {
 												log.error(err);
-												res.send(500);
+												res.send(new restify.InternalServerError());
 											} else {
-												res.send(img);
+												res.send(200, img);
 											}
 										});
 									}
 								});
 							}
 						});
-						//});
 
 						next();
 					});
@@ -99,6 +104,11 @@ module.exports = {
 				if(!req.user || !req.user.permissions.pictures) {
 					return next(new restify.UnauthorizedError());
 				}
+				
+				var regex = /[0-9a-zA-Z]{24}/;
+				if(!regex.test(req.params.galleryID) || !regex.test(req.params.imageID)) {
+					return next(new restify.BadRequestError());
+				}
 
 				var image = req.body;
 				if(image && typeof image === 'object' && typeof image.description === 'string') {
@@ -107,24 +117,36 @@ module.exports = {
 					db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery) {
 						if(err) {
 							log.error(err);
-							res.send(500);
+							res.send(new restify.InternalServerError());
+							return;
+						}
+						
+						if(!gallery) {
+							res.send(new restify.NotFoundError());
 							return;
 						}
 
+						var foundImage = false;
 						for(var i = 0; i < gallery.images.length; i++) {
 							if(gallery.images[i]._id.toString() === req.params.imageID) {
 								gallery.images[i].name = image.name;
 								gallery.images[i].description = image.description;
+								foundImage = true;
 								break;
 							}
+						}
+						
+						if(!foundImage) {
+							res.send(new restify.NotFoundError());
+							return;
 						}
 
 						gallery.save(function(err) {
 							if(err) {
 								log.error(err);
-								res.send(500);
+								res.send(new restify.InternalServerError());
 							} else {
-								res.send(200);
+								res.send(200, { });
 							}
 						});
 					});
@@ -133,7 +155,7 @@ module.exports = {
 				{
 					log.error("Invalid image object");
 					log.error(image);
-					res.send(400);
+					res.send(new restify.BadRequestError());
 				}
 				next();
 			},
@@ -142,27 +164,43 @@ module.exports = {
 					return next(new restify.UnauthorizedError());
 				}
 
+				var regex = /[0-9a-zA-Z]{24}/;
+				if(!regex.test(req.params.galleryID) || !regex.test(req.params.imageID)) {
+					return next(new restify.BadRequestError());
+				}
+
 				db.images.galleries.findOne({ _id: req.params.galleryID }).exec(function(err, gallery) {
 					if(err) {
 						log.error(err);
-						res.send(500);
+						res.send(new restify.InternalServerError());
+						return;
+					}
+					
+					if(!gallery) {
+						res.send(new restify.NotFoundError());
 						return;
 					}
 
+					var imageFound = false;
 					for(var i = 0; i < gallery.images.length; i++) {
 						if(gallery.images[i]._id.toString() === req.params.imageID) {
 							fs.unlinkSync(path.join(__FILE_PATH, gallery.images[i].path));
 							gallery.images.splice(i, 1);
+							imageFound = true;
 							break;
 						}
+					}
+					if(!imageFound) {
+						res.send(new restify.NotFoundError());
+						return;
 					}
 
 					gallery.save(function(err) {
 						if(err) {
 							log.error(err);
-							res.send(500);
+							res.send(new restify.InternalServerError());
 						} else {
-							res.send(200);
+							res.send(200, { });
 						}
 					});
 				});
