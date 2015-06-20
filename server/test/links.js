@@ -273,16 +273,28 @@ describe("Links API", function() {
 
 	var noBodyNoReturnTests = [
 		{
+			groupName: "Move a link group down",
+			linkName: "Move a link down",
+			verb: "put",
+			urlPostfix: "/down"
+		},
+		{
+			groupName: "Move a link group down with nothing below it",
+			linkName: "Move a link down with nothing below it",
+			verb: "put",
+			urlPostfix: "/down"
+		},
+		{
 			groupName: "Move a link group up",
 			linkName: "Move a link up",
 			verb: "put",
 			urlPostfix: "/up"
 		},
 		{
-			groupName: "Move a link group down",
-			linkName: "Move a link down",
+			groupName: "Move a link group up with nothing above it",
+			linkName: "Move a link up with nothing above it",
 			verb: "put",
-			urlPostfix: "/down"
+			urlPostfix: "/up"
 		},
 		{
 			groupName: "Delete a link group",
@@ -291,12 +303,23 @@ describe("Links API", function() {
 			urlPostfix: ""
 		}
 	];
-
+	
+	var secondaryLinkCreated = false;
 	noBodyNoReturnTests.forEach(function(test) {
+		
 		describe(test.linkName, function() {
 			var urlFn = function(groupID, linkID) {
 				return function() { return "/links/" + groupID() + "/" + linkID() + test.urlPostfix; };
 			}
+			
+			before(function(done) {
+				if(!secondaryLinkCreated) {
+					request.post({ url: lib.getFullURL("/links/" + getCreatedLinkGroupID()), headers: { Cookie: lib.getCookie(true)() }, json: true, body: { name: "secondary-url", url: "secondary-url" } }, done);
+					secondaryLinkCreated = true;
+				} else {
+					done();
+				}
+			});
 
 			groups.forEach(function(group) {
 				describe(group.name, function() {
