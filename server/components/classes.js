@@ -74,8 +74,11 @@ module.exports = {
 				obj.endDate = new Date(obj.startDate.getTime() + ((obj.numberOfWeeks - 1) * 604800000));
 			}),
 			"delete": fn.getModelDeleter(db.classes.classes, "classID", "classes", log, function(obj) {
-				if(obj.registrationFormPath) {
-					fs.unlinkSync(path.join(__FILE_PATH, obj._id.valueOf(), getRegistrationFormFilename(obj)));
+				if(fs.existsSync(path.join(__FILE_PATH, obj._id.toString()))) {
+					if(obj.registrationFormPath) {
+						fs.unlinkSync(path.join(__FILE_PATH, obj._id.toString(), getRegistrationFormFilename(obj)));
+					}
+					fs.rmdir(path.join(__FILE_PATH, obj._id.toString()));
 				}
 			})
 		},
@@ -90,6 +93,10 @@ module.exports = {
 					res.send(new restify.InternalServerError());
 					require("fs").unlinkSync(req.files.file.path);
 				};
+				
+				if(!/[0-9a-zA-Z]{24}/.test(req.params.classID)) {
+					return next(new restify.BadRequestError());
+				}
 
 				db.classes.classes.findOne({ _id: req.params.classID }).exec(function(err, clss) {
 					if(err) {
@@ -115,7 +122,8 @@ module.exports = {
 							}
 						});
 					} else {
-						handleError("Show ID [" + req.params.classID + "] not found");
+						res.send(new restify.NotFoundError());
+						require("fs").unlinkSync(req.files.file.path);
 						next();
 					}
 				});
@@ -123,6 +131,10 @@ module.exports = {
 			"delete": function(req, res, next) {
 				if(!req.user || !req.user.permissions.classes) {
 					return next(new restify.UnauthorizedError());
+				}
+				
+				if(!/[0-9a-zA-Z]{24}/.test(req.params.classID)) {
+					return next(new restify.BadRequestError());
 				}
 
 				db.classes.classes.findOne({ _id: req.params.classID }).exec(function(err, clss) {
@@ -147,7 +159,7 @@ module.exports = {
 							}
 						});
 					} else {
-						res.send(200, { });
+						res.send(new restify.NotFoundError());
 					}
 				});
 
