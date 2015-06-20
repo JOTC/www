@@ -64,7 +64,11 @@ module.exports = {
 						var ext = req.headers["content-type"].replace(/image\//, "");
 						img.path = img._id + "." + ext;
 
-						var filePath = path.join(__FILE_PATH, "temp", img.path);
+						var filePath = path.join(__FILE_PATH, "temp");
+						if(!fs.existsSync(filePath)) {
+							mkdirp.sync(filePath);
+						}
+						filePath = path.join(filePath, img.path);
 						var out = fs.createWriteStream(filePath);
 						req.pipe(out);
 
