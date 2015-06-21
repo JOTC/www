@@ -194,7 +194,7 @@ angular.module("jotc")
 				},
 				deleteFile: function(fileID, callback)
 				{
-					$http.delete("/data2/shows/" + showID + "/files/" + fileID)
+					$http.delete("/data2/shows/" + showID + "/file/" + fileID)
 						.success(getNoDataSuccessHandler(showID, callback, function(show)
 						{
 							show.files = show.files.filter(function(file) {
