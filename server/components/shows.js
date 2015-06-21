@@ -102,7 +102,12 @@ var moveRecurringShow = function(showID, direction, res) {
 	});
 };
 
+// __WWW_PATH is the relative path to this file
+// from the website
 var __WWW_PATH = "/files/shows";
+
+// __FILE_PATH is the relative path to the file
+// from the server's working director
 var __FILE_PATH = config.www.getPath(__WWW_PATH);
 
 var getObjectsInOrder = function(model, sortBy, callback) {
