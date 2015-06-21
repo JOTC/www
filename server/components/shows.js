@@ -18,6 +18,18 @@ var isValidShow = function(show) {
 		valid = valid && (show.registrationDeadline && typeof show.registrationDeadline === "string");
 		valid = valid && (show.classes && Array.isArray(show.classes));
 	}
+	
+	if(valid) {
+		valid = valid && !isNaN(Date.parse(show.startDate));
+		valid = valid && !isNaN(Date.parse(show.endDate));
+		valid = valid && !isNaN(Date.parse(show.registrationDeadline));
+	}
+	
+	if(valid) {
+		show.classes.forEach(function(c) {
+			valid = valid && (c && typeof c === "string");
+		});
+	}
 
 	return valid;
 };
@@ -52,18 +64,28 @@ var moveRecurringShow = function(showID, direction, res) {
 	} else {
 		direction = -1;
 	}
+	
+	if(!/[0-9a-zA-Z]{24}/.test(showID)) {
+		res.send(new restify.BadRequestError());
+		return;
+	}
 
 	db.shows.recurring.findOne({ _id: showID }).exec(function(err, show) {
 		if(err) {
 			log.error(err);
-			res.send(500);
+			res.send(new restify.InternalServerError());
+			return;
+		}
+		
+		if(!show) {
+			res.send(new restify.NotFoundError());
 			return;
 		}
 
 		db.shows.recurring.findOne({ ordering: (show.ordering + direction) }).exec(function(err, swapShow) {
 			if(err) {
 				log.error(err);
-				res.send(500);
+				res.send(new restify.InternalServerError());
 				return;
 			}
 
@@ -75,7 +97,7 @@ var moveRecurringShow = function(showID, direction, res) {
 				swapShow.save();
 			}
 
-			res.send(200);
+			res.send(200, { });
 		});
 	});
 };
@@ -277,12 +299,20 @@ module.exports = {
 		},
 		"/shows/recurring/:showID/up": {
 			"put": function(req, res, next) {
+				if(!req.user || !req.user.permissions.shows) {
+					return next(new restify.UnauthorizedError());
+				}
+
 				moveRecurringShow(req.params.showID, -1, res);
 				next();
 			}
 		},
 		"/shows/recurring/:showID/down": {
 			"put": function(req, res, next) {
+				if(!req.user || !req.user.permissions.shows) {
+					return next(new restify.UnauthorizedError());
+				}
+
 				moveRecurringShow(req.params.showID, 1, res);
 				next();
 			}
