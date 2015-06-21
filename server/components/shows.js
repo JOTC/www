@@ -189,7 +189,7 @@ var getFileDeleteHandler = function() {
 			if(err) {
 				log.error(err);
 				res.send(new restify.InternalServerError());
-			} else {
+			} else if(show) {
 				
 				var filename = "";
 				
@@ -205,7 +205,7 @@ var getFileDeleteHandler = function() {
 					return;
 				}
 				
-				fs.unlink(config.www.getPath(decodeURIComponent(filename)), function(err) {
+				fs.unlink(path.join(__FILE_PATH, show._id.toString(), path.basename(filename)), function(err) {
 					if(err) {
 						log.error(err);
 						res.send(new restify.InternalServerError());
@@ -225,8 +225,12 @@ var getFileDeleteHandler = function() {
 						});
 					}
 				});
+			} else {
+				res.send(new restify.NotFoundError());
 			}
 		});
+		
+		next();
 	};
 };
 
@@ -272,6 +276,8 @@ module.exports = {
 					show.files.forEach(function(file) {
 						fs.unlinkSync(path.join(__FILE_PATH, show._id.toString(), path.basename(file.path)));
 					});
+				}
+				if(fs.existsSync(path.join(__FILE_PATH, show._id.toString()))) {
 					fs.rmdirSync(path.join(__FILE_PATH, show._id.toString()));
 				}
 			})
@@ -279,7 +285,7 @@ module.exports = {
 		"/shows/:showID/file": {
 			"post": getFileUploadHandler()
 		},
-		"/shows/:showID/files/:fileID": {
+		"/shows/:showID/file/:fileID": {
 			"delete": getFileDeleteHandler()
 		},
 		"/shows/recurring": {
