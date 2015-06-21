@@ -18,6 +18,18 @@ var isValidShow = function(show) {
 		valid = valid && (show.registrationDeadline && typeof show.registrationDeadline === "string");
 		valid = valid && (show.classes && Array.isArray(show.classes));
 	}
+	
+	if(valid) {
+		valid = valid && !isNaN(Date.parse(show.startDate));
+		valid = valid && !isNaN(Date.parse(show.endDate));
+		valid = valid && !isNaN(Date.parse(show.registrationDeadline));
+	}
+	
+	if(valid) {
+		show.classes.forEach(function(c) {
+			valid = valid && (c && typeof c === "string");
+		});
+	}
 
 	return valid;
 };
@@ -52,18 +64,28 @@ var moveRecurringShow = function(showID, direction, res) {
 	} else {
 		direction = -1;
 	}
+	
+	if(!/[0-9a-zA-Z]{24}/.test(showID)) {
+		res.send(new restify.BadRequestError());
+		return;
+	}
 
 	db.shows.recurring.findOne({ _id: showID }).exec(function(err, show) {
 		if(err) {
 			log.error(err);
-			res.send(500);
+			res.send(new restify.InternalServerError());
+			return;
+		}
+		
+		if(!show) {
+			res.send(new restify.NotFoundError());
 			return;
 		}
 
 		db.shows.recurring.findOne({ ordering: (show.ordering + direction) }).exec(function(err, swapShow) {
 			if(err) {
 				log.error(err);
-				res.send(500);
+				res.send(new restify.InternalServerError());
 				return;
 			}
 
@@ -75,12 +97,17 @@ var moveRecurringShow = function(showID, direction, res) {
 				swapShow.save();
 			}
 
-			res.send(200);
+			res.send(200, { });
 		});
 	});
 };
 
+// __WWW_PATH is the relative path to this file
+// from the website
 var __WWW_PATH = "/files/shows";
+
+// __FILE_PATH is the relative path to the file
+// from the server's working director
 var __FILE_PATH = config.www.getPath(__WWW_PATH);
 
 var getObjectsInOrder = function(model, sortBy, callback) {
@@ -90,40 +117,45 @@ var getObjectsInOrder = function(model, sortBy, callback) {
 	model.find({}).sort(sort).exec().then(callback);
 };
 
-var getFileUploadHandler = function(filenameSuffix, showPropertyName) {
+var getFileUploadHandler = function() {
 	return function(req, res, next) {
 		if(!req.user || !req.user.permissions.shows) {
 			return next(new restify.UnauthorizedError());
 		}
-
-		var handleError = function(err) {
+		
+		var handleError = function(err, ex) {
+			if(!ex) {
+				ex = new restify.InternalServerError();
+			}
+			
 			log.error(err);
-			res.send(500);
+			res.send(ex);
+			
 			require("fs").unlinkSync(req.files.file.path);
 		};
+		
+		if(!/[0-9a-zA-Z]{24}/.test(req.params.showID)) {
+			handleError("Invalid show ID", new restify.BadRequestError());
+			return;
+		}
+		if(typeof req.params.name !== "string") {
+			handleError("Invalid document name", new restify.BadRequestError());
+			return;
+		}
 
 		db.shows.shows.findOne({ _id: req.params.showID }).exec(function(err, show) {
 			if(err) {
 				handleError(err);
 				next();
 			} else if(show) {
-				
-				if(showPropertyName === "files") {
-					filenameSuffix = "Files " + Date.now();
-				}
-				
-				var filename = show.title + " " + filenameSuffix + ".pdf";
+				var filename = show.title + " File " + Date.now() + ".pdf";
 				fs.move(req.files.file.path, path.join(__FILE_PATH, req.params.showID, filename), { mkdirp: true }, function(err) {
 					if(err) {
 						handleError(err);
 						next();
 					} else {
 						var wwwPath = path.join(__WWW_PATH, req.params.showID, filename);
-						if(showPropertyName === "files") {
-							show.files.push({ name: req.params.name, path: wwwPath });
-						} else {
-							show[showPropertyName] = wwwPath;
-						}
+						show.files.push({ name: req.params.name, path: wwwPath });
 						show.save(function(err) {
 							if(err) {
 								handleError(err);
@@ -136,69 +168,69 @@ var getFileUploadHandler = function(filenameSuffix, showPropertyName) {
 					}
 				});
 			} else {
-				handleError("Show ID [" + req.params.showID + "] not found");
+				handleError("Show ID [" + req.params.showID + "] not found", new restify.NotFoundError());
 				next();
 			}
 		});
 	};
 };
 
-var getFileDeleteHandler = function(showPropertyName) {
+var getFileDeleteHandler = function() {
 	return function(req, res, next) {
 		if(!req.user || !req.user.permissions.shows) {
 			return next(new restify.UnauthorizedError());
+		}
+		
+		if(!/[0-9a-zA-Z]{24}/.test(req.params.showID) || !/[0-9a-zA-Z]{24}/.test(req.params.fileID)) {
+			return next(new restify.BadRequestError());
 		}
 
 		db.shows.shows.findOne({ _id: req.params.showID }).exec(function(err, show) {
 			if(err) {
 				log.error(err);
-				res.send(500);
-			} else {
+				res.send(new restify.InternalServerError());
+			} else if(show) {
 				
 				var filename = "";
 				
-				if(showPropertyName === "files") {
-					var files = show.files.filter(function(file) {
-						return (file._id.toString() === req.params.fileID);
-					});
-					if(files.length > 0) {
-						filename = files[0].path;
-					}
-				} else {
-					filename = show[showPropertyName];
+				var files = show.files.filter(function(file) {
+					return (file._id.toString() === req.params.fileID);
+				});
+				if(files.length > 0) {
+					filename = files[0].path;
 				}
 				
 				if(!filename) {
-					res.send(400);
+					res.send(new restify.NotFoundError());
 					return;
 				}
 				
-				fs.unlink(config.www.getPath(decodeURIComponent(filename)), function(err) {
+				fs.unlink(path.join(__FILE_PATH, show._id.toString(), path.basename(filename)), function(err) {
 					if(err) {
 						log.error(err);
-						res.send(500);
+						res.send(new restify.InternalServerError());
 					} else {
 						
-						if(showPropertyName === "files") {
-							show.files = show.files.filter(function(file) {
-								return (file._id.toString() !== req.params.fileID);
-							});
-						} else {
-							show[showPropertyName] = "";
-						}
+						show.files = show.files.filter(function(file) {
+							return (file._id.toString() !== req.params.fileID);
+						});
 						
 						show.save(function(err) {
 							if(err) {
 								log.error(err);
-								res.send(500);
+								res.send(new restify.InternalServerError());
 							} else {
-								res.send(200);
+								res.send(200, { });
 							}
 						});
 					}
 				});
+			} else {
+				res.send(new restify.NotFoundError());
 			}
 		});
+		
+		next();
 	};
 };
 
@@ -240,23 +272,21 @@ module.exports = {
 				obj.dateRange = dates.stringDateRange(new Date(obj.startDate), new Date(obj.endDate));
 			}),
 			"delete": fn.getModelDeleter(db.shows.shows, "showID", "shows", log, function(show) {
-				if(show.premiumListPath) {
-					fs.unlinkSync(path.join(__FILE_PATH, decodeURIComponent(show.premiumListPath)));
+				if(show.files) {
+					show.files.forEach(function(file) {
+						fs.unlinkSync(path.join(__FILE_PATH, show._id.toString(), path.basename(file.path)));
+					});
 				}
-				if(show.resultsPath) {
-					fs.unlinkSync(path.join(__FILE_PATH, decodeURIComponent(show.resultsPath)));
+				if(fs.existsSync(path.join(__FILE_PATH, show._id.toString()))) {
+					fs.rmdirSync(path.join(__FILE_PATH, show._id.toString()));
 				}
 			})
 		},
 		"/shows/:showID/file": {
-			"post": getFileUploadHandler("File", "files")
+			"post": getFileUploadHandler()
 		},
-		"/shows/:showID/files/:fileID": {
-			"delete": getFileDeleteHandler("files")
-		},
-		"/shows/:showID/results": {
-			"post": getFileUploadHandler("Results", "resultsPath"),
-			"delete": getFileDeleteHandler("resultsPath")
+		"/shows/:showID/file/:fileID": {
+			"delete": getFileDeleteHandler()
 		},
 		"/shows/recurring": {
 			"post": fn.getModelCreator(db.shows.recurring, "shows", log, isValidRecurringShow, function(obj) {
@@ -277,12 +307,20 @@ module.exports = {
 		},
 		"/shows/recurring/:showID/up": {
 			"put": function(req, res, next) {
+				if(!req.user || !req.user.permissions.shows) {
+					return next(new restify.UnauthorizedError());
+				}
+
 				moveRecurringShow(req.params.showID, -1, res);
 				next();
 			}
 		},
 		"/shows/recurring/:showID/down": {
 			"put": function(req, res, next) {
+				if(!req.user || !req.user.permissions.shows) {
+					return next(new restify.UnauthorizedError());
+				}
+
 				moveRecurringShow(req.params.showID, 1, res);
 				next();
 			}
