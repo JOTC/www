@@ -112,40 +112,45 @@ var getObjectsInOrder = function(model, sortBy, callback) {
 	model.find({}).sort(sort).exec().then(callback);
 };
 
-var getFileUploadHandler = function(filenameSuffix, showPropertyName) {
+var getFileUploadHandler = function() {
 	return function(req, res, next) {
 		if(!req.user || !req.user.permissions.shows) {
 			return next(new restify.UnauthorizedError());
 		}
-
-		var handleError = function(err) {
+		
+		var handleError = function(err, ex) {
+			if(!ex) {
+				ex = new restify.InternalServerError();
+			}
+			
 			log.error(err);
-			res.send(500);
+			res.send(ex);
+			
 			require("fs").unlinkSync(req.files.file.path);
 		};
+		
+		if(!/[0-9a-zA-Z]{24}/.test(req.params.showID)) {
+			handleError("Invalid show ID", new restify.BadRequestError());
+			return;
+		}
+		if(typeof req.params.name !== "string") {
+			handleError("Invalid document name", new restify.BadRequestError());
+			return;
+		}
 
 		db.shows.shows.findOne({ _id: req.params.showID }).exec(function(err, show) {
 			if(err) {
 				handleError(err);
 				next();
 			} else if(show) {
-				
-				if(showPropertyName === "files") {
-					filenameSuffix = "Files " + Date.now();
-				}
-				
-				var filename = show.title + " " + filenameSuffix + ".pdf";
+				var filename = show.title + " File " + Date.now() + ".pdf";
 				fs.move(req.files.file.path, path.join(__FILE_PATH, req.params.showID, filename), { mkdirp: true }, function(err) {
 					if(err) {
 						handleError(err);
 						next();
 					} else {
 						var wwwPath = path.join(__WWW_PATH, req.params.showID, filename);
-						if(showPropertyName === "files") {
-							show.files.push({ name: req.params.name, path: wwwPath });
-						} else {
-							show[showPropertyName] = wwwPath;
-						}
+						show.files.push({ name: req.params.name, path: wwwPath });
 						show.save(function(err) {
 							if(err) {
 								handleError(err);
@@ -158,63 +163,59 @@ var getFileUploadHandler = function(filenameSuffix, showPropertyName) {
 					}
 				});
 			} else {
-				handleError("Show ID [" + req.params.showID + "] not found");
+				handleError("Show ID [" + req.params.showID + "] not found", new restify.NotFoundError());
 				next();
 			}
 		});
 	};
 };
 
-var getFileDeleteHandler = function(showPropertyName) {
+var getFileDeleteHandler = function() {
 	return function(req, res, next) {
 		if(!req.user || !req.user.permissions.shows) {
 			return next(new restify.UnauthorizedError());
+		}
+		
+		if(!/[0-9a-zA-Z]{24}/.test(req.params.showID) || !/[0-9a-zA-Z]{24}/.test(req.params.fileID)) {
+			return next(new restify.BadRequestError());
 		}
 
 		db.shows.shows.findOne({ _id: req.params.showID }).exec(function(err, show) {
 			if(err) {
 				log.error(err);
-				res.send(500);
+				res.send(new restify.InternalServerError());
 			} else {
 				
 				var filename = "";
 				
-				if(showPropertyName === "files") {
-					var files = show.files.filter(function(file) {
-						return (file._id.toString() === req.params.fileID);
-					});
-					if(files.length > 0) {
-						filename = files[0].path;
-					}
-				} else {
-					filename = show[showPropertyName];
+				var files = show.files.filter(function(file) {
+					return (file._id.toString() === req.params.fileID);
+				});
+				if(files.length > 0) {
+					filename = files[0].path;
 				}
 				
 				if(!filename) {
-					res.send(400);
+					res.send(new restify.NotFoundError());
 					return;
 				}
 				
 				fs.unlink(config.www.getPath(decodeURIComponent(filename)), function(err) {
 					if(err) {
 						log.error(err);
-						res.send(500);
+						res.send(new restify.InternalServerError());
 					} else {
 						
-						if(showPropertyName === "files") {
-							show.files = show.files.filter(function(file) {
-								return (file._id.toString() !== req.params.fileID);
-							});
-						} else {
-							show[showPropertyName] = "";
-						}
+						show.files = show.files.filter(function(file) {
+							return (file._id.toString() !== req.params.fileID);
+						});
 						
 						show.save(function(err) {
 							if(err) {
 								log.error(err);
-								res.send(500);
+								res.send(new restify.InternalServerError());
 							} else {
-								res.send(200);
+								res.send(200, { });
 							}
 						});
 					}
@@ -262,23 +263,19 @@ module.exports = {
 				obj.dateRange = dates.stringDateRange(new Date(obj.startDate), new Date(obj.endDate));
 			}),
 			"delete": fn.getModelDeleter(db.shows.shows, "showID", "shows", log, function(show) {
-				if(show.premiumListPath) {
-					fs.unlinkSync(path.join(__FILE_PATH, decodeURIComponent(show.premiumListPath)));
-				}
-				if(show.resultsPath) {
-					fs.unlinkSync(path.join(__FILE_PATH, decodeURIComponent(show.resultsPath)));
+				if(show.files) {
+					show.files.forEach(function(file) {
+						fs.unlinkSync(path.join(__FILE_PATH, show._id.toString(), path.basename(file.path)));
+					});
+					fs.rmdirSync(path.join(__FILE_PATH, show._id.toString()));
 				}
 			})
 		},
 		"/shows/:showID/file": {
-			"post": getFileUploadHandler("File", "files")
+			"post": getFileUploadHandler()
 		},
 		"/shows/:showID/files/:fileID": {
-			"delete": getFileDeleteHandler("files")
-		},
-		"/shows/:showID/results": {
-			"post": getFileUploadHandler("Results", "resultsPath"),
-			"delete": getFileDeleteHandler("resultsPath")
+			"delete": getFileDeleteHandler()
 		},
 		"/shows/recurring": {
 			"post": fn.getModelCreator(db.shows.recurring, "shows", log, isValidRecurringShow, function(obj) {
