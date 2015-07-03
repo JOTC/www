@@ -34,8 +34,8 @@
     "should": "^6.0.3"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha",
-    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec -t 5000"
+    "test": "mocha",
+    "coverage": "istanbul cover server.js"
   },
   "private": true
 }
