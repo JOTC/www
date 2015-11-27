@@ -687,11 +687,11 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
   $templateCache.put('jotc/sections/pictures/template.html',
     "<div id=\"pictures\">\n" +
     "\t<div class=\"title\">Pictures</div>\n" +
-    "\t\n" +
+    "\n" +
     "\t<div ng-if=\"auth.pictures\" style=\"text-align: center;\">\n" +
     "\t\t<button ng-if=\"auth.pictures\" class=\"btn btn-primary\" ng-click=\"openEditor(null, $event)\">New Gallery</button>\n" +
     "\t</div>\n" +
-    "\t\n" +
+    "\n" +
     "\t<div class=\"galleries container-fluid\">\n" +
     "\t\t<div class=\"galleryRow\" ng-repeat=\"row in getRows()\">\n" +
     "\t\t\t<div class=\"col-md-6\" ng-repeat=\"gallery in row\">\n" +
@@ -701,16 +701,16 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t<div class=\"name\">{{ gallery.name }}</div>\n" +
     "\t\t\t\t\t<div class=\"description\">{{ gallery.description }}</div>\n" +
-    "\t\t\t\t\t<div class=\"metadata\">Created {{ gallery.created | date }} | {{ gallery.images.length }} images</div>\n" +
+    "\t\t\t\t\t<div class=\"metadata\">Created {{ gallery.created | date }} | {{ gallery.images.length }} pictures</div>\n" +
     "\t\t\t\t\t<div ng-if=\"auth.pictures\" ng-controller=\"pictures.dragdrop\" gallery-id=\"{{ gallery._id }}\">\n" +
-    "\t\t\t\t\t\t\n" +
-    "\t\t\t\t\t\t<button class=\"btn btn-warning\" ng-click=\"openEditor(gallery, $event)\">Edit</button>\t\t\t\t\t\t\n" +
+    "\n" +
+    "\t\t\t\t\t\t<button class=\"btn btn-warning\" ng-click=\"openEditor(gallery, $event)\">Edit</button>\n" +
     "\t\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"deleteGallery(gallery, $event)\">Delete</button>\n" +
-    "\t\t\t\t\t\t\n" +
+    "\n" +
     "\t\t\t\t\t\t<div ng-file-drop ng-model=\"files\" class=\"upload-box\" drag-over-class=\"dragover\" multiple=\"true\" allow-dir=\"true\" accept=\".jpg,.jpeg,.png,.gif\">\n" +
     "\t\t\t\t\t\t\tDrop pictures here to add them to this gallery\n" +
     "\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t\t\n" +
+    "\n" +
     "\t\t\t\t\t\t<div class=\"uploading\" ng-if=\"uploadingFiles.length > 0\">\n" +
     "\t\t\t\t\t\t\t<span>Currently uploading...</span>\n" +
     "\t\t\t\t\t\t\t<div ng-repeat=\"file in uploadingFiles\" class=\"c---ell\">\n" +
@@ -718,13 +718,13 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t\t\t\t<div class=\"uploadProgress\" style=\"width: {{ file.progress }}%\">\n" +
     "\t\t\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t\t\n" +
+    "\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\t</div>\n" +
-    "</div>"
+    "</div>\n"
   );
 
 
