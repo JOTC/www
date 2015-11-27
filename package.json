@@ -1,22 +1,23 @@
 {
   "name": "jotc-website",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "mkdir build && browserify -t [ babelify --presets [ es2015 react ] ] src/main.js -o build/app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:darkcooger/jotc-website.git"
+    "url": "jotc/www"
   },
-  "author": "",
+  "author": "Jackson Obedience Training Club",
   "license": "ISC",
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-angular-templates": "^0.5.7",
-    "grunt-contrib-less": "^1.0.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-wiredep": "^2.0.0"
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-react": "^6.1.18",
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3"
   }
 }
