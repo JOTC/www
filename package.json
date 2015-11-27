@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "mkdir build && browserify -t [ babelify --presets [ es2015 react ] ] src/main.js -o build/app.js"
+    "build": "mkdir -p build && browserify -t [ babelify --presets [ es2015 react ] ] src/main.js -o build/app.js && cp src/index.html build/index.html"
   },
   "repository": {
     "type": "git",
