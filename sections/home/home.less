@@ -2,38 +2,48 @@
 
 #landing
 {
-	.calendar
-	{
-		background-color: rgba(0, 0, 0, 0.1);
-		width: 20%;
-		
-		.header
-		{
-			text-align: center;
-			font-weight: bold;
-			font-size: 1.2em;
-		}
-		
-		.eventGroup
-		{
-			.date
-			{
-				background-color: @darkbackground;
-				color: white;
-				padding: 2px;
+	.l-container {
+		.display(flex);
+		.flex-direction(row);
+		.justify-content(center);
+		margin: 0 auto;
+		width: 90vw;
+
+		.content {
+			&.image {
+				.flex(0 0 220px);
+				margin-right: 10px;
 			}
-		
-			.body
-			{
-				cursor: pointer;
-				padding: 5px;
-			
-				.link
-				{
-					text-align: right;
-					font-size: 0.8em;
-					color: blue;
-					text-decoration: underline;
+
+			&.calendar {
+				.flex(0 0 220px);
+				margin-left: 10px;
+				background-color: rgba(0, 0, 0, 0.1);
+
+				.header {
+					text-align: center;
+					font-weight: bold;
+					font-size: 1.2em;
+				}
+
+				.eventGroup {
+					.date {
+						background-color: @darkbackground;
+						color: white;
+						padding: 2px;
+					}
+
+					.body {
+						cursor: pointer;
+						padding: 5px;
+
+						.link {
+							text-align: right;
+							font-size: 0.8em;
+							color: blue;
+							text-decoration: underline;
+						}
+					}
 				}
 			}
 		}

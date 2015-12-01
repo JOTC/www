@@ -465,12 +465,12 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "<div id=\"landing\">\n" +
     "\t<div class=\"title\">Welcome to JOTC</div>\n" +
     "\n" +
-    "\t<div class=\"table\">\n" +
-    "\t\t<div class=\"cell\" style=\"width: 20%;\">\n" +
+    "\t<div class=\"l-container\">\n" +
+    "\t\t<div class=\"content image\" style=\"width: 20%;\">\n" +
     "\t\t\t<img style=\"width: 90%; border: 1px solid black; box-shadow: 3px 3px 10px #666;\" ng-src=\"/galleryImages/{{ getRandomImage() }}\"><!--src=\"http://i.imgur.com/pWHNIVMh.jpg\"-->\n" +
     "\t\t</div>\n" +
-    "\t\t\n" +
-    "\t\t<div class=\"cell\">\n" +
+    "\n" +
+    "\t\t<div class=\"content\">\n" +
     "\t\t\tThe Jackson Obedience Training Club, Inc. (JOTC) is a non-profit organization established\n" +
     "\t\t\tin 1969 and licensed by the American Kennel Club.  The club is dedicated to the advancement\n" +
     "\t\t\tof dog obedience as a sport and the promotion of responsible pet ownership.  JOTC's belief\n" +
@@ -502,7 +502,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t</ul>\n" +
     "\t\t</div>\n" +
     "\n" +
-    "\t\t<div class=\"cell calendar\">\n" +
+    "\t\t<div class=\"content calendar\">\n" +
     "\t\t\t<div class=\"header\">Upcoming Events</div>\n" +
     "\t\t\t<div class=\"eventGroup\" ng-repeat=\"eventGroup in events\" ng-if=\"isFuture(eventGroup)\">\n" +
     "\t\t\t\t<div class=\"date\">{{ eventGroup.date | date : 'MMMM d' }}</div>\n" +
@@ -513,7 +513,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\t</div>\n" +
-    "</div>"
+    "</div>\n"
   );
 
 

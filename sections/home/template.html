@@ -1,12 +1,12 @@
 <div id="landing">
 	<div class="title">Welcome to JOTC</div>
 
-	<div class="table">
-		<div class="cell" style="width: 20%;">
+	<div class="l-container">
+		<div class="content image">
 			<img style="width: 90%; border: 1px solid black; box-shadow: 3px 3px 10px #666;" ng-src="/galleryImages/{{ getRandomImage() }}"><!--src="http://i.imgur.com/pWHNIVMh.jpg"-->
 		</div>
-		
-		<div class="cell">
+
+		<div class="content">
 			The Jackson Obedience Training Club, Inc. (JOTC) is a non-profit organization established
 			in 1969 and licensed by the American Kennel Club.  The club is dedicated to the advancement
 			of dog obedience as a sport and the promotion of responsible pet ownership.  JOTC's belief
@@ -38,7 +38,7 @@
 			</ul>
 		</div>
 
-		<div class="cell calendar">
+		<div class="content calendar">
 			<div class="header">Upcoming Events</div>
 			<div class="eventGroup" ng-repeat="eventGroup in events" ng-if="isFuture(eventGroup)">
 				<div class="date">{{ eventGroup.date | date : 'MMMM d' }}</div>
