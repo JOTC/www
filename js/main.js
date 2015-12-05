@@ -156,7 +156,7 @@ angular.module("jotc", [ "ngRoute", "ngAnimate", "ui.bootstrap", "angularFileUpl
 					return "";
 				}
 				var loc = locationStr.replace(/ /g, "+");
-				return "http://maps.googleapis.com/maps/api/staticmap?sensor=false&zoom=11&size=200x150&center=" + loc + "&markers=" + loc;
+				return "https://maps.googleapis.com/maps/api/staticmap?sensor=false&zoom=11&size=200x150&center=" + loc + "&markers=" + loc;
 
 			},
 			getDirectionsURLForLocation: function(locationStr)
