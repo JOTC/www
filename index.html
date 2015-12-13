@@ -1,16 +1,16 @@
 <html>
 <head>
 	<title>Jackson Obedience Training Club | JOTC</title>
-	
+
 	<!-- bower:css -->
 	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
 	<!-- endbower -->
 	<link rel="stylesheet" type="text/css" href="style/main.css">
 </head>
 <body ng-app="jotc" ng-controller="main">
-	
+
 	<div id="header">
-		<img class="logo" src="media/jotc_logo_color.png">
+		<img class="logo" src="media/jotc_logo_color.svg">
 		<div class="title">
 			Jackson Obedience<br>Training Club
 			<div class="motto">Teaching You to Train Your Dog</div>
@@ -18,13 +18,13 @@
 		<div id="userStatus">
 			[ <span ng-if="!auth.isLoggedIn()" ng-click="login();">Login</span>
 			<span ng-if="auth.isLoggedIn()">
-				Hello {{ auth.getUsername() }} | 
+				Hello {{ auth.getUsername() }} |
 				<span ng-if="auth.permissions.users"><a href="#/users">Manage Users</a> | </span>
 				<span ng-click="logout();">Logout</span>
 			</span> ]
 		</div>
 	</div>
-	
+
 	<div id="navBar" ng-class="{ fixed: navbar.fixed }">
 		<div class="title">Jackson Obedience Training Club
 		</div><div class="item">
@@ -43,9 +43,9 @@
 			<a href="#/about">About JOTC</a>
 		</div>
 	</div>
-	
+
 	<div ng-view></div>
-	
+
 	<!-- bower:js -->
 	<script src="bower_components/jquery/dist/jquery.js"></script>
 	<script src="bower_components/angular/angular.js"></script>
@@ -80,7 +80,7 @@
 
 	<script src="sections/links/service.js" type="text/javascript"></script>
 	<script src="sections/links/controller.js" type="text/javascript"></script>
-	
+
 	<script src="sections/about/service.js" type="text/javascript"></script>
 	<script src="sections/about/controller.js" type="text/javascript"></script>
 </body>
