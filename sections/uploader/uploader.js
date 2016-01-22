@@ -86,7 +86,7 @@ angular.module("jotc")
 					}
 				});
 			} else {
-				doUpload(uploadingFile, "/data2/" + $scope.objectType + "/" + $scope.obj_id + "/" + $scope.documentType);
+				doUpload(uploadingFile, "/data2/" + $scope.objectType + "/" + $scope.obj._id + "/" + $scope.documentType);
 			}
 		};
 	}]);
