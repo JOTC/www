@@ -40572,9 +40572,17 @@ module.exports = _react2.default.createClass({
   displayName: "exports",
   render: function render() {
     return _react2.default.createElement(
-      "span",
-      null,
-      "links"
+      "div",
+      { className: "links-container" },
+      _react2.default.createElement(
+        "div",
+        { className: "main" },
+        _react2.default.createElement(
+          "h1",
+          { className: "title" },
+          "Useful Links"
+        )
+      )
     );
   }
 });
@@ -40592,9 +40600,17 @@ module.exports = _react2.default.createClass({
   displayName: "exports",
   render: function render() {
     return _react2.default.createElement(
-      "span",
-      null,
-      "about"
+      "div",
+      { className: "about-container" },
+      _react2.default.createElement(
+        "div",
+        { className: "main" },
+        _react2.default.createElement(
+          "h1",
+          { className: "title" },
+          "About JOTC"
+        )
+      )
     );
   }
 });
@@ -40636,26 +40652,39 @@ var _about = require("./about");
 
 var _about2 = _interopRequireDefault(_about);
 
+var _sidebar = require("./sidebar");
+
+var _sidebar2 = _interopRequireDefault(_sidebar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = _react2.default.createClass({
   displayName: "exports",
   render: function render() {
     return _react2.default.createElement(
-      _reactRouter.Router,
-      { history: _reactRouter.hashHistory },
-      _react2.default.createElement(_reactRouter.Route, { path: "/", component: _home2.default }),
-      _react2.default.createElement(_reactRouter.Route, { path: "/shows", component: _shows2.default }),
-      _react2.default.createElement(_reactRouter.Route, { path: "/classes", component: _classes2.default }),
-      _react2.default.createElement(_reactRouter.Route, { path: "/pictures", component: _pictures2.default }),
-      _react2.default.createElement(_reactRouter.Route, { path: "/calendar", component: _calendar2.default }),
-      _react2.default.createElement(_reactRouter.Route, { path: "/links", component: _Links2.default }),
-      _react2.default.createElement(_reactRouter.Route, { path: "/about", component: _about2.default })
+      "div",
+      null,
+      _react2.default.createElement(
+        "div",
+        { className: "container" },
+        _react2.default.createElement(
+          _reactRouter.Router,
+          { history: _reactRouter.hashHistory },
+          _react2.default.createElement(_reactRouter.Route, { path: "/", component: _home2.default }),
+          _react2.default.createElement(_reactRouter.Route, { path: "/shows", component: _shows2.default }),
+          _react2.default.createElement(_reactRouter.Route, { path: "/classes", component: _classes2.default }),
+          _react2.default.createElement(_reactRouter.Route, { path: "/pictures", component: _pictures2.default }),
+          _react2.default.createElement(_reactRouter.Route, { path: "/calendar", component: _calendar2.default }),
+          _react2.default.createElement(_reactRouter.Route, { path: "/links", component: _Links2.default }),
+          _react2.default.createElement(_reactRouter.Route, { path: "/about", component: _about2.default })
+        )
+      ),
+      _react2.default.createElement(_sidebar2.default, null)
     );
   }
 });
 
-},{"./Links":340,"./about":341,"./calendar":343,"./classes":345,"./home":347,"./pictures":348,"./shows":349,"react":336,"react-router":190}],343:[function(require,module,exports){
+},{"./Links":340,"./about":341,"./calendar":343,"./classes":345,"./home":347,"./pictures":348,"./shows":349,"./sidebar":350,"react":336,"react-router":190}],343:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -40668,9 +40697,17 @@ module.exports = _react2.default.createClass({
   displayName: "exports",
   render: function render() {
     return _react2.default.createElement(
-      "span",
-      null,
-      "calendar"
+      "div",
+      { className: "calendar-container" },
+      _react2.default.createElement(
+        "div",
+        { className: "main" },
+        _react2.default.createElement(
+          "h1",
+          { className: "title" },
+          "Calendar of Events"
+        )
+      )
     );
   }
 });
@@ -40802,7 +40839,7 @@ module.exports = _react2.default.createClass({
   render: function render() {
     return _react2.default.createElement(
       "div",
-      { className: "container classes-container" },
+      { className: "classes-container" },
       _react2.default.createElement(
         "div",
         { className: "main" },
@@ -40811,8 +40848,7 @@ module.exports = _react2.default.createClass({
           { className: "title" },
           "Classes"
         )
-      ),
-      _react2.default.createElement(_sidebar2.default, null)
+      )
     );
   }
 });
@@ -40944,14 +40980,14 @@ module.exports = _react2.default.createClass({
   render: function render() {
     return _react2.default.createElement(
       "div",
-      { className: "container home-container" },
+      { className: "home-container" },
       _react2.default.createElement(
         "div",
         { className: "random-image-container" },
         _react2.default.createElement(
           _paper2.default,
           { zDepth: 3, circle: true, style: { overflow: "hidden" } },
-          _react2.default.createElement("img", { src: "http://lorempixel.com/400/400/" })
+          _react2.default.createElement("img", { src: "http://lorempixel.com/400/400/animals/9" })
         )
       ),
       _react2.default.createElement(
@@ -41007,8 +41043,7 @@ module.exports = _react2.default.createClass({
             "Training your dog will reduce the risk of him biting someone, which could result in a lawsuit and even your dog being euthanized. A well-mannered, trained dog teamed with a responsible pet owner is absolutely necessary. Obedience training is a very subtle, non-threatening way of gaining control over a dog that is prone to aggression. Once your dog has been properly socialized and trained, the chances of him biting someone are significantly reduced."
           )
         )
-      ),
-      _react2.default.createElement(_sidebar2.default, null)
+      )
     );
   }
 });
@@ -41026,9 +41061,17 @@ module.exports = _react2.default.createClass({
   displayName: "exports",
   render: function render() {
     return _react2.default.createElement(
-      "span",
-      null,
-      "pictures"
+      "div",
+      { className: "pictures-container" },
+      _react2.default.createElement(
+        "div",
+        { className: "main" },
+        _react2.default.createElement(
+          "h1",
+          { className: "title" },
+          "Pictures"
+        )
+      )
     );
   }
 });
@@ -41055,7 +41098,7 @@ module.exports = _react2.default.createClass({
   render: function render() {
     return _react2.default.createElement(
       "div",
-      { className: "container classes-container" },
+      { className: "shows-container" },
       _react2.default.createElement(
         "div",
         { className: "main" },
@@ -41064,8 +41107,7 @@ module.exports = _react2.default.createClass({
           { className: "title" },
           "Shows"
         )
-      ),
-      _react2.default.createElement(_sidebar2.default, null)
+      )
     );
   }
 });

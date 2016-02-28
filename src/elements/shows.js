@@ -5,12 +5,10 @@ import Paper from 'material-ui/lib/paper';
 module.exports = React.createClass({
   render() {
     return (
-      <div className="container classes-container">
+      <div className="shows-container">
         <div className="main">
           <h1 className="title">Shows</h1>
         </div>
-
-        <Sidebar />
       </div>
     );
   }

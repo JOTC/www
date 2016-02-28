@@ -1,11 +1,11 @@
 @import "bourbon";
 @import "neat";
 
-&.home-container {
+> .home-container {
   @include outer-container;
 
   .random-image-container {
-    @include span-columns(2);
+    @include span-columns(3);
     min-height: 1px;
 
     img {
@@ -14,22 +14,11 @@
   }
 
   .main {
-    @include span-columns(6);
+    @include span-columns(9);
     line-height: 1.4em;
 
     h3 {
       font-size: 2rem;
-    }
-  }
-
-  .sidebar {
-    @include span-columns(4);
-
-    h3 {
-      background: #112e51;
-      color: white;
-      padding: 10px;
-      margin: 10px 0;
     }
   }
 }

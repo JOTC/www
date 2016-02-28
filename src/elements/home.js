@@ -5,10 +5,10 @@ import Paper from 'material-ui/lib/paper';
 module.exports = React.createClass({
   render() {
     return (
-      <div className="container home-container">
+      <div className="home-container">
         <div className="random-image-container">
           <Paper zDepth={3} circle={true} style={{ overflow: "hidden" }}>
-            <img src="http://lorempixel.com/400/400/"/>
+            <img src="http://lorempixel.com/400/400/animals/9"/>
           </Paper>
         </div>
         <div className="main">
@@ -35,8 +35,6 @@ module.exports = React.createClass({
             <li>Training your dog will reduce the risk of him biting someone, which could result in a lawsuit and even your dog being euthanized. A well-mannered, trained dog teamed with a responsible pet owner is absolutely necessary. Obedience training is a very subtle, non-threatening way of gaining control over a dog that is prone to aggression. Once your dog has been properly socialized and trained, the chances of him biting someone are significantly reduced.</li>
           </ul>
         </div>
-
-        <Sidebar />
       </div>
     );
   }
