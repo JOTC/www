@@ -40805,7 +40805,9 @@ module.exports = _react2.default.createClass({
         { className: "container" },
         _react2.default.createElement(
           _reactRouter.Router,
-          { history: _reactRouter.hashHistory },
+          { onUpdate: function onUpdate() {
+              return window.scrollTo(0, 0);
+            }, history: _reactRouter.hashHistory },
           _react2.default.createElement(_reactRouter.Route, { path: "/", component: _home2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: "/shows", component: _shows2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: "/classes", component: _classes2.default }),

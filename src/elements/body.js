@@ -15,7 +15,7 @@ module.exports = React.createClass({
     return (
       <div>
         <div className="container">
-          <Router history={hashHistory}>
+          <Router onUpdate={() => window.scrollTo(0, 0)} history={hashHistory}>
             <Route path="/" component={Home} />
             <Route path="/shows" component={Shows} />
             <Route path="/classes" component={Classes} />
