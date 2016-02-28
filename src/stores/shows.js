@@ -1,5 +1,5 @@
-const dispatcher = require('../dispatcher');
-import { Store } from 'flux/utils';
+import dispatcher from "../dispatcher";
+import { Store } from "flux/utils";
 
 class ShowStore extends Store {
   constructor(dispatcher) {
@@ -52,11 +52,11 @@ class ShowStore extends Store {
 
   __onDispatch(event) {
     switch(event.type) {
-      case 'shows-in':
+      case "shows-in":
         this._shows = event.payload;
         this.__emitChange();
         break;
-      case 'new-show':
+      case "new-show":
         break;
     }
   }
