@@ -40785,20 +40785,37 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _sidebar = require("./sidebar");
+
+var _sidebar2 = _interopRequireDefault(_sidebar);
+
+var _paper = require("material-ui/lib/paper");
+
+var _paper2 = _interopRequireDefault(_paper);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = _react2.default.createClass({
   displayName: "exports",
   render: function render() {
     return _react2.default.createElement(
-      "span",
-      null,
-      "classes"
+      "div",
+      { className: "container classes-container" },
+      _react2.default.createElement(
+        "div",
+        { className: "main" },
+        _react2.default.createElement(
+          "h1",
+          { className: "title" },
+          "Classes"
+        )
+      ),
+      _react2.default.createElement(_sidebar2.default, null)
     );
   }
 });
 
-},{"react":336}],346:[function(require,module,exports){
+},{"./sidebar":350,"material-ui/lib/paper":115,"react":336}],346:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -41021,20 +41038,37 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _sidebar = require("./sidebar");
+
+var _sidebar2 = _interopRequireDefault(_sidebar);
+
+var _paper = require("material-ui/lib/paper");
+
+var _paper2 = _interopRequireDefault(_paper);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = _react2.default.createClass({
   displayName: "exports",
   render: function render() {
     return _react2.default.createElement(
-      "span",
-      null,
-      "shows"
+      "div",
+      { className: "container classes-container" },
+      _react2.default.createElement(
+        "div",
+        { className: "main" },
+        _react2.default.createElement(
+          "h1",
+          { className: "title" },
+          "Shows"
+        )
+      ),
+      _react2.default.createElement(_sidebar2.default, null)
     );
   }
 });
 
-},{"react":336}],350:[function(require,module,exports){
+},{"./sidebar":350,"material-ui/lib/paper":115,"react":336}],350:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");

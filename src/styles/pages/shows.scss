@@ -1,0 +1,21 @@
+@import "bourbon";
+@import "neat";
+
+&.classes-container {
+  @include outer-container;
+
+  .main {
+    @include span-columns(8);
+  }
+
+  .sidebar {
+    @include span-columns(4);
+
+    h3 {
+      background: #112e51;
+      color: white;
+      padding: 10px;
+      margin: 10px 0;
+    }
+  }
+}

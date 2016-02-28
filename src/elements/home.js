@@ -3,7 +3,6 @@ import Sidebar from "./sidebar";
 import Paper from 'material-ui/lib/paper';
 
 module.exports = React.createClass({
-
   render() {
     return (
       <div className="container home-container">

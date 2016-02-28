@@ -99,7 +99,9 @@ body {
         }
       }
 
-      @import "home";
+      @import "pages/home";
+      @import "pages/shows";
+      @import "pages/classes";
     }
   }
 

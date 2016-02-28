@@ -1,9 +1,17 @@
 import React from "react";
+import Sidebar from "./sidebar";
+import Paper from 'material-ui/lib/paper';
 
 module.exports = React.createClass({
   render() {
     return (
-      <span>shows</span>
+      <div className="container classes-container">
+        <div className="main">
+          <h1 className="title">Shows</h1>
+        </div>
+
+        <Sidebar />
+      </div>
     );
   }
 });
