@@ -40594,28 +40594,164 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _officers = require("../stores/officers");
+
+var _officers2 = _interopRequireDefault(_officers);
+
+var _contact = require("./contact");
+
+var _contact2 = _interopRequireDefault(_contact);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = _react2.default.createClass({
   displayName: "exports",
+  getInitialState: function getInitialState() {
+    return {
+      officers: _officers2.default.getOfficers()
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    this.storeListenerToken = _officers2.default.addListener(this._officerStoreChanged);
+  },
+  componentWillUnmount: function componentWillUnmount() {
+    this.storeListenerToken.remove();
+  },
+  _officerStoreChanged: function _officerStoreChanged() {
+    this.setState({ officers: _officers2.default.getOfficers() });
+  },
   render: function render() {
     return _react2.default.createElement(
       "div",
       { className: "about-container" },
       _react2.default.createElement(
+        "h1",
+        { className: "title" },
+        "About JOTC"
+      ),
+      _react2.default.createElement(
         "div",
-        { className: "main" },
+        { className: "halves" },
         _react2.default.createElement(
-          "h1",
-          { className: "title" },
-          "About JOTC"
+          "div",
+          { className: "half" },
+          _react2.default.createElement(
+            "h3",
+            null,
+            "Club Activities"
+          ),
+          _react2.default.createElement(
+            "ul",
+            null,
+            _react2.default.createElement(
+              "li",
+              null,
+              "Monthly Member Meetings"
+            ),
+            _react2.default.createElement(
+              "li",
+              null,
+              "Training classes held twice in the spring and twice in the fall"
+            ),
+            _react2.default.createElement(
+              "li",
+              null,
+              "Two-day AKC Obedience trials held in the summer of each year"
+            ),
+            _react2.default.createElement(
+              "li",
+              null,
+              "Annual awards banquet to honor members who have achieved new titles in various dog events during the year"
+            ),
+            _react2.default.createElement(
+              "li",
+              null,
+              "Christmas party and \"fun match,\" a \"practice trial\" for club members to enjoy the holidays together"
+            )
+          )
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "half" },
+          _react2.default.createElement(
+            "h3",
+            null,
+            "Newsletter and Meetings"
+          ),
+          "The Jackson Obedience Training Club sponsors a monthly newsletter for its members. The newsletter incldues club news, upcoming events, and informative articles of interest to all dog owners. The club has been publishing its newsletter since 1987. Non-members may subscribe to the newsletter by sending $12 in check, payable to JOTC, to:",
+          _react2.default.createElement("br", null),
+          _react2.default.createElement("br", null),
+          "Jackson Obedience Training Club",
+          _react2.default.createElement("br", null),
+          "PO Box 193",
+          _react2.default.createElement("br", null),
+          "Jackson, MS 39205",
+          _react2.default.createElement("br", null),
+          _react2.default.createElement("br", null),
+          "Meetings are held on the second Monday of the month. For information about meeting places, times and directions, call the Dog Line at",
+          _react2.default.createElement(
+            "a",
+            { href: "tel:+16013523647" },
+            _react2.default.createElement(
+              "strong",
+              null,
+              "(601) 352-DOGS (3647)"
+            )
+          ),
+          "."
+        )
+      ),
+      _react2.default.createElement(
+        "h3",
+        null,
+        "JOTC Officers"
+      ),
+      _react2.default.createElement(
+        "div",
+        { className: "officer-list-container" },
+        _react2.default.createElement(
+          "div",
+          { className: "officer-list" },
+          _react2.default.createElement(
+            "table",
+            null,
+            this.state.officers.map(function (officer) {
+              return _react2.default.createElement(
+                "tr",
+                { className: "officer", key: officer._id },
+                _react2.default.createElement(
+                  "td",
+                  { className: "officer-titles" },
+                  officer.titles.map(function (title) {
+                    return _react2.default.createElement(
+                      "div",
+                      { className: "officer-title", key: officer._id + "-title-" + title },
+                      title
+                    );
+                  })
+                ),
+                _react2.default.createElement(
+                  "td",
+                  { className: "officer-name" },
+                  officer.name
+                ),
+                _react2.default.createElement(
+                  "td",
+                  { className: "officer-contacts" },
+                  officer.contacts.map(function (contact) {
+                    return _react2.default.createElement(_contact2.default, { contact: contact, key: officer._id + "-contact-" + contact.value });
+                  })
+                )
+              );
+            })
+          )
         )
       )
     );
   }
 });
 
-},{"react":336}],342:[function(require,module,exports){
+},{"../stores/officers":353,"./contact":346,"react":336}],342:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -40684,7 +40820,7 @@ module.exports = _react2.default.createClass({
   }
 });
 
-},{"./Links":340,"./about":341,"./calendar":343,"./classes":345,"./home":347,"./pictures":348,"./shows":349,"./sidebar":350,"react":336,"react-router":190}],343:[function(require,module,exports){
+},{"./Links":340,"./about":341,"./calendar":343,"./classes":345,"./home":348,"./pictures":349,"./shows":350,"./sidebar":351,"react":336,"react-router":190}],343:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -40853,7 +40989,44 @@ module.exports = _react2.default.createClass({
   }
 });
 
-},{"./sidebar":350,"material-ui/lib/paper":115,"react":336}],346:[function(require,module,exports){
+},{"./sidebar":351,"material-ui/lib/paper":115,"react":336}],346:[function(require,module,exports){
+"use strict";
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = _react2.default.createClass({
+  displayName: "exports",
+  getLink: function getLink() {
+    if (this.props.contact.type === "email") {
+      return _react2.default.createElement(
+        "a",
+        { href: "mailto:" + this.props.contact.value },
+        "Email ",
+        this.props.contact.value
+      );
+    } else {
+      return _react2.default.createElement(
+        "a",
+        { href: "tel:" + this.props.contact.value },
+        "Phone ",
+        this.props.contact.value
+      );
+    }
+  },
+  render: function render() {
+    return _react2.default.createElement(
+      "div",
+      null,
+      this.getLink()
+    );
+  }
+});
+
+},{"react":336}],347:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -40958,7 +41131,7 @@ module.exports = _react2.default.createClass({
   }
 });
 
-},{"react":336,"react-headroom":161,"react-router":190}],347:[function(require,module,exports){
+},{"react":336,"react-headroom":161,"react-router":190}],348:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -41048,7 +41221,7 @@ module.exports = _react2.default.createClass({
   }
 });
 
-},{"./sidebar":350,"material-ui/lib/paper":115,"react":336}],348:[function(require,module,exports){
+},{"./sidebar":351,"material-ui/lib/paper":115,"react":336}],349:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -41076,7 +41249,7 @@ module.exports = _react2.default.createClass({
   }
 });
 
-},{"react":336}],349:[function(require,module,exports){
+},{"react":336}],350:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -41112,7 +41285,7 @@ module.exports = _react2.default.createClass({
   }
 });
 
-},{"./sidebar":350,"material-ui/lib/paper":115,"react":336}],350:[function(require,module,exports){
+},{"./sidebar":351,"material-ui/lib/paper":115,"react":336}],351:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -41137,12 +41310,11 @@ module.exports = _react2.default.createClass({
   displayName: "exports",
   getInitialState: function getInitialState() {
     return {
-      shows: { upcoming: [] }
+      shows: _shows2.default.getShows()
     };
   },
   componentDidMount: function componentDidMount() {
     this.storeListenerToken = _shows2.default.addListener(this._showStoreChanged);
-    this.setState({ shows: _shows2.default.getShows() });
   },
   componentWillUnmount: function componentWillUnmount() {
     this.storeListenerToken.remove();
@@ -41166,7 +41338,7 @@ module.exports = _react2.default.createClass({
   }
 });
 
-},{"../stores/shows":352,"./card-show":344,"material-ui/lib/paper":115,"react":336}],351:[function(require,module,exports){
+},{"../stores/shows":354,"./card-show":344,"material-ui/lib/paper":115,"react":336}],352:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -41200,7 +41372,58 @@ _reactDom2.default.render(_react2.default.createElement(_header2.default, null),
 
 _reactDom2.default.render(_react2.default.createElement(_body2.default, null), document.getElementById("body"));
 
-},{"./elements/body":342,"./elements/header":346,"react":336,"react-dom":160,"react-tap-event-plugin":201}],352:[function(require,module,exports){
+},{"./elements/body":342,"./elements/header":347,"react":336,"react-dom":160,"react-tap-event-plugin":201}],353:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _utils = require('flux/utils');
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var dispatcher = require('../dispatcher');
+
+var OfficerStore = function (_Store) {
+  _inherits(OfficerStore, _Store);
+
+  function OfficerStore(dispatcher) {
+    _classCallCheck(this, OfficerStore);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OfficerStore).call(this, dispatcher));
+
+    _this._officers = [{ "name": "James Evans", "_id": "5500f57f453eeef259cee96c", "__v": 0, "contacts": [], "titles": ["President"] }, { "name": "Betty Hutchinson", "_id": "5500f59a453eeef259cee96d", "__v": 0, "contacts": [{ "type": "email", "value": "bettybh@bellsouth.net", "_id": "5500f59a453eeef259cee96e" }], "titles": ["Vice President"] }, { "name": "Theresa Hanna", "_id": "5500f5a6453eeef259cee96f", "__v": 0, "contacts": [], "titles": ["Secretary"] }, { "name": "MaryJo Anderson", "_id": "5500f5c3453eeef259cee970", "__v": 0, "contacts": [{ "type": "email", "value": "MJA47@bellsouth.net", "_id": "5500f5c3453eeef259cee971" }], "titles": ["Treasurer", "Training Coordinator"] }, { "name": "Donna Webb", "_id": "5500f5d2453eeef259cee972", "__v": 0, "contacts": [], "titles": ["Board Member"] }, { "name": "Joan Moran", "_id": "5500f5da453eeef259cee973", "__v": 0, "contacts": [], "titles": ["Board Member"] }, { "name": "Randy Kahlaf", "_id": "5500f5e6453eeef259cee974", "__v": 0, "contacts": [], "titles": ["Board Member"] }];
+    return _this;
+  }
+
+  _createClass(OfficerStore, [{
+    key: 'getOfficers',
+    value: function getOfficers() {
+      return this._officers;
+    }
+  }, {
+    key: '__onDispatch',
+    value: function __onDispatch(event) {
+      switch (event.type) {
+        case 'officers-in':
+          this._officers = event.payload;
+          this.__emitChange();
+          break;
+        case 'new-officer':
+          break;
+      }
+    }
+  }]);
+
+  return OfficerStore;
+}(_utils.Store);
+
+module.exports = new OfficerStore(dispatcher);
+
+},{"../dispatcher":339,"flux/utils":48}],354:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -41223,7 +41446,7 @@ var ShowStore = function (_Store) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ShowStore).call(this, dispatcher));
 
-    var shows = {
+    _this._shows = {
       upcoming: [{
         _id: "56d0509d1a71d4a45f6005f4",
         dateRange: "Jun 25-26",
@@ -41240,30 +41463,10 @@ var ShowStore = function (_Store) {
           _id: "56d058c41a71d4a45f6005f5"
         }],
         classes: ["Novice A & B", "Beginner Novice A & B", "Preferred-Novice", "Team Open Relay (Non-Regular Class)"]
-
-        /*
-        name: "February Novice Obedience and Rally Trials",
-        shortDate: "February 20-21",
-        location: {
-          name: "McKenzie Arena, Hinds Community College",
-          place: "Raymond, MS"
-        },
-        description: "OC Matches held Friday, February 19.  Entries close February 3.",
-        competitionClasses: [
-          "Novice A & B",
-          "Beginner Novice A & B",
-          "Preferred-Novice",
-          "Team Open Relay (Non-Regular Class)",
-          "Rally Novice A & B",
-          "Rally Advanced A & B",
-          "Rally Excellent A & B",
-          "Rally Challenge (Non-Regular Class)"
-        ]*/
       }]
     };
 
-    shows.upcoming = shows.upcoming.map(_this.getProcessedShow);
-    _this._shows = shows;
+    _this._shows.upcoming = _this._shows.upcoming.map(_this.getProcessedShow);
     return _this;
   }
 
@@ -41302,4 +41505,4 @@ var ShowStore = function (_Store) {
 
 module.exports = new ShowStore(dispatcher);
 
-},{"../dispatcher":339,"flux/utils":48}]},{},[351]);
+},{"../dispatcher":339,"flux/utils":48}]},{},[352]);

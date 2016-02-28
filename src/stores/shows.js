@@ -4,7 +4,7 @@ import { Store } from 'flux/utils';
 class ShowStore extends Store {
   constructor(dispatcher) {
     super(dispatcher);
-    let shows = {
+    this._shows = {
       upcoming: [
         {
           _id: "56d0509d1a71d4a45f6005f4",
@@ -29,31 +29,11 @@ class ShowStore extends Store {
             "Preferred-Novice",
             "Team Open Relay (Non-Regular Class)"
           ]
-
-          /*
-          name: "February Novice Obedience and Rally Trials",
-          shortDate: "February 20-21",
-          location: {
-            name: "McKenzie Arena, Hinds Community College",
-            place: "Raymond, MS"
-          },
-          description: "OC Matches held Friday, February 19.  Entries close February 3.",
-          competitionClasses: [
-            "Novice A & B",
-            "Beginner Novice A & B",
-            "Preferred-Novice",
-            "Team Open Relay (Non-Regular Class)",
-            "Rally Novice A & B",
-            "Rally Advanced A & B",
-            "Rally Excellent A & B",
-            "Rally Challenge (Non-Regular Class)"
-          ]*/
         }
       ]
     };
 
-    shows.upcoming = shows.upcoming.map(this.getProcessedShow);
-    this._shows = shows;
+    this._shows.upcoming = this._shows.upcoming.map(this.getProcessedShow);
   }
 
   getShows() {

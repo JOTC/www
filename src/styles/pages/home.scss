@@ -15,7 +15,6 @@
 
   .main {
     @include span-columns(9);
-    line-height: 1.4em;
 
     h3 {
       font-size: 2rem;

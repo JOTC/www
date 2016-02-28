@@ -6,13 +6,12 @@ import ShowStore from '../stores/shows';
 module.exports = React.createClass({
   getInitialState() {
     return {
-      shows: { upcoming: [ ] }
+      shows: ShowStore.getShows()
     };
   },
 
   componentDidMount() {
     this.storeListenerToken = ShowStore.addListener(this._showStoreChanged);
-    this.setState({ shows: ShowStore.getShows() });
   },
 
   componentWillUnmount() {

@@ -24,6 +24,7 @@
 
 body {
   font-family: 'Roboto', sans-serif;
+  line-height: 1.4em;
 
   #header {
     .headroom {
@@ -105,6 +106,7 @@ body {
       @import "pages/home";
       @import "pages/shows";
       @import "pages/classes";
+      @import "pages/about";
     }
   }
 
