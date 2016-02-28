@@ -1,8 +1,29 @@
 @import "_reset";
 @import "bourbon";
+@import "neat";
+@import "basics";
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Roboto Light'), local('Roboto-Light'), url(fonts/roboto-light.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'), url(fonts/roboto-regular.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Roboto Medium'), local('Roboto-Medium'), url(fonts/roboto-medium.woff) format('woff');
+}
 
 body {
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
 
   #header {
     .headroom {
@@ -62,6 +83,36 @@ body {
           }
         }
       }
+    }
+  }
+
+  #body {
+    margin: 20px 10px 10px 10px;
+
+    .container {
+      > * {
+        h1.title {
+          font-size: 3rem;
+          font-weight: 500;
+          margin: 0.65em 0;
+          text-align:center;
+        }
+      }
+
+      @import "home";
+    }
+  }
+
+  > footer {
+    background: #112e51;
+    color: white;
+    padding: 15px;
+
+    .copyright, .address {
+      line-height: 1.3em;
+      display: inline-block;
+      text-align: center;
+      width: 50%;
     }
   }
 }

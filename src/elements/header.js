@@ -1,5 +1,6 @@
-const React = require("react");
-const Headroom = require("react-headroom");
+import React from "react";
+import Headroom from "react-headroom";
+import { Link } from "react-router";
 
 module.exports = React.createClass({
   render() {
@@ -13,13 +14,13 @@ module.exports = React.createClass({
           </small>
         </h1>
         <nav>
-          <button>Home</button>
-          <button>Shows</button>
-          <button>Classes</button>
-          <button>Pictures</button>
-          <button>Calendar</button>
-          <button>Links</button>
-          <button>About JOTC</button>
+          <a href="#/"><button>Home</button></a>
+          <a href="#/shows"><button>Shows</button></a>
+          <a href="#/classes"><button>Classes</button></a>
+          <a href="#/pictures"><button>Pictures</button></a>
+          <a href="#/calendar"><button>Calendar</button></a>
+          <a href="#/links"><button>Links</button></a>
+          <a href="#/about"><button>About JOTC</button></a>
         </nav>
       </Headroom>
     );
