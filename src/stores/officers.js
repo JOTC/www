@@ -6,7 +6,7 @@ class OfficerStore extends Store {
   constructor(dispatcher) {
     super(dispatcher);
     this._officers = [ ];
-    services.officers.refreshOfficers();
+    services.officers.refresh();
   }
 
   getOfficers() {

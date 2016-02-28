@@ -14,7 +14,7 @@ class OfficerService extends Store {
     }
   }
 
-  refreshOfficers() {
+  refresh() {
     request.get("/data2/officers", (err, res, body) => {
       if(!err) {
         if(typeof body === "string") {

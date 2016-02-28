@@ -58,19 +58,21 @@ module.exports = React.createClass({
         <div className="officer-list-container">
           <div className="officer-list">
             <table>
-              {this.state.officers.map(officer => {
-                return (
-                  <tr className="officer" key={officer._id}>
-                    <td className="officer-titles">
-                      { officer.titles.map(title => <div className="officer-title" key={`${officer._id}-title-${title}`}>{title}</div>) }
-                    </td>
-                    <td className="officer-name">{officer.name}</td>
-                    <td className="officer-contacts">
-                      { officer.contacts.map(contact => <Contact contact={contact} key={`${officer._id}-contact-${contact.value}`} />) }
-                    </td>
-                  </tr>
-                );
-              })}
+              <tbody>
+                {this.state.officers.map(officer => {
+                  return (
+                    <tr className="officer" key={officer._id}>
+                      <td className="officer-titles">
+                        { officer.titles.map(title => <div className="officer-title" key={`${officer._id}-title-${title}`}>{title}</div>) }
+                      </td>
+                      <td className="officer-name">{officer.name}</td>
+                      <td className="officer-contacts">
+                        { officer.contacts.map(contact => <Contact contact={contact} key={`${officer._id}-contact-${contact.value}`} />) }
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
         </div>
