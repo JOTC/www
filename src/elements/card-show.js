@@ -38,8 +38,8 @@ module.exports = React.createClass({
     return (
       <Card className="show-card">
         <CardHeader
-          title={this.props.showObj.name}
-          subtitle={this.props.showObj.shortDate}
+          title={this.props.showObj.title}
+          subtitle={this.props.showObj.dateRange}
           actAsExpander={true}
           showExpandableButton={true}
           style={{ background: "#205493", color: "white" }}
@@ -51,7 +51,7 @@ module.exports = React.createClass({
           {this.props.showObj.description}<br/><br/>
           The following competition classes are included:<br/>
           <ul>
-            {this.props.showObj.competitionClasses.map(c => <li>{c}</li>)}
+            {this.props.showObj.classes.map(c => <li>{c}</li>)}
           </ul>
         </CardText>
         <CardActions expandable={true} className="card-actions">
