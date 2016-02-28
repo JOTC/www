@@ -40735,6 +40735,8 @@ module.exports = _react2.default.createClass({
     );
   },
   render: function render() {
+    var _this = this;
+
     return _react2.default.createElement(
       _card2.default,
       { className: "show-card" },
@@ -40762,7 +40764,7 @@ module.exports = _react2.default.createClass({
           this.props.showObj.classes.map(function (c) {
             return _react2.default.createElement(
               "li",
-              null,
+              { key: _this.props.showObj._id + "-class-" + c },
               c
             );
           })
@@ -41097,7 +41099,6 @@ module.exports = _react2.default.createClass({
     };
   },
   componentDidMount: function componentDidMount() {
-    console.log("Sidebar did mount");
     this.storeListenerToken = _shows2.default.addListener(this._showStoreChanged);
     this.setState({ shows: _shows2.default.getShows() });
   },
@@ -41116,8 +41117,8 @@ module.exports = _react2.default.createClass({
         null,
         "Upcoming Events"
       ),
-      this.state.shows.upcoming.map(function (c) {
-        return _react2.default.createElement(_cardShow2.default, { showObj: c });
+      this.state.shows.upcoming.map(function (show) {
+        return _react2.default.createElement(_cardShow2.default, { showObj: show, key: show._id });
       })
     );
   }

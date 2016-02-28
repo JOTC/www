@@ -11,7 +11,6 @@ module.exports = React.createClass({
   },
 
   componentDidMount() {
-    console.log("Sidebar did mount");
     this.storeListenerToken = ShowStore.addListener(this._showStoreChanged);
     this.setState({ shows: ShowStore.getShows() });
   },
@@ -28,7 +27,7 @@ module.exports = React.createClass({
     return (
       <div className="sidebar">
         <h3>Upcoming Events</h3>
-        { this.state.shows.upcoming.map(c => <ShowCard showObj={c} />) }
+        { this.state.shows.upcoming.map(show => <ShowCard showObj={show} key={show._id}/>) }
       </div>
     );
   }

@@ -51,7 +51,7 @@ module.exports = React.createClass({
           {this.props.showObj.description}<br/><br/>
           The following competition classes are included:<br/>
           <ul>
-            {this.props.showObj.classes.map(c => <li>{c}</li>)}
+            {this.props.showObj.classes.map(c => <li key={`${this.props.showObj._id}-class-${c}`}>{c}</li>)}
           </ul>
         </CardText>
         <CardActions expandable={true} className="card-actions">
