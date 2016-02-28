@@ -1,33 +1,8 @@
 import React from "react";
-import ClassCard from "./class-card";
+import Sidebar from "./sidebar";
 import Paper from 'material-ui/lib/paper';
 
 module.exports = React.createClass({
-  getInitialState() {
-    return {
-      classes: [
-        {
-          name: "February Novice Obedience and Rally Trials",
-          shortDate: "February 20-21",
-          location: {
-            name: "McKenzie Arena, Hinds Community College",
-            place: "Raymond, MS"
-          },
-          description: "OC Matches held Friday, February 19.  Entries close February 3.",
-          competitionClasses: [
-            "Novice A & B",
-            "Beginner Novice A & B",
-            "Preferred-Novice",
-            "Team Open Relay (Non-Regular Class)",
-            "Rally Novice A & B",
-            "Rally Advanced A & B",
-            "Rally Excellent A & B",
-            "Rally Challenge (Non-Regular Class)"
-          ]
-        }
-      ]
-    }
-  },
 
   render() {
     return (
@@ -62,12 +37,7 @@ module.exports = React.createClass({
           </ul>
         </div>
 
-        <div className="sidebar">
-          <h3>Upcoming Events</h3>
-
-          <ClassCard classObj={this.state.classes[0]}/>
-
-        </div>
+        <Sidebar />
       </div>
     );
   }

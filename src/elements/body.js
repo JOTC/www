@@ -22,10 +22,5 @@ module.exports = React.createClass({
         <Route path="/about" component={About} />
       </Router>
     )
-    //return (
-    //  <div id="content">
-    //    { this.getActiveComponent() }
-    //  </div>
-    //);
   }
 });
