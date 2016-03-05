@@ -1,0 +1,40 @@
+@import "bourbon";
+@import "neat";
+@import "../colors";
+
+> .links-container {
+  .halves {
+    @include outer-container;
+    margin-bottom: 2em;
+    .half {
+      @include span-columns(6);
+    }
+  }
+
+  .link-group {
+    h3 {
+      @include medium-blue-container;
+      padding: 5px;
+      text-align: center;
+      font-size: 1.3rem;
+      border-radius: 0.5em;
+    }
+
+    ul {
+      margin: 0.5rem 0;
+      li {
+        margin: 0.5em 0 0.5em 2em;
+
+        a {
+          text-decoration: none;
+          color: lighten($medium-blue, 20%);
+
+          &:hover {
+            text-decoration: underline;
+            color: $dark-blue;
+          }
+        }
+      }
+    }
+  }
+}

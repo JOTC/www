@@ -1,0 +1,12 @@
+$dark-blue: #112351;
+$medium-blue: #205493;
+
+@mixin dark-blue-container {
+  background-color: $dark-blue;
+  color: white;
+}
+
+@mixin medium-blue-container {
+  background-color: $medium-blue;
+  color: white;
+}

@@ -41062,28 +41062,94 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _links = require("../stores/links");
+
+var _links2 = _interopRequireDefault(_links);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = _react2.default.createClass({
   displayName: "exports",
+  getInitialState: function getInitialState() {
+    return {
+      links: _links2.default.getLinks()
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    this.storeListenerToken = _links2.default.addListener(this._linkStoreChanged);
+  },
+  componentWillUnmount: function componentWillUnmount() {
+    this.storeListenerToken.remove();
+  },
+  _linkStoreChanged: function _linkStoreChanged() {
+    this.setState({ links: _links2.default.getLinks() });
+  },
+  getFirstHalf: function getFirstHalf() {
+    return this.state.links.slice(0, Math.ceil(this.state.links.length / 2));
+  },
+  getSecondHalf: function getSecondHalf() {
+    return this.state.links.slice(Math.ceil(this.state.links.length / 2));
+  },
+  mapLinkGroup: function mapLinkGroup(group) {
+    return _react2.default.createElement(
+      "div",
+      { className: "link-group", key: group._id },
+      _react2.default.createElement(
+        "h3",
+        null,
+        group.name
+      ),
+      _react2.default.createElement(
+        "ul",
+        null,
+        group.links.map(function (link) {
+          return _react2.default.createElement(
+            "li",
+            { key: link._id },
+            _react2.default.createElement(
+              "a",
+              { href: link.url },
+              link.name
+            )
+          );
+        })
+      )
+    );
+  },
   render: function render() {
+    var _this = this;
+
     return _react2.default.createElement(
       "div",
       { className: "links-container" },
       _react2.default.createElement(
+        "h1",
+        { className: "title" },
+        "Useful Links"
+      ),
+      _react2.default.createElement(
         "div",
-        { className: "main" },
+        { className: "halves" },
         _react2.default.createElement(
-          "h1",
-          { className: "title" },
-          "Useful Links"
+          "div",
+          { className: "half" },
+          this.getFirstHalf().map(function (group) {
+            return _this.mapLinkGroup(group);
+          })
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "half" },
+          this.getSecondHalf().map(function (group) {
+            return _this.mapLinkGroup(group);
+          })
         )
       )
     );
   }
 });
 
-},{"react":337}],342:[function(require,module,exports){
+},{"../stores/links":357,"react":337}],342:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -41251,7 +41317,7 @@ module.exports = _react2.default.createClass({
   }
 });
 
-},{"../stores/officers":357,"./contact":347,"react":337}],343:[function(require,module,exports){
+},{"../stores/officers":358,"./contact":347,"react":337}],343:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -41840,7 +41906,7 @@ module.exports = _react2.default.createClass({
   }
 });
 
-},{"../stores/shows":358,"./card-show":345,"material-ui/lib/paper":116,"react":337}],353:[function(require,module,exports){
+},{"../stores/shows":359,"./card-show":345,"material-ui/lib/paper":116,"react":337}],353:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -42031,6 +42097,69 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var LinkStore = function (_Store) {
+  _inherits(LinkStore, _Store);
+
+  function LinkStore(dispatcher) {
+    _classCallCheck(this, LinkStore);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LinkStore).call(this, dispatcher));
+
+    _this._links = [];
+    _services2.default.links.refresh();
+    return _this;
+  }
+
+  _createClass(LinkStore, [{
+    key: "getLinks",
+    value: function getLinks() {
+      return this._links;
+    }
+  }, {
+    key: "__onDispatch",
+    value: function __onDispatch(event) {
+      switch (event.type) {
+        case "links-in":
+          this._links = event.payload;
+          this._links.sort(function (a, b) {
+            return a.ordering - b.ordering;
+          });
+          this.__emitChange();
+          break;
+        case "new-link":
+          break;
+      }
+    }
+  }]);
+
+  return LinkStore;
+}(_utils.Store);
+
+module.exports = new LinkStore(_dispatcher2.default);
+
+},{"../dispatcher":340,"../services":354,"flux/utils":49}],358:[function(require,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dispatcher = require("../dispatcher");
+
+var _dispatcher2 = _interopRequireDefault(_dispatcher);
+
+var _utils = require("flux/utils");
+
+var _services = require("../services");
+
+var _services2 = _interopRequireDefault(_services);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var OfficerStore = function (_Store) {
   _inherits(OfficerStore, _Store);
 
@@ -42068,7 +42197,7 @@ var OfficerStore = function (_Store) {
 
 module.exports = new OfficerStore(_dispatcher2.default);
 
-},{"../dispatcher":340,"../services":354,"flux/utils":49}],358:[function(require,module,exports){
+},{"../dispatcher":340,"../services":354,"flux/utils":49}],359:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();

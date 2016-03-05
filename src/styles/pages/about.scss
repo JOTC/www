@@ -1,5 +1,6 @@
 @import "bourbon";
 @import "neat";
+@import "../colors";
 
 > .about-container {
   h3 {
@@ -32,9 +33,7 @@
 
 
         &.officer-titles {
-          background: #112e51;
-          background: #205493;
-          color: white;
+          @include medium-blue-container;
           font-weight: bold;
           text-align: right;
         }

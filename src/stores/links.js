@@ -17,6 +17,7 @@ class LinkStore extends Store {
     switch(event.type) {
       case "links-in":
         this._links = event.payload;
+        this._links.sort((a, b) => a.ordering - b.ordering);
         this.__emitChange();
         break;
       case "new-link":

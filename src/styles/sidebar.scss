@@ -1,9 +1,9 @@
 @import "bourbon";
 @import "neat";
+@import "colors";
 
 h3 {
-  background: #112e51;
-  color: white;
+  @include dark-blue-container;
   padding: 10px;
   margin: 10px 0;
 }

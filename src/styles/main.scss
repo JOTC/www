@@ -2,6 +2,7 @@
 @import "bourbon";
 @import "neat";
 @import "basics";
+@import "colors";
 
 @font-face {
   font-family: 'Roboto';
@@ -106,6 +107,7 @@ body {
       @import "pages/home";
       @import "pages/shows";
       @import "pages/classes";
+      @import "pages/links";
       @import "pages/about";
     }
   }
@@ -116,8 +118,7 @@ body {
   }
 
   > footer {
-    background: #112e51;
-    color: white;
+    @include dark-blue-container;
     padding: 15px;
 
     .copyright, .address {
