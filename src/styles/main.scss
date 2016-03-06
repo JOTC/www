@@ -98,6 +98,8 @@ body {
       @include span-columns(8);
 
       > * {
+        padding: 1rem;
+        
         h1.title {
           font-size: 3rem;
           font-weight: 500;

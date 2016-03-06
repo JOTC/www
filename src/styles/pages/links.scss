@@ -3,6 +3,7 @@
 @import "../colors";
 
 > .links-container {
+
   .halves {
     @include outer-container;
     margin-bottom: 2em;
@@ -17,7 +18,6 @@
       padding: 5px;
       text-align: center;
       font-size: 1.3rem;
-      border-radius: 0.5em;
     }
 
     ul {
