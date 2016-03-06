@@ -41550,7 +41550,154 @@ module.exports = _react2.default.createClass({
         _react2.default.createElement(
           "h1",
           { className: "title" },
-          "Classes"
+          "Obedience Classes"
+        ),
+        _react2.default.createElement(
+          "h2",
+          null,
+          "Class Times and Locations"
+        ),
+        "JOTC currently offers classes four times a year: twice in the spring and twice in the fall. North classes are conducted through the city of Ridgeland and are held at the Old Trace Park on the Reservoir at Fowler Lodge. These classes usually begin the last Tuesday in March and the last Tuesday in August. South classes are currently being held at the old Home Depot location on Robinson Road in Jackson. These usually begin the first Thursday in April and the second Thursday in September. These classes last about an hour one night a week for 6 weeks, including a graduation night.",
+        _react2.default.createElement("br", null),
+        _react2.default.createElement("br", null),
+        "For more information about JOTC classes, please call the Dog Line at ",
+        _react2.default.createElement(
+          "strong",
+          null,
+          "(601) 352-DOGS (3647)"
+        ),
+        ".",
+        _react2.default.createElement(
+          "h2",
+          null,
+          "JOTC Classes"
+        ),
+        _react2.default.createElement(
+          "ul",
+          null,
+          _react2.default.createElement(
+            "li",
+            null,
+            _react2.default.createElement(
+              "strong",
+              null,
+              "Puppy Manners"
+            ),
+            " (3-5 months of age): This class is specially tailored to a puppy's limited attention span. You learn how to teach basic obedience commands and receive tips on socialization, care, and raising a puppy."
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            _react2.default.createElement(
+              "strong",
+              null,
+              "Basic Obedience"
+            ),
+            " (6 months and older): This class teaches basic obedience commands such as heel, sit, down, stay, come, and other commands that you will use in everyday life with your pet."
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            _react2.default.createElement(
+              "strong",
+              null,
+              "CGC/Advanced"
+            ),
+            " (requires basic obedience): Builds on the basic obedience class and teaches the exercises necessary to obtain AKC's Canine Good Citizen (CGC) certification."
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            _react2.default.createElement(
+              "strong",
+              null,
+              "Rally"
+            ),
+            " (requires basic obedience): Learn to run an obedience course with your dog."
+          )
+        ),
+        _react2.default.createElement(
+          "h2",
+          null,
+          "General Information"
+        ),
+        _react2.default.createElement(
+          "ul",
+          null,
+          _react2.default.createElement(
+            "li",
+            null,
+            "Instructors for all classes are required to meet specific criteria, must hold at least one obedience title on a dog, and attend continuing education seminars and training."
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            "Pre-registration is requested for all classes in order to ensure proper class sizes."
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            "Proof of vaccination is required. Rabies vaccination must have been given by a licensed veterinarian."
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            "All Basic Obedience classes are divided according to dogs' sizes. Classes include small, medium, and large dogs. This way, your small dog will not be intimidated by a larger dog, and your large dog won't be distracted by a smaller one."
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            "Our classes are small, usually with about 12 dogs per class. Each student will receive the individual attention necessary to help you fully understand each exercise as well as successfully work through any training problems you encounter."
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            "Obedience classes last six weeks and are held for one hour a night, one night a week. Rally classes last eight weeks."
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            "During class, you will be the one to train you dog, under the guidance of our instructors. We feel this approach is better for you and your dog than sending your dog to a boarding school to be trained by someone else for the following reasons:",
+            _react2.default.createElement(
+              "ul",
+              null,
+              _react2.default.createElement(
+                "li",
+                null,
+                "If your dog is trained by someone else, he will learn to respond and respect them, but will still need to learn to mind you. You will have to learn how to communicate with your dog and enforce your commands before the dog will take you seriously. The easiest way to accomplish this is to learn what to do and train the dog yourself."
+              ),
+              _react2.default.createElement(
+                "li",
+                null,
+                "Sending your dog to live with someone else for several weeks or months is stressful for you and your dog. Training with your dog is fun for both of you."
+              ),
+              _react2.default.createElement(
+                "li",
+                null,
+                "If you are the one training your dog, you can be assured that your dog is learning through a consistent and positive approach."
+              ),
+              _react2.default.createElement(
+                "li",
+                null,
+                "Training builds a relationship between you and your dog. You will find that you become closer and enjoy your dog's company more when he is under control and you can make him behave. If you send your dog to be trained, you lose the bonding that comes with learning."
+              ),
+              _react2.default.createElement(
+                "li",
+                null,
+                "Training your dog in a group setting will give him the opportunity to learn how to behave aground a number of people and dogs. You will also learn how to read your dog."
+              )
+            )
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            "JOTC welcomes all breeds of dogs to classes, regardless of whether the dog is a purebreed or mixed. ",
+            _react2.default.createElement(
+              "strong",
+              null,
+              "HOWEVER, JOTC does not allow wolves or wolf hybrids in any of its classes."
+            )
+          )
         )
       )
     );
@@ -41846,7 +41993,88 @@ module.exports = _react2.default.createClass({
         _react2.default.createElement(
           "h1",
           { className: "title" },
-          "Shows"
+          "Shows and Trials"
+        ),
+        "The Jackson Obedience Training Club sponsors two AKC Sanctioned Obedience and Rally events each year. Both shows are held indoors, with enclosed, fully-matted rings and usually include four back-to-back Obedience and four Rally Trials over the weekend.",
+        _react2.default.createElement("br", null),
+        _react2.default.createElement("br", null),
+        "In February of each year, the two day show is a Novice Obedience and Rally event with one ring, held indoors at the McKenzie Arena on the campus of Hinds Community College in Raymond, MS. Classes offered at this event usually include:",
+        _react2.default.createElement(
+          "ul",
+          null,
+          _react2.default.createElement(
+            "li",
+            null,
+            _react2.default.createElement(
+              "strong",
+              null,
+              "Obedience Classes:"
+            ),
+            _react2.default.createElement("br", null),
+            "Novice A & B, Beginner Novice A & B, Preferred Novice"
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            _react2.default.createElement(
+              "strong",
+              null,
+              "Rally Classes:"
+            ),
+            _react2.default.createElement("br", null),
+            "Rally Novice A & B, Rally Advanced A & B, Rally Excellent A & B"
+          )
+        ),
+        _react2.default.createElement("br", null),
+        _react2.default.createElement("br", null),
+        "In June of each year, a two day show is held in the Trademart Building at the Mississippi State Fairgrounds in Jackson. With four fully-matted and enclosed rings, this show offers a full range of Obedience and Rally competition. Classes at this event usually include:",
+        _react2.default.createElement(
+          "ul",
+          null,
+          _react2.default.createElement(
+            "li",
+            null,
+            _react2.default.createElement(
+              "strong",
+              null,
+              "Regular Obedience Classes:"
+            ),
+            _react2.default.createElement("br", null),
+            "Novice A & B, Open A & B, Utility A & B"
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            _react2.default.createElement(
+              "strong",
+              null,
+              "Optional Titling Classes:"
+            ),
+            _react2.default.createElement("br", null),
+            "Beginner Novice A & B, Graduate Novice, Graduate Open, Versatility, Preferred Novice, Preferred Open, Preferred Utility"
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            _react2.default.createElement(
+              "strong",
+              null,
+              "Non-Regular Obedience Classes:"
+            ),
+            _react2.default.createElement("br", null),
+            "Wildcard Novice, Wildcard Open, Wildcard Utility, Veterans"
+          ),
+          _react2.default.createElement(
+            "li",
+            null,
+            _react2.default.createElement(
+              "strong",
+              null,
+              "Rally Classes:"
+            ),
+            _react2.default.createElement("br", null),
+            "Rally Novice A & B, Rally Advanced A & B, Rally Excellent A & B"
+          )
         )
       )
     );
