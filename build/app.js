@@ -41062,6 +41062,10 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _paper = require("material-ui/lib/paper");
+
+var _paper2 = _interopRequireDefault(_paper);
+
 var _links = require("../stores/links");
 
 var _links2 = _interopRequireDefault(_links);
@@ -41092,7 +41096,7 @@ module.exports = _react2.default.createClass({
   },
   mapLinkGroup: function mapLinkGroup(group) {
     return _react2.default.createElement(
-      "div",
+      _paper2.default,
       { className: "link-group", key: group._id },
       _react2.default.createElement(
         "h3",
@@ -41149,7 +41153,7 @@ module.exports = _react2.default.createClass({
   }
 });
 
-},{"../stores/links":357,"react":337}],342:[function(require,module,exports){
+},{"../stores/links":357,"material-ui/lib/paper":116,"react":337}],342:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");

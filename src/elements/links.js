@@ -1,4 +1,5 @@
 import React from "react";
+import Paper from "material-ui/lib/paper";
 import LinkStore from "../stores/links";
 
 module.exports = React.createClass({
@@ -30,12 +31,12 @@ module.exports = React.createClass({
 
   mapLinkGroup(group) {
     return (
-      <div className="link-group" key={group._id}>
+      <Paper className="link-group" key={group._id}>
         <h3>{group.name}</h3>
         <ul>
           { group.links.map(link => <li key={link._id}><a href={link.url}>{link.name}</a></li>) }
         </ul>
-      </div>
+      </Paper>
     )
   },
 
