@@ -282,8 +282,8 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\tJOTC currently offers classes four times a year: twice in the spring and twice in the fall.  North\n" +
     "\t\t\t\tclasses are conducted through the city of Ridgeland and are held at the Old Trace Park on the\n" +
     "\t\t\t\tReservoir at Fowler Lodge.  These classes usually begin the last Tuesday in March and the last\n" +
-    "\t\t\t\tTuesday in August.  South classes are currently being held at the old Home Depot location\n" +
-    "\t\t\t\ton Robinson Road in Jackson.  These usually begin the first Thursday in April and the second Thursday\n" +
+    "\t\t\t\tTuesday in August.  South classes are currently being held at the Merit Health Central Medical Offices parking lot\n" +
+    "\t\t\t\tat 1850 Chadwicks Dr. in Jackson.  These usually begin the first Thursday in April and the second Thursday\n" +
     "\t\t\t\tin September.  These classes last about an hour one night a week for 6 weeks, including a graduation\n" +
     "\t\t\t\tnight.\n" +
     "\t\t\t\t<br><br>\n" +
@@ -295,10 +295,10 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t<li ng-repeat=\"type in classTypes\"><span class=\"bold\">{{ type.name }}</span> ({{ type.prerequisite }}): {{ type.description }}</li>\n" +
     "\t\t\t\t</ul>\n" +
     "\t\t\t</div>\n" +
-    "\t\t\n" +
+    "\n" +
     "\t\t\t<div class=\"col-md-6\">\n" +
     "\t\t\t\t<div class=\"header\">Upcoming Classes</div>\n" +
-    "\t\t\t\t\n" +
+    "\n" +
     "\t\t\t\t<div ng-if=\"auth.classes\" class=\"auth\">\n" +
     "\t\t\t\t\t<button class=\"btn btn-success\" ng-click=\"editClass()\">New Class</button>\n" +
     "\t\t\t\t</div>\n" +
@@ -323,25 +323,25 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t\t\t<span ng-if=\"$index > 0\"><br><br></span>\n" +
     "\t\t\t\t\t\t\t{{ description }}\n" +
     "\t\t\t\t\t\t</span>\n" +
-    "\t\t\t\t\t\t\n" +
+    "\n" +
     "\t\t\t\t\t<div ng-if=\"class.registrationFormPath\" class=\"premiumList\">\n" +
     "\t\t\t\t\t\t<a class=\"btn btn-success download\" ng-href=\"{{ class.registrationFormPath }}\">Download Registration Form</a>\n" +
     "\t\t\t\t\t\t<button ng-if=\"auth.classes\" class=\"btn btn-danger\" ng-click=\"deleteRegistrationForm(class)\">Delete Registration Form</button>\n" +
     "\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t\n" +
+    "\n" +
     "\n" +
     "\t\t\t\t\t<div drag-drop-file-uploader ng-if=\"auth.classes && !class.registrationFormPath\" obj-type=\"classes\" obj=\"class\" doc-type=\"registrationForm\" doc-name=\"registration form\">\n" +
     "\t\t\t\t\t</div>\n" +
     "\n" +
     "\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t\n" +
+    "\n" +
     "\t\t\t\t\t<div ng-if=\"auth.classes\" style=\"text-align: right; padding: 10px;\">\n" +
     "\t\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"editClass(class)\">Edit</button> <button class=\"btn btn-danger\" ng-click=\"deleteClass(class)\">Delete</button>\n" +
     "\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t\n" +
+    "\n" +
     "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
-    "\t\t\n" +
+    "\n" +
     "\t\t</div>\n" +
     "\t\t<div class=\"row\">\n" +
     "\t\t\t<div class=\"col-md-12\">\n" +
@@ -394,7 +394,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
     "\t</div>\n" +
-    "\t\n" +
+    "\n" +
     "\t<!--div class=\"table\">\n" +
     "\t\t<div class=\"cell\">\n" +
     "\n" +
@@ -457,7 +457,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\n" +
     "\n" +
     "\t</div>\n" +
-    "</div>"
+    "</div>\n"
   );
 
 

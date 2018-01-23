@@ -9,8 +9,8 @@
 				JOTC currently offers classes four times a year: twice in the spring and twice in the fall.  North
 				classes are conducted through the city of Ridgeland and are held at the Old Trace Park on the
 				Reservoir at Fowler Lodge.  These classes usually begin the last Tuesday in March and the last
-				Tuesday in August.  South classes are currently being held at the old Home Depot location
-				on Robinson Road in Jackson.  These usually begin the first Thursday in April and the second Thursday
+				Tuesday in August.  South classes are currently being held at the Merit Health Central Medical Offices parking lot
+				at 1850 Chadwicks Dr. in Jackson.  These usually begin the first Thursday in April and the second Thursday
 				in September.  These classes last about an hour one night a week for 6 weeks, including a graduation
 				night.
 				<br><br>
@@ -22,10 +22,10 @@
 					<li ng-repeat="type in classTypes"><span class="bold">{{ type.name }}</span> ({{ type.prerequisite }}): {{ type.description }}</li>
 				</ul>
 			</div>
-		
+
 			<div class="col-md-6">
 				<div class="header">Upcoming Classes</div>
-				
+
 				<div ng-if="auth.classes" class="auth">
 					<button class="btn btn-success" ng-click="editClass()">New Class</button>
 				</div>
@@ -50,25 +50,25 @@
 							<span ng-if="$index > 0"><br><br></span>
 							{{ description }}
 						</span>
-						
+
 					<div ng-if="class.registrationFormPath" class="premiumList">
 						<a class="btn btn-success download" ng-href="{{ class.registrationFormPath }}">Download Registration Form</a>
 						<button ng-if="auth.classes" class="btn btn-danger" ng-click="deleteRegistrationForm(class)">Delete Registration Form</button>
 					</div>
-					
+
 
 					<div drag-drop-file-uploader ng-if="auth.classes && !class.registrationFormPath" obj-type="classes" obj="class" doc-type="registrationForm" doc-name="registration form">
 					</div>
 
 					</div>
-					
+
 					<div ng-if="auth.classes" style="text-align: right; padding: 10px;">
 						<button class="btn btn-primary" ng-click="editClass(class)">Edit</button> <button class="btn btn-danger" ng-click="deleteClass(class)">Delete</button>
 					</div>
-					
+
 				</div>
 			</div>
-		
+
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -121,7 +121,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<!--div class="table">
 		<div class="cell">
 
