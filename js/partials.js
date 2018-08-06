@@ -219,53 +219,72 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\n" +
     "<div class=\"modal-body\">\n" +
     "\n" +
-    "<form>\n" +
-    "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Start Date</label>\n" +
-    "\t\t<div class=\"input-group\">\n" +
-    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"editClass.startDate\" disabled datepicker-popup=\"dd MMM yyyy\" is-open=\"date.start\" min-date=\"\">\n" +
-    "\t\t\t<span class=\"input-group-btn\">\n" +
-    "\t\t\t\t<button class=\"btn btn-primary\" style=\"height: 34px;\" ng-click=\"date.open('start', $event)\"><i class=\"fa fa-calendar\"></i></button>\n" +
-    "\t\t\t</span>\n" +
+    "\t<form>\n" +
+    "\t\t<div class=\"form-group\">\n" +
+    "\t\t\t<label>Start Date</label>\n" +
+    "\t\t\t<div class=\"input-group\">\n" +
+    "\t\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"editClass.startDate\" disabled datepicker-popup=\"dd MMM yyyy\" is-open=\"date.start\"\n" +
+    "\t\t\t\t min-date=\"\">\n" +
+    "\t\t\t\t<span class=\"input-group-btn\">\n" +
+    "\t\t\t\t\t<button class=\"btn btn-primary\" style=\"height: 34px;\" ng-click=\"date.open('start', $event)\">\n" +
+    "\t\t\t\t\t\t<i class=\"fa fa-calendar\"></i>\n" +
+    "\t\t\t\t\t</button>\n" +
+    "\t\t\t\t</span>\n" +
+    "\t\t\t</div>\n" +
     "\t\t</div>\n" +
-    "\t</div>\n" +
-    "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Location</label>\n" +
-    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"editClass.location\">\n" +
-    "\t</div>\n" +
-    "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Weeks</label>\n" +
-    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"editClass.numberOfWeeks\">\n" +
-    "\t</div>\n" +
-    "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Hours</label>\n" +
-    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"editClass.hoursPerWeek\">\n" +
-    "\t</div>\n" +
-    "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Time</label>\n" +
-    "\t\t<input type=\"text\" class=\"form-control\" ng-model=\"editClass.timeOfDay\">\n" +
-    "\t</div>\n" +
-    "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Day</label>\n" +
-    "\t\t{{ getDayOfWeek() }}\n" +
-    "\t</div>\n" +
-    "\t<div class=\"form-group\">\n" +
-    "\t\t<label>Classes</label>\n" +
-    "\t\t<div class=\"input-group container\">\n" +
-    "\t\t\t<div class=\"row\" ng-repeat=\"row in getClassesByRow()\">\n" +
-    "\t\t\t\t<div class=\"col-md-4\" ng-repeat=\"class in row\">\n" +
-    "\t\t\t\t\t<label class=\"control-label\" style=\"margin-left: 1em; text-indent: -1em;\"><input type=\"checkbox\" ng-model=\"classesChecked[class._id]\" ng-change=\"toggleClass(class)\"> {{ class.name }}</label>\n" +
+    "\t\t<div class=\"form-group\">\n" +
+    "\t\t\t<label>Location</label>\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"editClass.location\">\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"form-group\">\n" +
+    "\t\t\t<label>Weeks</label>\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"editClass.numberOfWeeks\">\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"form-group\">\n" +
+    "\t\t\t<label>Hours</label>\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"editClass.hoursPerWeek\">\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"form-group\">\n" +
+    "\t\t\t<label>Time</label>\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"editClass.timeOfDay\">\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"form-group\">\n" +
+    "\t\t\t<label>Registration form URL</label>\n" +
+    "\t\t\t<div>If registration is offered via online form, you can add the URL here.</div>\n" +
+    "\t\t\t<input type=\"text\" class=\"form-control\" ng-model=\"editClass.registrationLink\">\n" +
+    "\t\t</div>\n" +
+    "\t\t<div class=\"form-group\">\n" +
+    "\t\t\t<label>Classes</label>\n" +
+    "\t\t\t<div class=\"input-group container\">\n" +
+    "\t\t\t\t<div class=\"row\" ng-repeat=\"row in getClassesByRow()\">\n" +
+    "\t\t\t\t\t<div class=\"col-md-4\" ng-repeat=\"class in row\">\n" +
+    "\t\t\t\t\t\t<label class=\"control-label\" style=\"margin-left: 1em; text-indent: -1em;\">\n" +
+    "\t\t\t\t\t\t\t<input type=\"checkbox\" ng-model=\"classesChecked[class._id]\" ng-change=\"toggleClass(class)\"> {{ class.name }}</label>\n" +
+    "\t\t\t\t\t</div>\n" +
     "\t\t\t\t</div>\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
-    "\t</div>\n" +
-    "</form>\n" +
+    "\t</form>\n" +
     "\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"modal-footer\">\n" +
     "\t<button class=\"btn btn-primary\" ng-click=\"save()\">Save</button>\n" +
     "\t<button class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('jotc/sections/classes/payment.template.html',
+    "<div class=\"modal-header\">Processing Payment</div>\n" +
+    "\n" +
+    "<div class=\"modal-body\">\n" +
+    "  {{message}}\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"modal-footer\" ng-if=\"dismissable > 0\">\n" +
+    "\t<button class=\"btn btn-primary\" ng-if=\"dismissable == 1\" ng-click=\"dismiss()\">Okay</button>\n" +
+    "\t<button class=\"btn btn-danger\" ng-if=\"dismissable == 2\" ng-click=\"dismiss()\">Okay</button>\n" +
     "</div>"
   );
 
@@ -279,20 +298,21 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t<div class=\"col-md-6\">\n" +
     "\t\t\t\t<div class=\"header\">JOTC Class Times and Locations</div>\n" +
     "\n" +
-    "\t\t\t\tJOTC currently offers classes four times a year: twice in the spring and twice in the fall.  North\n" +
-    "\t\t\t\tclasses are conducted through the city of Ridgeland and are held at the Old Trace Park on the\n" +
-    "\t\t\t\tReservoir at Fowler Lodge.  These classes usually begin the last Tuesday in March and the last\n" +
-    "\t\t\t\tTuesday in August.  South classes are currently being held at the Merit Health Central Medical Offices parking lot\n" +
-    "\t\t\t\tat 1850 Chadwicks Dr. in Jackson.  These usually begin the first Thursday in April and the second Thursday\n" +
-    "\t\t\t\tin September.  These classes last about an hour one night a week for 6 weeks, including a graduation\n" +
+    "\t\t\t\tJOTC currently offers classes four times a year: twice in the spring and twice in the fall. North classes are conducted through\n" +
+    "\t\t\t\tthe city of Ridgeland and are held at the Old Trace Park on the Reservoir at Fowler Lodge. These classes usually begin\n" +
+    "\t\t\t\tthe last Tuesday in March and the last Tuesday in August. South classes are currently being held at the Merit Health\n" +
+    "\t\t\t\tCentral Medical Offices parking lot at 1850 Chadwicks Dr. in Jackson. These usually begin the first Thursday in April\n" +
+    "\t\t\t\tand the second Thursday in September. These classes last about an hour one night a week for 6 weeks, including a graduation\n" +
     "\t\t\t\tnight.\n" +
-    "\t\t\t\t<br><br>\n" +
-    "\t\t\t\tFor more information about JOTC classes, please call the Dog Line at <span class=\"bold\">(601) 352-DOGS (3647)</span>.\n" +
+    "\t\t\t\t<br>\n" +
+    "\t\t\t\t<br> For more information about JOTC classes, please call the Dog Line at\n" +
+    "\t\t\t\t<span class=\"bold\">(601) 352-DOGS (3647)</span>.\n" +
     "\n" +
     "\t\t\t\t<div class=\"header\">JOTC Classes</div>\n" +
     "\n" +
     "\t\t\t\t<ul>\n" +
-    "\t\t\t\t\t<li ng-repeat=\"type in classTypes\"><span class=\"bold\">{{ type.name }}</span> ({{ type.prerequisite }}): {{ type.description }}</li>\n" +
+    "\t\t\t\t\t<li ng-repeat=\"type in classTypes\">\n" +
+    "\t\t\t\t\t\t<span class=\"bold\">{{ type.name }}</span> ({{ type.prerequisite }}): {{ type.description }}</li>\n" +
     "\t\t\t\t</ul>\n" +
     "\t\t\t</div>\n" +
     "\n" +
@@ -306,13 +326,14 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t<div ng-repeat=\"class in classes\" class=\"class\">\n" +
     "\t\t\t\t\t<div class=\"date\">\n" +
     "\t\t\t\t\t\tStarting {{ getStartDate(class); }}\n" +
-    "\t\t\t\t\t\t<span ng-if=\"auth.canEditClasses\" class=\"editBox\">[ <span ng-click=\"classes.edit(class);\">edit</span> | <span ng-click=\"classes.remove(class);\">delete</span> ]</span>\n" +
+    "\t\t\t\t\t\t<span ng-if=\"auth.canEditClasses\" class=\"editBox\">[\n" +
+    "\t\t\t\t\t\t\t<span ng-click=\"classes.edit(class);\">edit</span> |\n" +
+    "\t\t\t\t\t\t\t<span ng-click=\"classes.remove(class);\">delete</span> ]</span>\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t<div class=\"map\">\n" +
     "\t\t\t\t\t\t<a href=\"{{ $location.getDirectionsURLForLocation(class.location) }}\" target=\"_blank\">\n" +
     "\t\t\t\t\t\t\t<img ng-src=\"{{ $location.getImageURLForLocation(class.location); }}\">\n" +
-    "\t\t\t\t\t\t\t<br>\n" +
-    "\t\t\t\t\t\t\tClick for directions\n" +
+    "\t\t\t\t\t\t\t<br> Click for directions\n" +
     "\t\t\t\t\t\t</a>\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t<div class=\"location\">\n" +
@@ -320,23 +341,40 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t<div class=\"description\">\n" +
     "\t\t\t\t\t\t<span ng-repeat=\"description in getDescriptionBlocks(class)\">\n" +
-    "\t\t\t\t\t\t\t<span ng-if=\"$index > 0\"><br><br></span>\n" +
+    "\t\t\t\t\t\t\t<span ng-if=\"$index > 0\">\n" +
+    "\t\t\t\t\t\t\t\t<br>\n" +
+    "\t\t\t\t\t\t\t\t<br>\n" +
+    "\t\t\t\t\t\t\t</span>\n" +
     "\t\t\t\t\t\t\t{{ description }}\n" +
     "\t\t\t\t\t\t</span>\n" +
     "\n" +
-    "\t\t\t\t\t<div ng-if=\"class.registrationFormPath\" class=\"premiumList\">\n" +
-    "\t\t\t\t\t\t<a class=\"btn btn-success download\" ng-href=\"{{ class.registrationFormPath }}\">Download Registration Form</a>\n" +
-    "\t\t\t\t\t\t<button ng-if=\"auth.classes\" class=\"btn btn-danger\" ng-click=\"deleteRegistrationForm(class)\">Delete Registration Form</button>\n" +
-    "\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\t<div ng-if=\"class.registrationLink\">\n" +
+    "\t\t\t\t\t\t\t<br/>\n" +
+    "\t\t\t\t\t\t\t<a class=\"btn btn-success\" ng-href=\"{{class.registrationLink}}\">Register online</a>\n" +
+    "\t\t\t\t\t\t</div>\n" +
     "\n" +
+    "\t\t\t\t\t\t<div ng-if=\"class.registrationFormPath\" class=\"premiumList\">\n" +
+    "\t\t\t\t\t\t\t<a class=\"btn btn-success download\" ng-href=\"{{ class.registrationFormPath }}\">Download Registration Form</a>\n" +
+    "\t\t\t\t\t\t\t<button ng-if=\"auth.classes\" class=\"btn btn-danger\" ng-click=\"deleteRegistrationForm(class)\">Delete Registration Form</button>\n" +
+    "\t\t\t\t\t\t</div>\n" +
     "\n" +
-    "\t\t\t\t\t<div drag-drop-file-uploader ng-if=\"auth.classes && !class.registrationFormPath\" obj-type=\"classes\" obj=\"class\" doc-type=\"registrationForm\" doc-name=\"registration form\">\n" +
-    "\t\t\t\t\t</div>\n" +
+    "\t\t\t\t\t\t<div drag-drop-file-uploader ng-if=\"auth.classes && !class.registrationLink && !class.registrationFormPath\" obj-type=\"classes\"\n" +
+    "\t\t\t\t\t\t obj=\"class\" doc-type=\"registrationForm\" doc-name=\"registration form\">\n" +
+    "\t\t\t\t\t\t</div>\n" +
+    "\n" +
+    "\t\t\t\t\t\t<div>\n" +
+    "\t\t\t\t\t\t\t<h3>Pay online</h3>\n" +
+    "\t\t\t\t\t\t\t<button class=\"btn btn-info\" ng-click=\"stripe(75, class)\">My dog has never take a JOTC class - $75</button>\n" +
+    "\t\t\t\t\t\t\t<br/>\n" +
+    "\t\t\t\t\t\t\t<br/>\n" +
+    "\t\t\t\t\t\t\t<button class=\"btn btn-info\" ng-click=\"stripe(65, class)\">My dog has taken a JOTC class before - $65</button>\n" +
+    "\t\t\t\t\t\t</div>\n" +
     "\n" +
     "\t\t\t\t\t</div>\n" +
     "\n" +
     "\t\t\t\t\t<div ng-if=\"auth.classes\" style=\"text-align: right; padding: 10px;\">\n" +
-    "\t\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"editClass(class)\">Edit</button> <button class=\"btn btn-danger\" ng-click=\"deleteClass(class)\">Delete</button>\n" +
+    "\t\t\t\t\t\t<button class=\"btn btn-primary\" ng-click=\"editClass(class)\">Edit</button>\n" +
+    "\t\t\t\t\t\t<button class=\"btn btn-danger\" ng-click=\"deleteClass(class)\">Delete</button>\n" +
     "\t\t\t\t\t</div>\n" +
     "\n" +
     "\t\t\t\t</div>\n" +
@@ -348,48 +386,41 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t<div class=\"clear header\" style=\"margin-top: 25px;\">General Information</div>\n" +
     "\n" +
     "\t\t\t\t<ul>\n" +
-    "\t\t\t\t\t<li>Instructors for all classes are required to meet specific criteria, must hold at least\n" +
-    "\t\t\t\t\t\tone obedience title on a dog, and attend continuing education seminars and training.</li>\n" +
+    "\t\t\t\t\t<li>Instructors for all classes are required to meet specific criteria, must hold at least one obedience title on a dog,\n" +
+    "\t\t\t\t\t\tand attend continuing education seminars and training.</li>\n" +
     "\t\t\t\t\t<li>Pre-registration is requested for all classes in order to ensure proper class sizes.</li>\n" +
-    "\t\t\t\t\t<li>Proof of vaccination is required.  Rabies vaccination must have been given by a\n" +
-    "\t\t\t\t\t\tlicensed veterinarian.</li>\n" +
-    "\t\t\t\t\t<li>All Basic Obedience classes are divided according to dogs' sizes.  Classes include small,\n" +
-    "\t\t\t\t\t\tmedium, and large dogs.  This way, your small dog will not be intimidated by a larger\n" +
-    "\t\t\t\t\t\tdog, and your large dog won't be distracted by a smaller one.</li>\n" +
-    "\t\t\t\t\t<li>Our classes are small, usually with about 12 dogs per class.  Each student will receive\n" +
-    "\t\t\t\t\t\tthe individual attention necessary to help you fully understand each exercise as well\n" +
-    "\t\t\t\t\t\tas successfully work through any training problems you encounter.</li>\n" +
-    "\t\t\t\t\t<li>Obedience classes last six weeks and are held for one hour a night, one night a week.\n" +
-    "\t\t\t\t\t\tRally classes last eight weeks.</li>\n" +
-    "\t\t\t\t\t<li>During class, you will be the one to train you dog, under the guidance of our\n" +
-    "\t\t\t\t\t\tinstructors.  We feel this approach is better for you and your dog than sending\n" +
-    "\t\t\t\t\t\tyour dog to a boarding school to be trained by someone else for the following reasons:\n" +
+    "\t\t\t\t\t<li>Proof of vaccination is required. Rabies vaccination must have been given by a licensed veterinarian.</li>\n" +
+    "\t\t\t\t\t<li>All Basic Obedience classes are divided according to dogs' sizes. Classes include small, medium, and large dogs. This\n" +
+    "\t\t\t\t\t\tway, your small dog will not be intimidated by a larger dog, and your large dog won't be distracted by a smaller one.</li>\n" +
+    "\t\t\t\t\t<li>Our classes are small, usually with about 12 dogs per class. Each student will receive the individual attention necessary\n" +
+    "\t\t\t\t\t\tto help you fully understand each exercise as well as successfully work through any training problems you encounter.</li>\n" +
+    "\t\t\t\t\t<li>Obedience classes last six weeks and are held for one hour a night, one night a week. Rally classes last eight weeks.</li>\n" +
+    "\t\t\t\t\t<li>During class, you will be the one to train you dog, under the guidance of our instructors. We feel this approach is\n" +
+    "\t\t\t\t\t\tbetter for you and your dog than sending your dog to a boarding school to be trained by someone else for the following\n" +
+    "\t\t\t\t\t\treasons:\n" +
     "\n" +
     "\t\t\t\t\t\t<ul>\n" +
-    "\t\t\t\t\t\t\t<li>If your dog is trained by someone else, he will learn to respond and respect\n" +
-    "\t\t\t\t\t\t\t\tthem, but will still need to learn to mind you.  You will have to learn how\n" +
-    "\t\t\t\t\t\t\t\tto communicate with your dog and enforce your commands before the dog will\n" +
-    "\t\t\t\t\t\t\t\ttake you seriously.  The easiest way to accomplish this is to learn what to\n" +
-    "\t\t\t\t\t\t\t\tdo and train the dog yourself.</li>\n" +
-    "\t\t\t\t\t\t\t<li>Sending your dog to live with someone else for several weeks or months is\n" +
-    "\t\t\t\t\t\t\t\tstressful for you and your dog.  Training with your dog is fun for both of\n" +
-    "\t\t\t\t\t\t\t\tyou.</li>\n" +
-    "\t\t\t\t\t\t\t<li>If you are the one training your dog, you can be assured that your dog is\n" +
-    "\t\t\t\t\t\t\t\tlearning through a consistent and positive approach.</li>\n" +
-    "\t\t\t\t\t\t\t<li>Training builds a relationship between you and your dog.  You will find that\n" +
-    "\t\t\t\t\t\t\t\tyou become closer and enjoy your dog's company more when he is under control\n" +
-    "\t\t\t\t\t\t\t\tand you can make him behave.  If you send your dog to be trained, you lose\n" +
-    "\t\t\t\t\t\t\t\tthe bonding that comes with learning.</li>\n" +
+    "\t\t\t\t\t\t\t<li>If your dog is trained by someone else, he will learn to respond and respect them, but will still need to learn to\n" +
+    "\t\t\t\t\t\t\t\tmind you. You will have to learn how to communicate with your dog and enforce your commands before the dog will take\n" +
+    "\t\t\t\t\t\t\t\tyou seriously. The easiest way to accomplish this is to learn what to do and train the dog yourself.</li>\n" +
+    "\t\t\t\t\t\t\t<li>Sending your dog to live with someone else for several weeks or months is stressful for you and your dog. Training\n" +
+    "\t\t\t\t\t\t\t\twith your dog is fun for both of you.\n" +
+    "\t\t\t\t\t\t\t</li>\n" +
+    "\t\t\t\t\t\t\t<li>If you are the one training your dog, you can be assured that your dog is learning through a consistent and positive\n" +
+    "\t\t\t\t\t\t\t\tapproach.\n" +
+    "\t\t\t\t\t\t\t</li>\n" +
+    "\t\t\t\t\t\t\t<li>Training builds a relationship between you and your dog. You will find that you become closer and enjoy your dog's\n" +
+    "\t\t\t\t\t\t\t\tcompany more when he is under control and you can make him behave. If you send your dog to be trained, you lose the\n" +
+    "\t\t\t\t\t\t\t\tbonding that comes with learning.</li>\n" +
     "\n" +
-    "\t\t\t\t\t\t\t<li>Training your dog in a group setting will give him the opportunity to learn\n" +
-    "\t\t\t\t\t\t\t\thow to behave aground a number of people and dogs.  You will also learn how\n" +
-    "\t\t\t\t\t\t\t\tto read your dog.</li>\n" +
+    "\t\t\t\t\t\t\t<li>Training your dog in a group setting will give him the opportunity to learn how to behave aground a number of people\n" +
+    "\t\t\t\t\t\t\t\tand dogs. You will also learn how to read your dog.</li>\n" +
     "\t\t\t\t\t\t</ul>\n" +
     "\t\t\t\t\t</li>\n" +
     "\n" +
-    "\t\t\t\t\t<li>JOTC welcomes all breeds of dogs to classes, regardless of whether the dog is a purebreed\n" +
-    "\t\t\t\t\t\tor mixed.  <span class=\"bold\">HOWEVER, JOTC does not allow wolves or wolf hybrids\n" +
-    "\t\t\t\t\t\t\t\tin any of its classes.</span></li>\n" +
+    "\t\t\t\t\t<li>JOTC welcomes all breeds of dogs to classes, regardless of whether the dog is a purebreed or mixed.\n" +
+    "\t\t\t\t\t\t<span class=\"bold\">HOWEVER, JOTC does not allow wolves or wolf hybrids in any of its classes.</span>\n" +
+    "\t\t\t\t\t</li>\n" +
     "\t\t\t\t</ul>\n" +
     "\t\t\t</div>\n" +
     "\t\t</div>\n" +
@@ -457,7 +488,7 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\n" +
     "\n" +
     "\t</div>\n" +
-    "</div>\n"
+    "</div>"
   );
 
 
@@ -627,6 +658,35 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t<a class=\"btn btn-danger\" ng-click=\"cancel()\">Cancel</a>\n" +
     "\t</div>\n" +
     "</form>\n"
+  );
+
+
+  $templateCache.put('jotc/sections/payments/template.html',
+    "<div id=\"payments\">\n" +
+    "\t<div class=\"title\">Payments</div>\n" +
+    "\n" +
+    "\t<table style=\"width: 100%;\">\n" +
+    "\t\t<thead style=\"font-weight: bold; border-bottom: 2px solid black; margin: 1em 0;\">\n" +
+    "\t\t\t<tr>\n" +
+    "\t\t\t\t<th style=\"padding: 1em 0;\">Email</th>\n" +
+    "\t\t\t\t<th style=\"padding: 1em 0;\">Amount</th>\n" +
+    "\t\t\t\t<th style=\"padding: 1em 0;\">Class</th>\n" +
+    "\t\t\t\t<th style=\"padding: 1em 0;\">Payment date/time</th>\n" +
+    "\t\t\t\t<th style=\"padding: 1em 0;\">Stripe payment ID</th>\n" +
+    "\t\t\t</tr>\n" +
+    "\t\t</thead>\n" +
+    "\t\t<tbody>\n" +
+    "\t\t\t<tr ng-repeat=\"payment in payments\">\n" +
+    "\t\t\t\t<td style=\"padding: 1em 0; border-top: 1px solid black;\">{{payment.email}}</td>\n" +
+    "\t\t\t\t<td style=\"padding: 1em 0; border-top: 1px solid black;\">{{payment.amount}}</td>\n" +
+    "\t\t\t\t<td style=\"padding: 1em 0; border-top: 1px solid black;\">{{payment.class}}</td>\n" +
+    "\t\t\t\t<td style=\"padding: 1em 0; border-top: 1px solid black;\">{{payment.date}}</td>\n" +
+    "\t\t\t\t<td style=\"padding: 1em 0; border-top: 1px solid black;\">{{payment.stripeID}}</td>\n" +
+    "\t\t\t</tr>\n" +
+    "\t\t</tbody>\n" +
+    "\t</table>\n" +
+    "\n" +
+    "</div>"
   );
 
 

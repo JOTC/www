@@ -1,0 +1,10 @@
+<div class="modal-header">Processing Payment</div>
+
+<div class="modal-body">
+  {{message}}
+</div>
+
+<div class="modal-footer" ng-if="dismissable > 0">
+	<button class="btn btn-primary" ng-if="dismissable == 1" ng-click="dismiss()">Okay</button>
+	<button class="btn btn-danger" ng-if="dismissable == 2" ng-click="dismiss()">Okay</button>
+</div>
