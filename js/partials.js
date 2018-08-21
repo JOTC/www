@@ -340,10 +340,9 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t\t{{ class.location }}\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t<div class=\"description\">\n" +
-    "\t\t\t\t\t\t<span ng-repeat=\"description in getDescriptionBlocks(class)\">\n" +
+    "\t\t\t\t\t\t<span ng-repeat=\"description in getDescriptionBlocks(class)\" style=\"white-space: pre-line;\">\n" +
     "\t\t\t\t\t\t\t<span ng-if=\"$index > 0\">\n" +
-    "\t\t\t\t\t\t\t\t<br>\n" +
-    "\t\t\t\t\t\t\t\t<br>\n" +
+    "\n" +
     "\t\t\t\t\t\t\t</span>\n" +
     "\t\t\t\t\t\t\t{{ description }}\n" +
     "\t\t\t\t\t\t</span>\n" +

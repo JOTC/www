@@ -90,7 +90,7 @@ angular
 
       $scope.getDescriptionBlocks = function(clss) {
         var descriptions = [
-          "Classes are $75 for your dog's first class with us. If your dog has been to our classes before, additional classes are $65. You can pay in advance online with a credit card, or you can pay on the first day of class with a check or cash."
+          "Classes are $75 for your dog's first class with us. If your dog has been to our classes before, additional classes are $65. You can pay in advance online with a credit card, or mail payment to:\n\nJOTC\nPO Box 193\nJackson, MS 39205."
         ];
 
         var day = [

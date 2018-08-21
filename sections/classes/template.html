@@ -48,10 +48,9 @@
 						{{ class.location }}
 					</div>
 					<div class="description">
-						<span ng-repeat="description in getDescriptionBlocks(class)">
+						<span ng-repeat="description in getDescriptionBlocks(class)" style="white-space: pre-line;">
 							<span ng-if="$index > 0">
-								<br>
-								<br>
+
 							</span>
 							{{ description }}
 						</span>
