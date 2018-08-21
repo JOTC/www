@@ -44,7 +44,8 @@ angular
           allowRememberMe: false,
           description: 'Obedience class registration',
           image: '/media/jotc_logo_color.png',
-          key: 'pk_test_Y9gebG833jMWzVRaKEzk3Wz7',
+          // key: 'pk_test_Y9gebG833jMWzVRaKEzk3Wz7',
+          key: 'pk_live_KAY3htjbuRKmjK4QAanhbO9f',
           name: 'JOTC',
           token: function(token) {
             var modalDone;
