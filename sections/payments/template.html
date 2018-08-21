@@ -1,0 +1,25 @@
+<div id="payments">
+	<div class="title">Payments</div>
+
+	<table style="width: 100%;">
+		<thead style="font-weight: bold; border-bottom: 2px solid black; margin: 1em 0;">
+			<tr>
+				<th style="padding: 1em 0;">Email</th>
+				<th style="padding: 1em 0;">Amount</th>
+				<th style="padding: 1em 0;">Class</th>
+				<th style="padding: 1em 0;">Payment date/time</th>
+				<th style="padding: 1em 0;">Stripe payment ID</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="payment in payments">
+				<td style="padding: 1em 0; border-top: 1px solid black;">{{payment.email}}</td>
+				<td style="padding: 1em 0; border-top: 1px solid black;">{{payment.amount}}</td>
+				<td style="padding: 1em 0; border-top: 1px solid black;">{{payment.class}}</td>
+				<td style="padding: 1em 0; border-top: 1px solid black;">{{payment.date}}</td>
+				<td style="padding: 1em 0; border-top: 1px solid black;">{{payment.stripeID}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>

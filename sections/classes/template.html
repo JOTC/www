@@ -6,20 +6,21 @@
 			<div class="col-md-6">
 				<div class="header">JOTC Class Times and Locations</div>
 
-				JOTC currently offers classes four times a year: twice in the spring and twice in the fall.  North
-				classes are conducted through the city of Ridgeland and are held at the Old Trace Park on the
-				Reservoir at Fowler Lodge.  These classes usually begin the last Tuesday in March and the last
-				Tuesday in August.  South classes are currently being held at the Merit Health Central Medical Offices parking lot
-				at 1850 Chadwicks Dr. in Jackson.  These usually begin the first Thursday in April and the second Thursday
-				in September.  These classes last about an hour one night a week for 6 weeks, including a graduation
+				JOTC currently offers classes four times a year: twice in the spring and twice in the fall. North classes are conducted through
+				the city of Ridgeland and are held at the Old Trace Park on the Reservoir at Fowler Lodge. These classes usually begin
+				the last Tuesday in March and the last Tuesday in August. South classes are currently being held at the Merit Health
+				Central Medical Offices parking lot at 1850 Chadwicks Dr. in Jackson. These usually begin the first Thursday in April
+				and the second Thursday in September. These classes last about an hour one night a week for 6 weeks, including a graduation
 				night.
-				<br><br>
-				For more information about JOTC classes, please call the Dog Line at <span class="bold">(601) 352-DOGS (3647)</span>.
+				<br>
+				<br> For more information about JOTC classes, please call the Dog Line at
+				<span class="bold">(601) 352-DOGS (3647)</span>.
 
 				<div class="header">JOTC Classes</div>
 
 				<ul>
-					<li ng-repeat="type in classTypes"><span class="bold">{{ type.name }}</span> ({{ type.prerequisite }}): {{ type.description }}</li>
+					<li ng-repeat="type in classTypes">
+						<span class="bold">{{ type.name }}</span> ({{ type.prerequisite }}): {{ type.description }}</li>
 				</ul>
 			</div>
 
@@ -33,37 +34,54 @@
 				<div ng-repeat="class in classes" class="class">
 					<div class="date">
 						Starting {{ getStartDate(class); }}
-						<span ng-if="auth.canEditClasses" class="editBox">[ <span ng-click="classes.edit(class);">edit</span> | <span ng-click="classes.remove(class);">delete</span> ]</span>
+						<span ng-if="auth.canEditClasses" class="editBox">[
+							<span ng-click="classes.edit(class);">edit</span> |
+							<span ng-click="classes.remove(class);">delete</span> ]</span>
 					</div>
 					<div class="map">
 						<a href="{{ $location.getDirectionsURLForLocation(class.location) }}" target="_blank">
 							<img ng-src="{{ $location.getImageURLForLocation(class.location); }}">
-							<br>
-							Click for directions
+							<br> Click for directions
 						</a>
 					</div>
 					<div class="location">
 						{{ class.location }}
 					</div>
 					<div class="description">
-						<span ng-repeat="description in getDescriptionBlocks(class)">
-							<span ng-if="$index > 0"><br><br></span>
+						<span ng-repeat="description in getDescriptionBlocks(class)" style="white-space: pre-line;">
+							<span ng-if="$index > 0">
+
+							</span>
 							{{ description }}
 						</span>
 
-					<div ng-if="class.registrationFormPath" class="premiumList">
-						<a class="btn btn-success download" ng-href="{{ class.registrationFormPath }}">Download Registration Form</a>
-						<button ng-if="auth.classes" class="btn btn-danger" ng-click="deleteRegistrationForm(class)">Delete Registration Form</button>
-					</div>
+						<div ng-if="class.registrationLink">
+							<br/>
+							<a class="btn btn-success" ng-href="{{class.registrationLink}}">Register online</a>
+						</div>
 
+						<div ng-if="class.registrationFormPath" class="premiumList">
+							<a class="btn btn-success download" ng-href="{{ class.registrationFormPath }}">Download Registration Form</a>
+							<button ng-if="auth.classes" class="btn btn-danger" ng-click="deleteRegistrationForm(class)">Delete Registration Form</button>
+						</div>
 
-					<div drag-drop-file-uploader ng-if="auth.classes && !class.registrationFormPath" obj-type="classes" obj="class" doc-type="registrationForm" doc-name="registration form">
-					</div>
+						<div drag-drop-file-uploader ng-if="auth.classes && !class.registrationLink && !class.registrationFormPath" obj-type="classes"
+						 obj="class" doc-type="registrationForm" doc-name="registration form">
+						</div>
+
+						<div>
+							<h3>Pay online</h3>
+							<button class="btn btn-info" ng-click="stripe(75, class)">My dog has never take a JOTC class - $75</button>
+							<br/>
+							<br/>
+							<button class="btn btn-info" ng-click="stripe(65, class)">My dog has taken a JOTC class before - $65</button>
+						</div>
 
 					</div>
 
 					<div ng-if="auth.classes" style="text-align: right; padding: 10px;">
-						<button class="btn btn-primary" ng-click="editClass(class)">Edit</button> <button class="btn btn-danger" ng-click="deleteClass(class)">Delete</button>
+						<button class="btn btn-primary" ng-click="editClass(class)">Edit</button>
+						<button class="btn btn-danger" ng-click="deleteClass(class)">Delete</button>
 					</div>
 
 				</div>
@@ -75,48 +93,41 @@
 				<div class="clear header" style="margin-top: 25px;">General Information</div>
 
 				<ul>
-					<li>Instructors for all classes are required to meet specific criteria, must hold at least
-						one obedience title on a dog, and attend continuing education seminars and training.</li>
+					<li>Instructors for all classes are required to meet specific criteria, must hold at least one obedience title on a dog,
+						and attend continuing education seminars and training.</li>
 					<li>Pre-registration is requested for all classes in order to ensure proper class sizes.</li>
-					<li>Proof of vaccination is required.  Rabies vaccination must have been given by a
-						licensed veterinarian.</li>
-					<li>All Basic Obedience classes are divided according to dogs' sizes.  Classes include small,
-						medium, and large dogs.  This way, your small dog will not be intimidated by a larger
-						dog, and your large dog won't be distracted by a smaller one.</li>
-					<li>Our classes are small, usually with about 12 dogs per class.  Each student will receive
-						the individual attention necessary to help you fully understand each exercise as well
-						as successfully work through any training problems you encounter.</li>
-					<li>Obedience classes last six weeks and are held for one hour a night, one night a week.
-						Rally classes last eight weeks.</li>
-					<li>During class, you will be the one to train you dog, under the guidance of our
-						instructors.  We feel this approach is better for you and your dog than sending
-						your dog to a boarding school to be trained by someone else for the following reasons:
+					<li>Proof of vaccination is required. Rabies vaccination must have been given by a licensed veterinarian.</li>
+					<li>All Basic Obedience classes are divided according to dogs' sizes. Classes include small, medium, and large dogs. This
+						way, your small dog will not be intimidated by a larger dog, and your large dog won't be distracted by a smaller one.</li>
+					<li>Our classes are small, usually with about 12 dogs per class. Each student will receive the individual attention necessary
+						to help you fully understand each exercise as well as successfully work through any training problems you encounter.</li>
+					<li>Obedience classes last six weeks and are held for one hour a night, one night a week. Rally classes last eight weeks.</li>
+					<li>During class, you will be the one to train you dog, under the guidance of our instructors. We feel this approach is
+						better for you and your dog than sending your dog to a boarding school to be trained by someone else for the following
+						reasons:
 
 						<ul>
-							<li>If your dog is trained by someone else, he will learn to respond and respect
-								them, but will still need to learn to mind you.  You will have to learn how
-								to communicate with your dog and enforce your commands before the dog will
-								take you seriously.  The easiest way to accomplish this is to learn what to
-								do and train the dog yourself.</li>
-							<li>Sending your dog to live with someone else for several weeks or months is
-								stressful for you and your dog.  Training with your dog is fun for both of
-								you.</li>
-							<li>If you are the one training your dog, you can be assured that your dog is
-								learning through a consistent and positive approach.</li>
-							<li>Training builds a relationship between you and your dog.  You will find that
-								you become closer and enjoy your dog's company more when he is under control
-								and you can make him behave.  If you send your dog to be trained, you lose
-								the bonding that comes with learning.</li>
+							<li>If your dog is trained by someone else, he will learn to respond and respect them, but will still need to learn to
+								mind you. You will have to learn how to communicate with your dog and enforce your commands before the dog will take
+								you seriously. The easiest way to accomplish this is to learn what to do and train the dog yourself.</li>
+							<li>Sending your dog to live with someone else for several weeks or months is stressful for you and your dog. Training
+								with your dog is fun for both of you.
+							</li>
+							<li>If you are the one training your dog, you can be assured that your dog is learning through a consistent and positive
+								approach.
+							</li>
+							<li>Training builds a relationship between you and your dog. You will find that you become closer and enjoy your dog's
+								company more when he is under control and you can make him behave. If you send your dog to be trained, you lose the
+								bonding that comes with learning.</li>
 
-							<li>Training your dog in a group setting will give him the opportunity to learn
-								how to behave aground a number of people and dogs.  You will also learn how
-								to read your dog.</li>
+							<li>Training your dog in a group setting will give him the opportunity to learn how to behave aground a number of people
+								and dogs. You will also learn how to read your dog.</li>
 						</ul>
 					</li>
 
-					<li>JOTC welcomes all breeds of dogs to classes, regardless of whether the dog is a purebreed
-						or mixed.  <span class="bold">HOWEVER, JOTC does not allow wolves or wolf hybrids
-								in any of its classes.</span></li>
+					<li>JOTC welcomes all breeds of dogs to classes, regardless of whether the dog is a purebreed or mixed.
+						<span class="bold">HOWEVER, JOTC does not allow wolves or wolf hybrids in any of its classes.</span>
+					</li>
 				</ul>
 			</div>
 		</div>
