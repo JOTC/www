@@ -38,14 +38,9 @@
 							<span ng-click="classes.edit(class);">edit</span> |
 							<span ng-click="classes.remove(class);">delete</span> ]</span>
 					</div>
-					<div class="map">
-						<a href="{{ $location.getDirectionsURLForLocation(class.location) }}" target="_blank">
-							<img ng-src="{{ $location.getImageURLForLocation(class.location); }}">
-							<br> Click for directions
-						</a>
-					</div>
 					<div class="location">
-						{{ class.location }}
+						<a href="{{ $location.getDirectionsURLForLocation(class.location) }}" target="_blank">{{ class.location }} <i class="fas fa-map-marked-alt"></i><br/>
+						<span style="font-weight: normal; size: 0.8em;">Click for directions</span></a>
 					</div>
 					<div class="description">
 						<span ng-repeat="description in getDescriptionBlocks(class)" style="white-space: pre-line;">

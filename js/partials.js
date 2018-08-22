@@ -330,14 +330,9 @@ angular.module('jotc-partials', []).run(['$templateCache', function($templateCac
     "\t\t\t\t\t\t\t<span ng-click=\"classes.edit(class);\">edit</span> |\n" +
     "\t\t\t\t\t\t\t<span ng-click=\"classes.remove(class);\">delete</span> ]</span>\n" +
     "\t\t\t\t\t</div>\n" +
-    "\t\t\t\t\t<div class=\"map\">\n" +
-    "\t\t\t\t\t\t<a href=\"{{ $location.getDirectionsURLForLocation(class.location) }}\" target=\"_blank\">\n" +
-    "\t\t\t\t\t\t\t<img ng-src=\"{{ $location.getImageURLForLocation(class.location); }}\">\n" +
-    "\t\t\t\t\t\t\t<br> Click for directions\n" +
-    "\t\t\t\t\t\t</a>\n" +
-    "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t<div class=\"location\">\n" +
-    "\t\t\t\t\t\t{{ class.location }}\n" +
+    "\t\t\t\t\t\t<a href=\"{{ $location.getDirectionsURLForLocation(class.location) }}\" target=\"_blank\">{{ class.location }} <i class=\"fas fa-map-marked-alt\"></i><br/>\n" +
+    "\t\t\t\t\t\t<span style=\"font-weight: normal; size: 0.8em;\">Click for directions</span></a>\n" +
     "\t\t\t\t\t</div>\n" +
     "\t\t\t\t\t<div class=\"description\">\n" +
     "\t\t\t\t\t\t<span ng-repeat=\"description in getDescriptionBlocks(class)\" style=\"white-space: pre-line;\">\n" +
